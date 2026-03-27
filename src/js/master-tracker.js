@@ -493,5 +493,3 @@ class MasterTracker {
 document.addEventListener('DOMContentLoaded', () => {
   window.masterTracker = new MasterTracker();
 });
-
-export default MasterTracker;

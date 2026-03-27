@@ -149,7 +149,7 @@ body {
 }
 
 /* MAIN */
-#main {
+#main-content {
   margin-left: var(--sidebar-w); 
   flex: 1; 
   display: flex; 
@@ -396,7 +396,7 @@ body {
     transform: translateX(0);
   }
   
-  #main {
+  #main-content {
     margin-left: 0;
     width: 100%;
     max-width: 100%;
@@ -443,7 +443,7 @@ html, body {
   padding: 0;
 }
 
-#main {
+#main-content {
   margin-left: var(--sidebar-w); 
   flex: 1; 
   display: flex; 
@@ -596,7 +596,7 @@ html, body {
     transform: translateX(0);
   }
   
-  #main {
+  #main-content {
     margin-left: 0;
     width: 100%;
     max-width: 100%;

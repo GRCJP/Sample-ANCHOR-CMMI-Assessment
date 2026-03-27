@@ -627,6 +627,3 @@ class AgencyAssessment {
 document.addEventListener('DOMContentLoaded', () => {
   window.agencyAssessment = new AgencyAssessment();
 });
-
-// Export for module usage
-export default AgencyAssessment;

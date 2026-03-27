@@ -311,6 +311,13 @@
   background: #cbd5e0;
 }
 
+/* Row highlight for agency selected from main dashboard */
+tr.row-selected td {
+  background: #dbeafe !important;
+  border-top: 1px solid #93c5fd;
+  border-bottom: 1px solid #93c5fd;
+}
+
 /* Progress Indicators */
 .progress-indicator {
   position: fixed;

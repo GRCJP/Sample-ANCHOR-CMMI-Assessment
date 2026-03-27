@@ -400,5 +400,3 @@ class NavigationManager {
     return false; // Placeholder
   }
 }
-
-export default NavigationManager;
