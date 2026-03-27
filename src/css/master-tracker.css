@@ -1,0 +1,363 @@
+/* Master Tracker specific styles */
+
+/* Gantt Chart Styles */
+.gantt-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 6px;
+  height: 32px;
+}
+
+.gantt-label {
+  width: 200px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 8px;
+}
+
+.gantt-label-spacer {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.gantt-bar-wrap {
+  flex: 1;
+  position: relative;
+  height: 26px;
+  background: #f0f2f5;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gantt-header {
+  display: flex;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 4px;
+}
+
+.gantt-week {
+  flex: 1;
+  text-align: center;
+  border-left: 1px solid var(--border);
+  padding: 2px 0;
+}
+
+.gantt-week:first-child {
+  border-left: none;
+}
+
+/* Stage Progress Styles */
+.stage-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.stage-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stage-item.completed {
+  border-left: 4px solid var(--accent2);
+  background: #d4f4e220;
+}
+
+.stage-item.active {
+  border-left: 4px solid var(--accent);
+  background: #fef3cd20;
+}
+
+.stage-item.pending {
+  border-left: 4px solid var(--text-muted);
+  background: #f8f9fa;
+}
+
+.stage-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.stage-item.completed .stage-dot {
+  background: var(--accent2);
+  color: white;
+}
+
+.stage-item.active .stage-dot {
+  background: var(--accent);
+  color: white;
+}
+
+.stage-item.pending .stage-dot {
+  background: var(--text-muted);
+  color: white;
+}
+
+.stage-info {
+  flex: 1;
+}
+
+.stage-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.stage-status {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Activity Timeline */
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.activity-text {
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Workflow Cards */
+.wf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.wf-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.wf-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 2px 12px rgba(37,99,168,0.12);
+  transform: translateY(-1px);
+}
+
+.wf-card.selected {
+  border-color: var(--primary-light);
+  background: #dbeafe20;
+}
+
+.wf-card .wf-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.wf-card .wf-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.wf-card .wf-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.wf-card .wf-stages {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.wf-stage {
+  font-size: 0.68rem;
+  background: #f0f2f5;
+  border-radius: 10px;
+  padding: 2px 8px;
+  color: var(--text-muted);
+}
+
+/* Status Dots */
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.dot-complete {
+  background: var(--accent2);
+}
+
+.dot-active {
+  background: var(--primary-light);
+}
+
+.dot-pending {
+  background: var(--warn);
+}
+
+.dot-not-started {
+  background: #cbd5e0;
+}
+
+/* Progress Indicators */
+.progress-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  z-index: 1000;
+}
+
+.progress-indicator .progress-bar {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary-light);
+  background: #f5f7fb;
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .wf-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .gantt-label {
+    width: 120px;
+    font-size: 0.7rem;
+  }
+  
+  .gantt-header {
+    overflow-x: auto;
+  }
+  
+  .stage-item {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .stage-dot {
+    align-self: flex-start;
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .activity-date {
+    min-width: auto;
+  }
+  
+  .wf-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-buttons {
+    justify-content: center;
+  }
+}
