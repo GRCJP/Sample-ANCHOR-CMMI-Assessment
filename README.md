@@ -1,4 +1,4 @@
-# Assurit CyberAssess Platform
+# CyberAssess Platform
 
 Maryland DoIT Cybersecurity Assessment Platform implementing the ANCHOR Framework for statewide cybersecurity assessments across ~90 agencies.
 
