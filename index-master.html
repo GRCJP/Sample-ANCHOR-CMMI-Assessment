@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assurit CyberAssess | Agency Master Tracker</title>
+  <meta name="description" content="Maryland DoIT Cybersecurity Assessment Platform - Agency Master Tracker">
+  <meta name="author" content="Assurit">
+  
+  <!-- External dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- CSS files -->
+  <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/components.css">
+  <link rel="stylesheet" href="src/css/accessibility.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+  <!-- Skip to main content link for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <nav id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <div class="brand">Assurit CyberAssess</div>
+      <div class="sub">Maryland DoIT Assessment Platform</div>
+      <div class="badge-md">BPM052516</div>
+    </div>
+    
+    <div class="nav-section">Assessment Management</div>
+    
+    <div class="nav-item active" role="button" aria-expanded="true" aria-controls="master-tracker" tabindex="0">
+      <div class="step-num" style="background:#27ae60">📊</div>
+      <div>
+        <div style="font-size:.65rem; opacity:.6; font-weight:400;">OVERVIEW</div>
+        Agency Master Tracker
+      </div>
+    </div>
+    
+    <div class="nav-item" role="button" aria-expanded="false" aria-controls="pipeline" tabindex="0">
+      <div class="step-num" style="background:rgba(255,255,255,.1)">📅</div>
+      <div>
+        <div style="font-size:.65rem; opacity:.6; font-weight:400;">PLANNING</div>
+        Assessment Pipeline
+      </div>
+    </div>
+    
+    <div class="nav-item" role="button" aria-expanded="false" aria-controls="workflows" tabindex="0">
+      <div class="step-num" style="background:rgba(255,255,255,.1)">⚡</div>
+      <div>
+        <div style="font-size:.65rem; opacity:.6; font-weight:400;">CONFIGURATION</div>
+        Workflow Templates
+      </div>
+    </div>
+    
+    <div class="nav-section">System</div>
+    
+    <div class="nav-item" role="button" aria-expanded="false" aria-controls="settings" tabindex="0">
+      <div class="step-num" style="background:rgba(255,255,255,.1)">⚙</div>
+      <div>
+        <div style="font-size:.65rem; opacity:.6; font-weight:400;">SYSTEM</div>
+        Settings & Integration
+      </div>
+    </div>
+    
+    <div class="sidebar-bottom">
+      Maryland DGS / DoIT &nbsp;|&nbsp; Assessor: J. Williams<br>
+      Platform v2.4.1 &nbsp;|&nbsp; Secure Environment
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT AREA -->
+  <main id="main-content" role="main">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-title" id="topbar-title">
+        Agency Master Tracker
+        <span>Statewide Assessment Overview</span>
+      </div>
+      <div class="topbar-right">
+        <span class="badge badge-blue" aria-label="Active Assessments">🔒 3 Active</span>
+        <span class="badge badge-orange" aria-label="Pending">⏳ 2 Pending</span>
+        <span class="badge badge-green" aria-label="Completed">✅ 1 Complete</span>
+        <div class="avatar" aria-label="Current user">JW</div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <div class="content">
+      
+      <!-- MASTER TRACKER SECTION -->
+      <section class="section active" id="master-tracker" aria-hidden="false">
+        <div class="page-header">
+          <h1 id="section-master-tracker-title">Agency Assessment Master Tracker</h1>
+          <p>Real-time status and progress overview for all Maryland state agency cybersecurity assessments. Click on any agency to view detailed assessment workflow and manage specific assessment activities.</p>
+        </div>
+
+        <!-- Statewide Overview Cards -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-label">Total Agencies</div>
+            <div class="stat-value">6</div>
+            <div class="stat-sub">In current assessment cohort</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-label">Active Assessments</div>
+            <div class="stat-value">3</div>
+            <div class="stat-sub">Currently in progress</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value">1</div>
+            <div class="stat-sub">SARs delivered</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">Critical Findings</div>
+            <div class="stat-value">12</div>
+            <div class="stat-sub">Across all agencies</div>
+          </div>
+        </div>
+
+        <!-- Agency Status Table -->
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">🏛</span>
+            Agency Assessment Status
+            <span style="margin-left: auto; font-size:.75rem; color:var(--text-muted);">Click agency name to manage assessment</span>
+          </div>
+          
+          <div class="table-wrap">
+            <table role="table" aria-label="Agency assessment status table">
+              <thead>
+                <tr>
+                  <th>Agency</th>
+                  <th>Status</th>
+                  <th>Assessor</th>
+                  <th>Started</th>
+                  <th>Target End</th>
+                  <th>Maturity</th>
+                  <th>Critical</th>
+                  <th>Progress</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('mdot')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Maryland Dept. of Transportation (MDOT)
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-active"></span>In Progress</td>
+                  <td>J. Williams</td>
+                  <td>Apr 7, 2026</td>
+                  <td>May 19, 2026</td>
+                  <td><strong>2.5</strong> / 5.0</td>
+                  <td><span class="badge badge-red">4</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-blue" style="width:65%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">65%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="openAgencyAssessment('mdot')">Manage</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('mdh')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Maryland Dept. of Health (MDH)
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-active"></span>In Progress</td>
+                  <td>S. Patel</td>
+                  <td>Apr 14, 2026</td>
+                  <td>May 26, 2026</td>
+                  <td><strong>2.8</strong> / 5.0</td>
+                  <td><span class="badge badge-red">2</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-blue" style="width:45%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">45%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="openAgencyAssessment('mdh')">Manage</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('msde')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Maryland Dept. of Education (MSDE)
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-complete"></span>Complete</td>
+                  <td>J. Williams</td>
+                  <td>Feb 3, 2026</td>
+                  <td>Mar 17, 2026</td>
+                  <td><strong>3.1</strong> / 5.0</td>
+                  <td><span class="badge badge-green">1</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-green" style="width:100%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">100%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="openAgencyAssessment('msde')">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('dpscs')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Dept. of Public Safety & Corr. Services
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-active"></span>In Progress</td>
+                  <td>R. Okafor</td>
+                  <td>Apr 21, 2026</td>
+                  <td>Jun 2, 2026</td>
+                  <td><strong>2.3</strong> / 5.0</td>
+                  <td><span class="badge badge-red">6</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-blue" style="width:30%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">30%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="openAgencyAssessment('dpscs')">Manage</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('labor')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Maryland Dept. of Labor
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-pending"></span>Scheduled</td>
+                  <td>T. Adams</td>
+                  <td>May 5, 2026</td>
+                  <td>Jun 16, 2026</td>
+                  <td><strong>—</strong></td>
+                  <td><span class="badge badge-gray">—</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-orange" style="width:0%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">0%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="openAgencyAssessment('labor')">Prepare</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button class="btn-link" onclick="openAgencyAssessment('comptroller')" style="background:none;border:none;color:var(--primary);text-decoration:underline;cursor:pointer;font-weight:600;">
+                      Office of the Comptroller
+                    </button>
+                  </td>
+                  <td><span class="status-dot dot-pending"></span>Scheduled</td>
+                  <td>J. Williams</td>
+                  <td>May 12, 2026</td>
+                  <td>Jun 23, 2026</td>
+                  <td><strong>—</strong></td>
+                  <td><span class="badge badge-gray">—</span></td>
+                  <td>
+                    <div class="progress-bar-wrap" style="width:100px;">
+                      <div class="progress-bar pb-orange" style="width:0%;"></div>
+                    </div>
+                    <span style="font-size:.7rem;">0%</span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="openAgencyAssessment('comptroller')">Prepare</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Statewide Maturity Overview -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">
+              <span class="icon">📊</span>
+              Statewide Maturity Distribution
+            </div>
+            <div class="chart-wrap-sm">
+              <canvas id="maturityChart"></canvas>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">
+              <span class="icon">⚠️</span>
+              Critical Findings by Function
+            </div>
+            <div class="chart-wrap-sm">
+              <canvas id="findingsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessment Timeline -->
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">📅</span>
+            Assessment Timeline - Next 90 Days
+          </div>
+          <div class="chart-wrap">
+            <canvas id="timelineChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- PIPELINE SECTION -->
+      <section class="section" id="pipeline" aria-hidden="true">
+        <div class="page-header">
+          <h1 id="section-pipeline-title">Assessment Pipeline</h1>
+          <p>Strategic planning and resource allocation for upcoming assessments across the 6-agency cohort.</p>
+        </div>
+
+        <div class="info-box">
+          <strong>Pipeline Overview:</strong> Current cohort focuses on high-impact agencies with complex IT environments. Resource allocation optimized for parallel assessments while maintaining quality standards.
+        </div>
+
+        <!-- Pipeline Gantt Chart -->
+        <div class="card">
+          <div class="card-title">
+            <span class="icon">📊</span>
+            Assessment Schedule - Q2 2026
+          </div>
+          <div id="pipeline-gantt"></div>
+        </div>
+
+        <!-- Resource Allocation -->
+        <div class="grid-3">
+          <div class="stat-card">
+            <div class="stat-label">Active Assessors</div>
+            <div class="stat-value">4</div>
+            <div class="stat-sub">2 Senior, 2 Junior</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-label">Avg Duration</div>
+            <div class="stat-value">42</div>
+            <div class="stat-sub">Days per assessment</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Capacity</div>
+            <div class="stat-value">75%</div>
+            <div class="stat-sub">Resource utilization</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKFLOWS SECTION -->
+      <section class="section" id="workflows" aria-hidden="true">
+        <div class="page-header">
+          <h1 id="section-workflows-title">Workflow Templates</h1>
+          <p>Standardized assessment workflows for different agency types and complexity levels.</p>
+        </div>
+
+        <div class="wf-grid">
+          <div class="wf-card">
+            <div class="wf-badge badge badge-blue">Most Used</div>
+            <div class="wf-title">Standard Enterprise IT</div>
+            <div class="wf-desc">Comprehensive assessment for large agencies with hybrid cloud environments and complex regulatory requirements.</div>
+            <div class="wf-stages">
+              <span class="wf-stage">7 Stages</span>
+              <span class="wf-stage">42 Days</span>
+              <span class="wf-stage">High Complexity</span>
+            </div>
+          </div>
+
+          <div class="wf-card">
+            <div class="wf-title">Focused Rapid Assessment</div>
+            <div class="wf-desc">Streamlined process for agencies with mature security programs and prior assessment experience.</div>
+            <div class="wf-stages">
+              <span class="wf-stage">5 Stages</span>
+              <span class="wf-stage">21 Days</span>
+              <span class="wf-stage">Medium Complexity</span>
+            </div>
+          </div>
+
+          <div class="wf-card">
+            <div class="wf-title">Critical Infrastructure</div>
+            <div class="wf-desc">Enhanced assessment for agencies with OT/ICS systems and national security implications.</div>
+            <div class="wf-stages">
+              <span class="wf-stage">8 Stages</span>
+              <span class="wf-stage">56 Days</span>
+              <span class="wf-stage">Very High Complexity</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS SECTION -->
+      <section class="section" id="settings" aria-hidden="true">
+        <div class="page-header">
+          <h1 id="section-settings-title">Settings & Integration</h1>
+          <p>Platform configuration, user management, and system integration settings.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">
+              <span class="icon">👥</span>
+              User Management
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Role</th><th>Access Level</th><th>Users</th></tr></thead>
+                <tbody>
+                  <tr><td>Program Manager</td><td>Full access (all agencies)</td><td>1</td></tr>
+                  <tr><td>Lead Assessor</td><td>Full access (assigned agencies)</td><td>2</td></tr>
+                  <tr><td>Assessor</td><td>Read/write (assigned agency)</td><td>2</td></tr>
+                  <tr><td>Agency Rep</td><td>Evidence upload, view own agency</td><td>6</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <span class="icon">🔧</span>
+              Platform Configuration
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Assessment Framework</label>
+                <select>
+                  <option selected>NIST CSF 2.0 + NIST SP 800-53 Rev 5</option>
+                  <option>NIST CSF 1.1</option>
+                  <option>CIS Controls v8</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Maturity Model</label>
+                <select>
+                  <option selected>CMMI (1–5 Scale)</option>
+                  <option>Tier-Based (1–4)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Auto-save Interval</label>
+                <select>
+                  <option selected>30 seconds</option>
+                  <option>1 minute</option>
+                  <option>5 minutes</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Notification Level</label>
+                <select>
+                  <option selected>All notifications</option>
+                  <option>Critical only</option>
+                  <option>None</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- NOTIFICATION TOAST -->
+  <div class="notification" id="notif" role="alert" aria-live="polite"></div>
+
+  <!-- JavaScript modules -->
+  <script type="module" src="src/js/master-tracker.js"></script>
+  <script type="module" src="src/js/navigation.js"></script>
+  <script type="module" src="src/js/data.js"></script>
+  
+  <!-- Legacy compatibility script -->
+  <script>
+    // Navigation functions
+    function showSection(id, el) {
+      if (window.cyberAssessApp) {
+        window.cyberAssessApp.showSection(id, el);
+      }
+    }
+    
+    function notify(msg) {
+      if (window.cyberAssessApp) {
+        window.cyberAssessApp.announce(msg);
+      }
+    }
+    
+    // Agency assessment navigation
+    function openAgencyAssessment(agencyId) {
+      // Store current agency in session storage
+      sessionStorage.setItem('currentAgency', agencyId);
+      
+      // Navigate to agency-specific assessment page
+      const agencyPages = {
+        'mdot': 'agency-mdot.html',
+        'mdh': 'agency-mdh.html',
+        'msde': 'agency-msde.html',
+        'dpscs': 'agency-dpscs.html',
+        'labor': 'agency-labor.html',
+        'comptroller': 'agency-comptroller.html'
+      };
+      
+      const targetPage = agencyPages[agencyId];
+      if (targetPage) {
+        window.location.href = targetPage;
+      } else {
+        notify(`Assessment page for ${agencyId} not yet available`);
+      }
+    }
+  </script>
+</body>
+</html>
