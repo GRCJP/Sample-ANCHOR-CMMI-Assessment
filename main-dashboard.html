@@ -106,7 +106,7 @@
       <div class="badge-md">BPM052516</div>
     </div>
 
-    <div class="nav-section">OPTIMIZE</div>
+    <div class="nav-section">DASHBOARD</div>
     <div class="nav-item active" role="button" tabindex="0" onclick="showSection('portfolio', this)">
       <div class="step-num" style="background:#27ae60">🏛</div>
       <div>
@@ -148,8 +148,8 @@
   <main id="main-content" role="main">
     <header class="topbar">
       <div class="topbar-title">
-        STEP 7 — Optimize: Multi-Agency Portfolio Dashboard
-        <span>Main Entry Point (6-Agency Demo Cohort)</span>
+        Multi-Agency Portfolio Dashboard
+        <span>Main Entry Point</span>
       </div>
       <div class="topbar-right">
         <span class="badge badge-blue">6 Agencies</span>
@@ -162,7 +162,7 @@
     <div class="content">
       <section class="section active" id="portfolio" aria-hidden="false">
         <div class="page-header">
-          <div class="step-tag" style="background:#1e40af;">STEP 7 — OPTIMIZE</div>
+          <div class="step-tag" style="background:#1e40af;">PROGRAM OVERVIEW</div>
           <h1>Manage Multi-Agency Assessment Portfolio</h1>
           <p>Select an agency to enter the full overview app. Use Create New System to launch Step 1 Pre-Assess modal and generate preliminary POD scoring when questionnaire responses are returned.</p>
           <div style="margin-top:10px;">
@@ -393,7 +393,6 @@
         <!-- ---- AGENCY TABLE ---- -->
         <div class="card" id="agency-table">
           <div class="card-title">🏛 Agency Selection &amp; Assessment Management</div>
-          <div class="info-box" style="margin-bottom:10px; font-size:.78rem;">RFP §2.3.1(G) mandatory filters active. All tier definitions set by DoIT. Filters apply to tracker table and statewide analytics simultaneously.</div>
           <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
             <strong style="font-size:.72rem; color:var(--primary); white-space:nowrap;">Filters:</strong>
             <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
@@ -411,17 +410,18 @@
           </div>
           <div class="btn-row" style="margin-bottom:12px;">
             <button class="btn btn-accent" onclick="openCreateAssessmentModal()">➕ Create New System Assessment</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminder batch sent to pending agencies')">📨 Send Pending Questionnaire Reminders</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminder batch sent to pending agencies')">📨 Send Intake Reminders</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Agency</th><th>Status</th><th>Pre-Assess</th><th>POD</th><th>Current Stage</th><th>Progress</th><th>Actions</th></tr>
+                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Current Stage</th><th>Progress</th><th>Actions</th></tr>
               </thead>
               <tbody id="portfolio-body">
               </tbody>
             </table>
           </div>
+
         </div>
       </section>
 
@@ -906,42 +906,72 @@
   </main>
 
   <div id="create-assessment-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1300; padding:24px; overflow:auto;">
-    <div style="max-width:640px; margin:40px auto; background:#fff; border:1px solid var(--border); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.2);">
+    <div style="max-width:720px; margin:30px auto; background:#fff; border:1px solid var(--border); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.2);">
       <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border);">
         <h2 style="font-size:1.05rem; color:var(--primary);">Create New System Assessment</h2>
         <button class="btn btn-outline btn-sm" onclick="closeCreateAssessmentModal()">✕ Close</button>
       </div>
-      <div style="padding:16px 18px;">
-        <div class="info-box" style="margin-bottom:14px;"><strong>Workflow:</strong> Create a point of contact for the agency and send the Pre-Assess questionnaire. When the recipient submits their responses, POD size (Small / Medium / Large) is calculated automatically.</div>
+      <div style="padding:16px 18px; max-height:75vh; overflow-y:auto;">
+        <div class="info-box" style="margin-bottom:14px;"><strong>Client Intake:</strong> Enter the agency profile, POD assignment, system environment, and point of contact details below. This information will pre-populate the Agency Setup &amp; Intake module for the assessment.</div>
 
-        <div class="form-grid" style="margin-bottom:14px;">
-          <div class="form-group"><label>Agency</label><select id="ca-agency"><option value="mdot">Maryland Dept. of Transportation (MDOT)</option><option value="mdh">Maryland Dept. of Health (MDH)</option><option value="msde">Maryland Dept. of Education (MSDE)</option><option value="dpscs">Dept. Public Safety &amp; Corr. Services</option><option value="labor">Maryland Dept. of Labor</option><option value="comptroller">Office of the Comptroller</option></select></div>
-          <div class="form-group"><label>System / Environment Name</label><input id="ca-system" placeholder="e.g., MDOT Enterprise IT Infrastructure"></div>
-        </div>
-
+        <!-- Agency & POD -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">👤 Point of Contact</div>
+          <div class="card-title">🏛 Agency &amp; POD Assignment</div>
+          <input id="ca-original-key" type="hidden">
           <div class="form-grid">
-            <div class="form-group"><label>Contact Name</label><input id="ca-recipient" placeholder="e.g., Lisa Harmon, CISO"></div>
-            <div class="form-group"><label>Email</label><input id="ca-email" placeholder="name@agency.maryland.gov"></div>
-            <div class="form-group"><label>Phone</label><input id="ca-phone" placeholder="(410) 555-0000"></div>
-            <div class="form-group"><label>Title / Role</label><input id="ca-title" placeholder="e.g., Chief Information Security Officer"></div>
+            <div class="form-group"><label>Agency Name</label><input id="ca-agency-name" placeholder="e.g., Maryland Dept. of Transportation (MDOT)"></div>
+            <div class="form-group"><label>Agency Abbreviation</label><input id="ca-agency-abbr" placeholder="e.g., MDOT" style="text-transform:uppercase;"></div>
+            <div class="form-group"><label>POD Size</label><select id="ca-pod"><option value="XL">POD XL</option><option value="LARGE" selected>POD LARGE</option><option value="MEDIUM">POD MEDIUM</option><option value="SMALL">POD SMALL</option></select></div>
+            <div class="form-group"><label>System / Environment Name</label><input id="ca-system" placeholder="e.g., MDOT Enterprise IT Infrastructure"></div>
+            <div class="form-group"><label>Assessment Wave</label><select id="ca-wave"><option value="Wave 1 — Q1–Q2 2026" selected>Wave 1 — Q1–Q2 2026</option><option value="Wave 2 — Q3–Q4 2026">Wave 2 — Q3–Q4 2026</option><option value="Wave 3 — Q1–Q2 2027">Wave 3 — Q1–Q2 2027</option><option value="Wave 4 — Q3–Q4 2027">Wave 4 — Q3–Q4 2027</option></select></div>
           </div>
         </div>
 
+        <!-- Point of Contact -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">📧 Send Pre-Assess Questionnaire</div>
-          <p style="font-size:.82rem; color:var(--text-muted); margin-bottom:10px;">The questionnaire includes agency profile, IT environment, security posture, and compliance questions. When the recipient submits, their responses auto-calculate the preliminary POD assignment.</p>
+          <div class="card-title">👤 Point of Contact</div>
           <div class="form-grid">
-            <div class="form-group"><label>Response Due Date</label><input id="ca-due" type="date"></div>
-            <div class="form-group"><label>Questionnaire Template</label><select id="ca-template"><option>Standard Pre-Assess v2 (15 questions)</option><option>Abbreviated (8 questions)</option></select></div>
+            <div class="form-group"><label>Contact Name</label><input id="ca-recipient" placeholder="e.g., Lisa Harmon"></div>
+            <div class="form-group"><label>Title / Role</label><input id="ca-title" placeholder="e.g., Chief Information Security Officer"></div>
+            <div class="form-group"><label>Email</label><input id="ca-email" placeholder="name@agency.maryland.gov"></div>
+            <div class="form-group"><label>Phone</label><input id="ca-phone" placeholder="(410) 555-0000"></div>
+            <div class="form-group"><label>Alt. Contact Name</label><input id="ca-alt-name" placeholder="e.g., John Smith, IT Director"></div>
+            <div class="form-group"><label>Alt. Contact Email</label><input id="ca-alt-email" placeholder="e.g., j.smith@agency.maryland.gov"></div>
+          </div>
+        </div>
+
+        <!-- System Environment -->
+        <div class="card" style="margin-bottom:14px; background:#fafbfd;">
+          <div class="card-title">☁️ System Environment</div>
+          <div class="form-grid">
+            <div class="form-group"><label>System Type</label><select id="ca-systype"><option value="Hybrid (On-Prem + Cloud)" selected>Hybrid (On-Prem + Cloud)</option><option value="Cloud-Only (SaaS/IaaS)">Cloud-Only (SaaS/IaaS)</option><option value="On-Premises Only">On-Premises Only</option><option value="OT/ICS">OT/ICS</option></select></div>
+            <div class="form-group"><label>Agency Size</label><select id="ca-size"><option value="Large (500+ employees)">Large (500+ employees)</option><option value="Medium (100–499)">Medium (100–499)</option><option value="Small (<100)">Small (&lt;100)</option></select></div>
+            <div class="form-group"><label>Data Classification</label><select id="ca-dataclass"><option value="High – PII, Financial, CJI" selected>High – PII, Financial, CJI</option><option value="Moderate – Internal Use">Moderate – Internal Use</option><option value="Low – Public">Low – Public</option></select></div>
+            <div class="form-group"><label>FIPS 199 Categorization</label><select id="ca-fips"><option value="HIGH" selected>HIGH</option><option value="MODERATE">MODERATE</option><option value="LOW">LOW</option></select></div>
+            <div class="form-group"><label>Executive Branch</label><select id="ca-execbranch"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+            <div class="form-group"><label>DoIT Enterprise</label><select id="ca-doit"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+          </div>
+        </div>
+
+        <!-- Assessment Parameters -->
+        <div class="card" style="margin-bottom:14px; background:#fafbfd;">
+          <div class="card-title">📋 Assessment Parameters</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Lead Assessor</label><select id="ca-assessor"><option value="J. Williams" selected>J. Williams</option><option value="S. Patel">S. Patel</option><option value="R. Okafor">R. Okafor</option><option value="T. Adams">T. Adams</option><option value="M. Chen">M. Chen</option></select></div>
+            <div class="form-group"><label>Team Size</label><select id="ca-teamsize"><option value="Large (6–8 assessors)">Large (6–8 assessors)</option><option value="Standard (4–5 assessors)">Standard (4–5 assessors)</option><option value="Small (2–3 assessors)">Small (2–3 assessors)</option></select></div>
+            <div class="form-group"><label>Assessment Template</label><select id="ca-template"><option value="Standard Enterprise IT (High-Risk)" selected>Standard Enterprise IT (High-Risk)</option><option value="Standard Enterprise IT">Standard Enterprise IT</option><option value="Cloud-Only">Cloud-Only</option><option value="OT/ICS">OT/ICS</option><option value="Small Agency Streamlined">Small Agency Streamlined</option></select></div>
+            <div class="form-group"><label>Maturity Group</label><select id="ca-matgroup"><option value="Group A (0.0–1.4)">Group A (0.0–1.4)</option><option value="Group B (1.5–2.5)" selected>Group B (1.5–2.5)</option><option value="Group C (2.6–3.4)">Group C (2.6–3.4)</option><option value="Group D (3.5–4.4)">Group D (3.5–4.4)</option><option value="Group E (4.5–5.0)">Group E (4.5–5.0)</option></select></div>
+            <div class="form-group"><label>Start Date</label><input id="ca-start" type="date"></div>
+            <div class="form-group"><label>Target End Date</label><input id="ca-end" type="date"></div>
+            <div class="form-group" style="grid-column:1/-1;"><label>Scope Description</label><textarea id="ca-scope" rows="2" placeholder="Describe assessment scope, systems, and boundaries..."></textarea></div>
+            <div class="form-group" style="grid-column:1/-1;"><label>Known Constraints / Notes</label><textarea id="ca-notes" rows="2" placeholder="Any scheduling constraints, documentation gaps, or special considerations..."></textarea></div>
           </div>
         </div>
 
         <div id="create-status" class="info-box" style="display:none;"></div>
 
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="createAndSendQuestionnaire()">📧 Create System &amp; Send Questionnaire</button>
+          <button class="btn btn-primary" onclick="createSystemAssessment()">🚀 Create System &amp; Open Assessment</button>
           <button class="btn btn-outline" onclick="closeCreateAssessmentModal()">Cancel</button>
         </div>
       </div>
@@ -954,11 +984,9 @@
     const AGENCIES = {
       mdot:{name:'Maryland Dept. of Transportation (MDOT)', status:'In Progress', stage:'Evidence Collection', progress:'65%'},
       mdh:{name:'Maryland Dept. of Health (MDH)', status:'In Progress', stage:'Risk Assessment', progress:'45%'},
-      msde:{name:'Maryland Dept. of Education (MSDE)', status:'Complete', stage:'SAR Delivered', progress:'100%'},
-      dpscs:{name:'Dept. Public Safety & Corr. Services', status:'In Progress', stage:'Intake & Scoping', progress:'30%'},
-      labor:{name:'Maryland Dept. of Labor', status:'Scheduled', stage:'Pre-Assessment', progress:'0%'},
-      comptroller:{name:'Office of the Comptroller', status:'Scheduled', stage:'Pre-Assessment', progress:'0%'}
+      msde:{name:'Maryland Dept. of Education (MSDE)', status:'Complete', stage:'SAR Delivered', progress:'100%'}
     };
+    const ACTIVITY_LOG_KEY = 'demo_activity_log';
 
     // ---- SECTION NAV ----
     function showSection(id, el) {
@@ -997,6 +1025,17 @@
       setTimeout(() => notif.style.display = 'none', 2800);
     }
 
+    function logActivity(action, agency, details='') {
+      const rows = JSON.parse(localStorage.getItem(ACTIVITY_LOG_KEY) || '[]');
+      rows.unshift({
+        ts: new Date().toLocaleString(),
+        action,
+        agency: agency || '—',
+        details
+      });
+      localStorage.setItem(ACTIVITY_LOG_KEY, JSON.stringify(rows.slice(0, 50)));
+    }
+
     function statusBadge(status){
       if(status==='Complete') return 'badge-green';
       if(status==='In Progress') return 'badge-blue';
@@ -1004,12 +1043,65 @@
     }
 
     // ---- CREATE SYSTEM MODAL ----
-    function openCreateAssessmentModal(agencyId='mdot') {
+    function openCreateAssessmentModal(agencyId) {
       const modal = document.getElementById('create-assessment-modal');
-      const sel = document.getElementById('ca-agency');
-      if(sel) sel.value = agencyId;
       const status = document.getElementById('create-status');
       if(status) status.style.display = 'none';
+
+      const nameEl = document.getElementById('ca-agency-name');
+      const abbrEl = document.getElementById('ca-agency-abbr');
+      const originalEl = document.getElementById('ca-original-key');
+
+      const fieldMap = {
+        pod:'ca-pod', wave:'ca-wave', systemName:'ca-system', recipient:'ca-recipient', contactTitle:'ca-title',
+        email:'ca-email', phone:'ca-phone', altName:'ca-alt-name', altEmail:'ca-alt-email',
+        systemType:'ca-systype', agencySize:'ca-size', dataClassification:'ca-dataclass', fips:'ca-fips',
+        execBranch:'ca-execbranch', doitEnterprise:'ca-doit', leadAssessor:'ca-assessor', teamSize:'ca-teamsize',
+        template:'ca-template', maturityGroup:'ca-matgroup', startDate:'ca-start', endDate:'ca-end',
+        scope:'ca-scope', notes:'ca-notes'
+      };
+
+      // reset defaults
+      if(originalEl) originalEl.value = '';
+      if(nameEl) nameEl.value = '';
+      if(abbrEl) { abbrEl.value = ''; abbrEl.readOnly = false; abbrEl.style.opacity = '1'; }
+      Object.entries(fieldMap).forEach(([k,id]) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        if(el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+      });
+
+      if(agencyId) {
+        const all = getAllAgencies();
+        const base = all[agencyId] || null;
+        const stored = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
+        if(originalEl) originalEl.value = agencyId;
+        if(nameEl) nameEl.value = stored.agencyName || (base ? base.name : '');
+        if(abbrEl) {
+          abbrEl.value = (stored.abbr || agencyId).toUpperCase();
+          abbrEl.readOnly = true;
+          abbrEl.style.opacity = '.75';
+        }
+        Object.entries(fieldMap).forEach(([k,id]) => {
+          const el = document.getElementById(id);
+          if(!el || stored[k] === undefined || stored[k] === null || stored[k] === '') return;
+          el.value = stored[k];
+        });
+      } else {
+        if(document.getElementById('ca-pod')) document.getElementById('ca-pod').value = 'LARGE';
+        if(document.getElementById('ca-wave')) document.getElementById('ca-wave').value = 'Wave 1 — Q1–Q2 2026';
+        if(document.getElementById('ca-systype')) document.getElementById('ca-systype').value = 'Hybrid (On-Prem + Cloud)';
+        if(document.getElementById('ca-size')) document.getElementById('ca-size').value = 'Large (500+ employees)';
+        if(document.getElementById('ca-dataclass')) document.getElementById('ca-dataclass').value = 'High – PII, Financial, CJI';
+        if(document.getElementById('ca-fips')) document.getElementById('ca-fips').value = 'HIGH';
+        if(document.getElementById('ca-execbranch')) document.getElementById('ca-execbranch').value = 'Yes';
+        if(document.getElementById('ca-doit')) document.getElementById('ca-doit').value = 'Yes';
+        if(document.getElementById('ca-assessor')) document.getElementById('ca-assessor').value = 'J. Williams';
+        if(document.getElementById('ca-teamsize')) document.getElementById('ca-teamsize').value = 'Large (6–8 assessors)';
+        if(document.getElementById('ca-template')) document.getElementById('ca-template').value = 'Standard Enterprise IT (High-Risk)';
+        if(document.getElementById('ca-matgroup')) document.getElementById('ca-matgroup').value = 'Group B (1.5–2.5)';
+      }
       if(modal) modal.style.display = 'block';
     }
 
@@ -1018,72 +1110,192 @@
       if(modal) modal.style.display = 'none';
     }
 
-    function createAndSendQuestionnaire() {
-      const agency = document.getElementById('ca-agency').value;
+    function createSystemAssessment() {
+      const originalKey = (document.getElementById('ca-original-key').value || '').trim().toLowerCase();
+      const agencyName = document.getElementById('ca-agency-name').value.trim();
+      const abbr = document.getElementById('ca-agency-abbr').value.trim().toLowerCase().replace(/[^a-z0-9]/g,'');
       const recipient = document.getElementById('ca-recipient').value.trim();
       const email = document.getElementById('ca-email').value.trim();
-      if(!recipient || !email) {
-        notify('⚠️ Enter point of contact name and email before sending.');
+      if(!agencyName || !abbr) {
+        notify('⚠️ Enter the agency name and abbreviation.');
         return;
       }
+      if(!recipient || !email) {
+        notify('⚠️ Enter point of contact name and email before creating.');
+        return;
+      }
+      const agencyKey = originalKey || abbr;
+      const existing = JSON.parse(localStorage.getItem(`assessment_${agencyKey}`) || 'null');
+      const isUpdate = !!existing;
       const payload = {
-        agency,
-        agencyName: AGENCIES[agency].name,
+        agency: agencyKey,
+        abbr: abbr.toUpperCase(),
+        agencyName,
+        pod: document.getElementById('ca-pod').value,
+        wave: document.getElementById('ca-wave').value,
+        systemName: document.getElementById('ca-system').value.trim(),
         recipient,
+        contactTitle: document.getElementById('ca-title').value.trim(),
         email,
         phone: document.getElementById('ca-phone').value.trim(),
-        contactTitle: document.getElementById('ca-title').value.trim(),
-        systemName: document.getElementById('ca-system').value.trim(),
-        dueDate: document.getElementById('ca-due').value,
+        altName: document.getElementById('ca-alt-name').value.trim(),
+        altEmail: document.getElementById('ca-alt-email').value.trim(),
+        systemType: document.getElementById('ca-systype').value,
+        agencySize: document.getElementById('ca-size').value,
+        dataClassification: document.getElementById('ca-dataclass').value,
+        fips: document.getElementById('ca-fips').value,
+        execBranch: document.getElementById('ca-execbranch').value,
+        doitEnterprise: document.getElementById('ca-doit').value,
+        leadAssessor: document.getElementById('ca-assessor').value,
+        teamSize: document.getElementById('ca-teamsize').value,
         template: document.getElementById('ca-template').value,
-        questionnaireStatus: 'Sent',
-        sentAt: new Date().toISOString(),
-        createdAt: new Date().toISOString()
+        maturityGroup: document.getElementById('ca-matgroup').value,
+        startDate: document.getElementById('ca-start').value,
+        endDate: document.getElementById('ca-end').value,
+        scope: document.getElementById('ca-scope').value.trim(),
+        notes: document.getElementById('ca-notes').value.trim(),
+        status: isUpdate ? 'Updated' : 'Created',
+        createdAt: existing?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
-      localStorage.setItem(`assessment_${agency}`, JSON.stringify(payload));
-      const status = document.getElementById('create-status');
-      if(status) {
-        status.style.display = 'block';
-        status.innerHTML = `✅ System created for <strong>${AGENCIES[agency].name}</strong>. Pre-Assess questionnaire sent to <strong>${recipient}</strong> (${email}). POD will be calculated automatically when the recipient submits their responses.`;
+      localStorage.setItem(`assessment_${agencyKey}`, JSON.stringify(payload));
+      // register if not part of base samples
+      let dynList = JSON.parse(localStorage.getItem('dynamic_agencies') || '[]');
+      if(!AGENCIES[agencyKey] && !dynList.includes(agencyKey)) {
+        dynList.push(agencyKey);
+        localStorage.setItem('dynamic_agencies', JSON.stringify(dynList));
       }
-      notify(`📧 System created & questionnaire sent to ${recipient} for ${AGENCIES[agency].name}`);
+      const statusEl = document.getElementById('create-status');
+      if(statusEl) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = `✅ System ${isUpdate ? 'updated' : 'created'} for <strong>${agencyName}</strong> — POD <strong>${payload.pod}</strong>. Navigating to assessment setup...`;
+      }
+      notify(`🚀 System ${isUpdate ? 'updated' : 'created'} for ${agencyName} — POD ${payload.pod}`);
+      logActivity(isUpdate ? 'Updated System' : 'Created System', agencyName, `POD ${payload.pod} | Wave ${payload.wave}`);
       renderPortfolio();
+      setTimeout(() => {
+        closeCreateAssessmentModal();
+        window.location.href = `index.html?agency=${agencyKey}`;
+      }, 1200);
     }
 
     // ---- PORTFOLIO TABLE ----
-    function getPreAssessStatus(agencyId) {
+    function getIntakeStatus(agencyId) {
       const a = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
-      return a.questionnaireStatus || 'Not Sent';
+      return a.status || 'Not Started';
     }
 
     function getPod(agencyId) {
       const a = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
-      return a.pod ? a.pod.toUpperCase() : '—';
+      return a.pod ? 'POD ' + a.pod.toUpperCase() : '—';
+    }
+
+    function getAllAgencies() {
+      const hiddenBase = JSON.parse(localStorage.getItem('hidden_base_agencies') || '[]');
+      const allAgencies = {};
+      Object.entries(AGENCIES).forEach(([k,v]) => {
+        if(!hiddenBase.includes(k)) allAgencies[k] = Object.assign({}, v);
+      });
+
+      const dynList = JSON.parse(localStorage.getItem('dynamic_agencies') || '[]');
+      dynList.forEach(key => {
+        const stored = JSON.parse(localStorage.getItem(`assessment_${key}`) || '{}');
+        if(!stored || Object.keys(stored).length === 0) return;
+        allAgencies[key] = {
+          name: stored.agencyName || key.toUpperCase(),
+          status: stored.status === 'Updated' ? 'In Progress' : 'In Progress',
+          stage: 'Intake & Scoping',
+          progress: '0%'
+        };
+      });
+
+      // overlay base names/status with saved edits where available
+      Object.keys(allAgencies).forEach(key => {
+        const stored = JSON.parse(localStorage.getItem(`assessment_${key}`) || '{}');
+        if(stored.agencyName) allAgencies[key].name = stored.agencyName;
+        if(stored.status === 'Created' || stored.status === 'Updated') {
+          allAgencies[key].stage = 'Intake & Scoping';
+          allAgencies[key].progress = '0%';
+        }
+      });
+
+      return allAgencies;
     }
 
     function renderPortfolio() {
       const tb = document.getElementById('portfolio-body');
       if(!tb) return;
-      tb.innerHTML = Object.entries(AGENCIES).map(([id, a]) => {
-        const pre = getPreAssessStatus(id);
+      const allAgencies = getAllAgencies();
+      tb.innerHTML = Object.entries(allAgencies).map(([id, a]) => {
+        const intake = getIntakeStatus(id);
         const pod = getPod(id);
-        const preBadge = pre==='Returned' ? 'badge-green' : pre==='Sent' ? 'badge-orange' : 'badge-gray';
+        const intakeBadge = intake==='Created' ? 'badge-green' : 'badge-gray';
         return `<tr>
           <td>${a.name}</td>
           <td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td>
-          <td><span class="badge ${preBadge}">${pre}</span></td>
+          <td><span class="badge ${intakeBadge}">${intake}</span></td>
           <td>${pod}</td>
           <td>${a.stage}</td>
           <td>${a.progress}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="openOverview('${id}')">Open Overview</button>
-            <button class="btn btn-outline btn-sm" onclick="openCreateAssessmentModal('${id}')">Create / Update</button>
+            <button class="btn btn-primary btn-sm" onclick="openOverview('${id}')">Open Assessment</button>
+            <button class="btn btn-outline btn-sm" onclick="openCreateAssessmentModal('${id}')">Edit</button>
+            <button class="btn btn-outline btn-sm" onclick="deleteSystem('${id}')">Delete</button>
           </td>
         </tr>`;
       }).join('');
     }
 
+    function deleteSystem(agencyId) {
+      const allAgencies = getAllAgencies();
+      const agencyName = allAgencies[agencyId]?.name || agencyId.toUpperCase();
+      if(!confirm(`Delete system "${agencyName}" from the dashboard demo list?`)) return;
+
+      // Remove saved assessment payload
+      localStorage.removeItem(`assessment_${agencyId}`);
+
+      // Remove from dynamic list
+      const dynList = JSON.parse(localStorage.getItem('dynamic_agencies') || '[]').filter(x => x !== agencyId);
+      localStorage.setItem('dynamic_agencies', JSON.stringify(dynList));
+
+      // Hide base sample agencies if deleted
+      if(AGENCIES[agencyId]) {
+        const hidden = JSON.parse(localStorage.getItem('hidden_base_agencies') || '[]');
+        if(!hidden.includes(agencyId)) {
+          hidden.push(agencyId);
+          localStorage.setItem('hidden_base_agencies', JSON.stringify(hidden));
+        }
+      }
+
+      notify(`🗑️ Deleted ${agencyName} from demo dashboard`);
+      logActivity('Deleted System', agencyName, 'Removed from Agency Selection & Assessment Management');
+      renderPortfolio();
+    }
+
     function openOverview(agencyId) {
+      const saved = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || 'null');
+      if(!saved) {
+        const all = getAllAgencies();
+        const agencyName = all[agencyId]?.name || agencyId.toUpperCase();
+        const seed = {
+          agency: agencyId,
+          abbr: agencyId.toUpperCase(),
+          agencyName,
+          pod: 'LARGE',
+          wave: 'Wave 1 — Q1–Q2 2026',
+          systemName: agencyName + ' Enterprise IT',
+          recipient: 'Demo POC',
+          contactTitle: 'Information Security Officer',
+          email: `${agencyId}@demo.maryland.gov`,
+          phone: '(410) 555-0100',
+          status: 'Created',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(`assessment_${agencyId}`, JSON.stringify(seed));
+      }
+      const current = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
+      logActivity('Opened Assessment', current.agencyName || agencyId.toUpperCase(), 'Navigated to intake and scoping view');
       window.location.href = `index.html?agency=${agencyId}`;
     }
 
