@@ -574,7 +574,7 @@
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact — Name &amp; Title</label>
-            <input type="text" value="Lisa Harmon, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="text" id="sq-contact-name" value="Lisa Harmon, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Email</label>
@@ -582,11 +582,11 @@
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Phone</label>
-            <input type="tel" value="(410) 545-0300" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="tel" id="sq-contact-phone" value="(410) 545-0300" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact — Name &amp; Title</label>
-            <input type="text" placeholder="e.g. John Smith, IT Director" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="text" id="sq-alt-name" placeholder="e.g. John Smith, IT Director" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact Email</label>
@@ -594,7 +594,7 @@
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact Phone</label>
-            <input type="tel" placeholder="e.g. (410) 555-0100" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="tel" id="sq-alt-phone" placeholder="e.g. (410) 555-0100" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
         </div>
       </div>
@@ -654,7 +654,7 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">FIPS 199 Categorization</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <select id="sq-fips" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>HIGH</option>
               <option>MODERATE</option>
               <option>LOW</option>
@@ -662,14 +662,14 @@
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Executive Branch</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <select id="sq-env-execbranch" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>Yes</option>
               <option>No</option>
             </select>
           </div>
           <div style="grid-column:1/-1;">
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">DoIT Enterprise Agency</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <select id="sq-env-doit" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>Yes</option>
               <option>No</option>
             </select>
@@ -694,11 +694,11 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency ID</label>
-            <input type="text" value="MD-MDOT-2026-041" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="text" id="sq-agency-id" value="MD-MDOT-2026-041" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Size</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <select id="sq-agency-size" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>Large (500+ employees)</option>
               <option>Medium (100–499)</option>
               <option>Small (&lt;100)</option>
@@ -706,21 +706,21 @@
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">System Name</label>
-            <input type="text" value="MDOT Enterprise IT Infrastructure" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+            <input type="text" id="sq-system-name" value="MDOT Enterprise IT Infrastructure" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">System Type</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-              <option selected>Enterprise IT (On-Prem + Cloud)</option>
+            <select id="sq-system-type" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <option>Hybrid (On-Prem + Cloud)</option>
               <option>Cloud-Only (SaaS/IaaS)</option>
+              <option>On-Premises Only</option>
               <option>OT/ICS</option>
-              <option>Network Infrastructure</option>
             </select>
           </div>
           <div>
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Data Classification</label>
-            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-              <option selected>High – PII, Financial, CJI</option>
+            <select id="sq-data-class" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <option>High – PII, Financial, CJI</option>
               <option>Moderate – Internal Use</option>
               <option>Low – Public</option>
             </select>
@@ -743,11 +743,11 @@
           </div>
           <div style="grid-column:1/-1;">
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Scope Description</label>
-            <textarea rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">All enterprise IT systems, network infrastructure, cloud environments (AWS GovCloud, Azure Government), OT interfaces at transportation facilities, and third-party integrations. Excludes classified federal systems.</textarea>
+            <textarea id="sq-scope" rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">All enterprise IT systems, network infrastructure, cloud environments (AWS GovCloud, Azure Government), OT interfaces at transportation facilities, and third-party integrations. Excludes classified federal systems.</textarea>
           </div>
           <div style="grid-column:1/-1;">
             <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Known Constraints / Notes</label>
-            <textarea rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">Limited documentation on legacy systems. Potential gaps in asset inventory for field offices. MDOT operates 24/7 — coordinate interview schedules carefully.</textarea>
+            <textarea id="sq-notes" rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">Limited documentation on legacy systems. Potential gaps in asset inventory for field offices. MDOT operates 24/7 — coordinate interview schedules carefully.</textarea>
           </div>
         </div>
       </div>
@@ -813,20 +813,20 @@
         <div style="font-size:.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">📋 Assessment Assignment — Client Predefined</div>
         <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
           <tbody>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Assessment Wave</td><td style="padding:5px 4px;"><input type="text" value="Wave 1 — Q1–Q2 2026" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Pod Assignment</td><td style="padding:5px 4px;"><input type="text" value="POD LARGE" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Lead Assessor</td><td style="padding:5px 4px;"><input type="text" value="J. Williams" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Team Size</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Large (6–8 assessors)</option><option>Standard (4–5 assessors)</option><option>Small (2–3 assessors)</option></select></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed Start</td><td style="padding:5px 4px;"><input type="date" value="2026-04-07" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed End</td><td style="padding:5px 4px;"><input type="date" value="2026-05-19" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Template</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Standard Enterprise IT (High-Risk)</option><option>Standard Enterprise IT</option><option>Cloud-Only</option><option>OT/ICS</option></select></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Executive Branch</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
-            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">DoIT Enterprise</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
-            <tr><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Maturity Group</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0–1.4)</option><option selected>Group B (1.5–2.5)</option><option>Group C (2.6–3.4)</option><option>Group D (3.5–4.4)</option><option>Group E (4.5–5.0)</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Assessment Wave</td><td style="padding:5px 4px;"><select id="sq-wave" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Wave 1 — Q1–Q2 2026</option><option>Wave 2 — Q3–Q4 2026</option><option>Wave 3 — Q1–Q2 2027</option><option>Wave 4 — Q3–Q4 2027</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Pod Assignment</td><td style="padding:5px 4px;"><select id="sq-pod" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>POD XL</option><option selected>POD LARGE</option><option>POD MEDIUM</option><option>POD SMALL</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Lead Assessor</td><td style="padding:5px 4px;"><select id="sq-assessor" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>J. Williams</option><option>S. Patel</option><option>R. Okafor</option><option>T. Adams</option><option>M. Chen</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Team Size</td><td style="padding:5px 4px;"><select id="sq-teamsize" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Large (6–8 assessors)</option><option>Standard (4–5 assessors)</option><option>Small (2–3 assessors)</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed Start</td><td style="padding:5px 4px;"><input id="sq-start" type="date" value="2026-04-07" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed End</td><td style="padding:5px 4px;"><input id="sq-end" type="date" value="2026-05-19" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Template</td><td style="padding:5px 4px;"><select id="sq-template" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Standard Enterprise IT (High-Risk)</option><option>Standard Enterprise IT</option><option>Cloud-Only</option><option>OT/ICS</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Executive Branch</td><td style="padding:5px 4px;"><select id="sq-execbranch" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">DoIT Enterprise</td><td style="padding:5px 4px;"><select id="sq-doit" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
+            <tr><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Maturity Group</td><td style="padding:5px 4px;"><select id="sq-matgroup" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0–1.4)</option><option selected>Group B (1.5–2.5)</option><option>Group C (2.6–3.4)</option><option>Group D (3.5–4.4)</option><option>Group E (4.5–5.0)</option></select></td></tr>
           </tbody>
         </table>
         <div style="margin-top:10px;">
-          <button class="btn btn-primary btn-sm" onclick="notify('✅ Assignment confirmed. Pipeline updated.')">✅ Confirm Assignment</button>
+          <button class="btn btn-primary btn-sm" onclick="confirmAssignmentAndLog()">✅ Confirm Assignment</button>
         </div>
       </div>
 
@@ -834,9 +834,8 @@
       <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #059669; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
         <div style="font-size:.78rem; font-weight:800; color:#059669; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">⚡ Stage Actions</div>
         <div style="display:flex; flex-direction:column; gap:6px;">
-          <button class="btn btn-primary btn-sm" style="justify-content:flex-start;" onclick="notify('📧 Pre-assessment questionnaire sent to l.harmon@mdot.maryland.gov')">📧 Send Pre-Assessment Questionnaire</button>
-          <button class="btn btn-accent btn-sm" style="justify-content:flex-start;" onclick="document.getElementById('kickoff-modal').style.display='flex'">📊 Send Kick-Off Presentation</button>
-          <button class="btn btn-outline btn-sm" style="justify-content:flex-start;" onclick="notify('✅ Assignment confirmed. Pipeline updated.')">✅ Confirm Assignment &amp; Lock Schedule</button>
+          <button class="btn btn-accent btn-sm" style="justify-content:flex-start;" onclick="sendKickoffAndLog()">📊 Send Kick-Off Presentation</button>
+          <button class="btn btn-outline btn-sm" style="justify-content:flex-start;" onclick="confirmAssignmentAndLog(true)">✅ Confirm Assignment &amp; Lock Schedule</button>
         </div>
       </div>
 
@@ -1110,6 +1109,32 @@
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">🧾 Assessor/Admin Activity Log &amp; Schedule Impact</div>
+    <div class="info-box" style="margin-bottom:10px;">Tracks delivery events and schedule slippage/recovery across assessment stages (evidence collection, questionnaire/intake, remediation, reporting).</div>
+
+    <div class="grid-4" style="margin-bottom:12px;">
+      <div class="stat-card"><div class="stat-label">Events Logged</div><div class="stat-value" id="aal-events">0</div><div class="stat-sub">Current assessment</div></div>
+      <div class="stat-card" style="border-left:4px solid #dc2626;"><div class="stat-label">Delay Events</div><div class="stat-value" id="aal-delays" style="color:#dc2626;">0</div><div class="stat-sub">Schedule risk</div></div>
+      <div class="stat-card green"><div class="stat-label">Completion Events</div><div class="stat-value" id="aal-completions">0</div><div class="stat-sub">Progress restored</div></div>
+      <div class="stat-card accent"><div class="stat-label">Net Schedule Impact</div><div class="stat-value" id="aal-slip">0 days</div><div class="stat-sub">Positive = slip</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>User</th><th>Role</th><th>Stage</th><th>Event</th><th>Impact</th><th>Details</th></tr></thead>
+        <tbody id="assessment-activity-body"></tbody>
+      </table>
+    </div>
+
+    <div class="btn-row" style="margin-top:10px;">
+      <button class="btn btn-outline btn-sm" onclick="flagEvidenceDelay('Evidence Package',3,1)">⚠ Log Evidence Delay</button>
+      <button class="btn btn-outline btn-sm" onclick="markEvidenceCompletion('Evidence Package Submitted')">✅ Log Evidence Completion</button>
+      <button class="btn btn-outline btn-sm" onclick="logQuestionnaireDelay(2)">⚠ Log Questionnaire Delay</button>
+      <button class="btn btn-outline btn-sm" onclick="notify('📥 Assessment activity log exported for audit review')">📥 Export Activity Log</button>
     </div>
   </div>
 </div>
@@ -1501,7 +1526,7 @@
             <tr><td>Information Security Policy</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 12 by L. Harmon</td><td><span class="badge badge-gray">Complete</span></td></tr>
             <tr><td>Network Diagram (current)</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 13 by M. Webb</td><td><span class="badge badge-gray">Complete</span></td></tr>
             <tr><td>Patch Management Logs (90 days)</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 14 by T. Nguyen</td><td><span class="badge badge-gray">Complete</span></td></tr>
-            <tr><td>Software Inventory</td><td>Apr 16</td><td><span class="badge badge-red">Overdue</span></td><td>—</td><td><button class="btn btn-accent btn-sm" onclick="notify('📤 Reminder escalated to IT Director M. Webb')">Upload Now</button></td></tr>
+            <tr><td>Software Inventory</td><td>Apr 16</td><td><span class="badge badge-red">Overdue</span></td><td>—</td><td><button class="btn btn-accent btn-sm" onclick="flagEvidenceDelay('Software Inventory',8,2)">Upload Now</button></td></tr>
             <tr><td>Security Awareness Training Records</td><td>Apr 18</td><td><span class="badge badge-orange">Pending</span></td><td>—</td><td><button class="btn btn-outline btn-sm" onclick="notify('📁 Upload panel opened for Training Records')">Upload</button></td></tr>
             <tr><td>Third-Party Vendor Contracts</td><td>Apr 18</td><td><span class="badge badge-orange">Pending</span></td><td>—</td><td><button class="btn btn-outline btn-sm" onclick="notify('📁 Upload panel opened for Vendor Contracts')">Upload</button></td></tr>
           </tbody>
@@ -2099,8 +2124,9 @@ function showSection(id, el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
+  const activeAgencyName = getActiveAgencyName();
   const titles = {
-    sq:'Maryland Dept. of Transportation (MDOT)',
+    sq:'Agency Setup & Intake',
     s2:'ASSESS — CSF Assessment Workbook', s3:'NORMALIZE — Evidence Collection',
     s4:'NORMALIZE — Risk & CMMI Scoring', s5:'CONSOLIDATE — POA&M & Remediation',
     s6:'REPORT — SAR Dashboard',
@@ -2108,8 +2134,8 @@ function showSection(id, el) {
     sw:'Workflow Templates & Configuration', settings:'Settings & Integration',
     sai:'Agency CSF Intake & Evidence Upload'
   };
-  const ctxMap = {sq:'', sa:'MDOT — Agency Representative View', sw:'Assessment Configuration', sp:'Program Management Office (PMO)'};
-  const ctx = ctxMap[id] !== undefined ? ctxMap[id] : 'Maryland Dept. of Transportation (MDOT)';
+  const ctxMap = {sq:activeAgencyName, sa:`${activeAgencyName} — Agency Representative View`, sw:'Assessment Configuration', sp:'Program Management Office (PMO)'};
+  const ctx = ctxMap[id] !== undefined ? ctxMap[id] : activeAgencyName;
   document.getElementById('topbar-title').innerHTML = (titles[id]||id) + `<span>${ctx}</span>`;
   if(id==='s2') setTimeout(initSrtm,100);
   if(id==='s4') setTimeout(initCharts4,100);
@@ -2132,6 +2158,111 @@ function notify(msg) {
   const n = document.getElementById('notif');
   n.textContent = msg; n.style.display='block';
   setTimeout(()=>{ n.style.display='none'; }, 3200);
+}
+
+const ASSESSMENT_ACTIVITY_KEY = 'assessment_activity_log';
+
+function getActiveAgencyId() {
+  const params = new URLSearchParams(window.location.search);
+  return (params.get('agency') || 'mdot').toLowerCase();
+}
+
+function getActiveAgencyName() {
+  const agencyId = getActiveAgencyId();
+  const saved = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || 'null');
+  if(saved && saved.agencyName) return saved.agencyName;
+  if(AGENCY_LABELS[agencyId]) return AGENCY_LABELS[agencyId];
+  return agencyId.toUpperCase();
+}
+
+function logAssessmentActivityEvent(stage, eventType, details, impactDays, user='J. Williams', role='Lead Assessor') {
+  const rows = JSON.parse(localStorage.getItem(ASSESSMENT_ACTIVITY_KEY) || '[]');
+  rows.unshift({
+    ts: new Date().toISOString(),
+    agencyId: getActiveAgencyId(),
+    agencyName: getActiveAgencyName(),
+    user,
+    role,
+    stage,
+    eventType,
+    details,
+    impactDays: Number(impactDays) || 0
+  });
+  localStorage.setItem(ASSESSMENT_ACTIVITY_KEY, JSON.stringify(rows.slice(0, 300)));
+  renderAssessmentActivityLog();
+}
+
+function renderAssessmentActivityLog() {
+  const body = document.getElementById('assessment-activity-body');
+  if(!body) return;
+  const agencyId = getActiveAgencyId();
+  const rows = JSON.parse(localStorage.getItem(ASSESSMENT_ACTIVITY_KEY) || '[]').filter(r => r.agencyId === agencyId);
+
+  if(rows.length === 0) {
+    body.innerHTML = '<tr><td colspan="7" style="color:var(--text-muted);">No assessment activity events logged yet.</td></tr>';
+  } else {
+    body.innerHTML = rows.map(r => {
+      const dt = new Date(r.ts);
+      const stamp = dt.toLocaleString();
+      const impact = (r.impactDays > 0 ? '+' : '') + r.impactDays + ' day' + (Math.abs(r.impactDays) === 1 ? '' : 's');
+      const impactBadge = r.impactDays > 0 ? 'badge-red' : (r.impactDays < 0 ? 'badge-green' : 'badge-gray');
+      return `<tr>
+        <td>${stamp}</td>
+        <td>${r.user}</td>
+        <td>${r.role}</td>
+        <td>${r.stage}</td>
+        <td>${r.eventType}</td>
+        <td><span class="badge ${impactBadge}">${impact}</span></td>
+        <td>${r.details || ''}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const events = rows.length;
+  const delays = rows.filter(r => r.impactDays > 0).length;
+  const completions = rows.filter(r => r.impactDays < 0).length;
+  const slip = rows.reduce((sum, r) => sum + (Number(r.impactDays) || 0), 0);
+
+  const elEvents = document.getElementById('aal-events');
+  const elDelays = document.getElementById('aal-delays');
+  const elCompletions = document.getElementById('aal-completions');
+  const elSlip = document.getElementById('aal-slip');
+  if(elEvents) elEvents.textContent = events;
+  if(elDelays) elDelays.textContent = delays;
+  if(elCompletions) elCompletions.textContent = completions;
+  if(elSlip) elSlip.textContent = (slip > 0 ? '+' : '') + slip + ' days';
+}
+
+function confirmAssignmentAndLog(lockSchedule=false) {
+  notify(lockSchedule ? '✅ Assignment confirmed and schedule locked.' : '✅ Assignment confirmed. Pipeline updated.');
+  logAssessmentActivityEvent(
+    'Intake & Scoping',
+    lockSchedule ? 'Assignment Confirmed & Schedule Locked' : 'Assignment Confirmed',
+    lockSchedule ? 'Assessment assignment approved and schedule lock applied.' : 'Assessment assignment approved and moved to execution.',
+    0,
+    'J. Williams',
+    'Lead Assessor'
+  );
+}
+
+function sendKickoffAndLog() {
+  const modal = document.getElementById('kickoff-modal');
+  if(modal) modal.style.display = 'flex';
+  logAssessmentActivityEvent('Intake & Scoping', 'Kick-Off Sent', 'Kick-off presentation package sent to agency stakeholders.', 0, 'J. Williams', 'Lead Assessor');
+}
+
+function flagEvidenceDelay(item, overdueDays, scheduleImpactDays) {
+  notify(`📤 Reminder escalated for ${item}.`);
+  logAssessmentActivityEvent('Evidence Collection', 'Evidence Delay', `${item} is ${overdueDays} day(s) overdue. Escalation sent.`, scheduleImpactDays, 'S. Patel', 'Assessor');
+}
+
+function markEvidenceCompletion(item) {
+  logAssessmentActivityEvent('Evidence Collection', 'Evidence Completed', `${item} received and accepted.`, -1, 'S. Patel', 'Assessor');
+}
+
+function logQuestionnaireDelay(impactDays=2) {
+  logAssessmentActivityEvent('Questionnaire / Intake', 'Questionnaire Delay', 'Questionnaire/intake responses are incomplete; follow-up required.', impactDays, 'J. Williams', 'Lead Assessor');
+  notify('⚠ Questionnaire delay logged for schedule tracking.');
 }
 
 // ---- DATA ----
@@ -3402,19 +3533,23 @@ function applyAgencyContextFromMain() {
   const params = new URLSearchParams(window.location.search);
   const agency = params.get('agency');
   if(!agency) return;
-
-  const agencyName = AGENCY_LABELS[agency] || agency.toUpperCase();
-  const topbar = document.getElementById('topbar-title');
-  const agencyInput = document.getElementById('sq-agency-name');
-  if(topbar) topbar.innerHTML = `Pre-Assessment Questionnaire<span>${agencyName}</span>`;
-  if(agencyInput) agencyInput.value = agencyName;
-
   const saved = JSON.parse(localStorage.getItem(`assessment_${agency}`) || 'null');
   if(saved) {
     localStorage.setItem('activeAssessment', JSON.stringify(saved));
-    applyPodResult(saved);
+    const agencyName = saved.agencyName || AGENCY_LABELS[agency] || agency.toUpperCase();
+    const topbar = document.getElementById('topbar-title');
+    if(topbar) topbar.innerHTML = `${agencyName}<span></span>`;
+    // Only apply legacy questionnaire pod-scoring UI when score-based data is present.
+    if(saved.score != null && saved.pod) {
+      const legacy = Object.assign({}, saved, { pod: String(saved.pod).toLowerCase() });
+      applyPodResult(legacy);
+    }
   } else {
-    notify(`ℹ️ No pre-assess questionnaire returned yet for ${agencyName}. Create/send from Step 7 Optimize main page.`);
+    const agencyName = AGENCY_LABELS[agency] || agency.toUpperCase();
+    const topbar = document.getElementById('topbar-title');
+    const agencyInput = document.getElementById('sq-agency-name');
+    if(topbar) topbar.innerHTML = `${agencyName}<span></span>`;
+    if(agencyInput) agencyInput.value = agencyName;
   }
 }
 
@@ -3713,6 +3848,7 @@ function simulateUpload() {
           <span class="badge badge-green fi-status">Uploaded</span>
         </div>`).join('');
       notify('✅ '+name+' submitted successfully. Assessor notified.');
+      markEvidenceCompletion(name);
     },1400);
   }
 }
@@ -4014,6 +4150,7 @@ function ctrlUpload(upId, fileName) {
   if(item) { item.classList.add('uploaded'); item.querySelector('.ui-icon').textContent='✅'; }
   if(stat) { stat.textContent='✓ Uploaded'; stat.style.color='#16a34a'; }
   notify(`📎 "${fileName}" uploaded successfully. Routed to assessor S. Patel for review.`);
+  logAssessmentActivityEvent('Evidence Collection', 'Evidence Uploaded', `${fileName} uploaded from agency portal intake.`, -1, 'Lisa Harmon', 'Agency Representative');
   updateSaiScore();
 }
 
@@ -4068,8 +4205,93 @@ function submitSaiIntake() {
   const answered = Object.keys(saiAnswers).length;
   if(answered < total) {
     notify(`⚠️ ${total-answered} controls still unanswered. You may submit now; Assurit will follow up on gaps during on-site assessment.`);
+    logAssessmentActivityEvent('Questionnaire / Intake', 'Questionnaire Delay', `${total-answered} controls unanswered at submission. Follow-up required.`, 2, 'Lisa Harmon', 'Agency Representative');
   }
   notify('📤 CSF Intake submitted to assessor S. Patel. Confirmation: ACG-MDOT-CSF-2026-0042. You will receive an email summary within 24 hours.');
+  logAssessmentActivityEvent('Questionnaire / Intake', 'Questionnaire Submitted', `${answered}/${total} controls submitted to assessor.`, answered < total ? 0 : -1, 'Lisa Harmon', 'Agency Representative');
+}
+
+// ---- POPULATE FROM INTAKE (Create System modal in main-dashboard) ----
+function populateFromIntake() {
+  const params = new URLSearchParams(window.location.search);
+  const agencyId = params.get('agency');
+  if(!agencyId) return;
+  const raw = localStorage.getItem(`assessment_${agencyId}`);
+  if(!raw) return;
+  const d = JSON.parse(raw);
+
+  // Helper: set input/textarea value
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(val === undefined || val === null) return;
+    el.value = val;
+  }
+  // Helper: set select by matching option text (partial match OK)
+  function setSel(id, val) {
+    const el = document.getElementById(id);
+    if(!el || !val) return;
+    for(let i=0; i<el.options.length; i++) {
+      if(el.options[i].value === val || el.options[i].text === val || el.options[i].text.includes(val)) {
+        el.selectedIndex = i; return;
+      }
+    }
+  }
+
+  // Agency Profile
+  setVal('sq-agency-name', d.agencyName || '');
+  const nameTitle = d.recipient ? (d.contactTitle ? d.recipient + ', ' + d.contactTitle : d.recipient) : '';
+  setVal('sq-contact-name', nameTitle);
+  setVal('sq-primary-email', d.email);
+  setVal('sq-contact-phone', d.phone);
+  setVal('sq-alt-name', d.altName || '');
+  setVal('sq-alt-email', d.altEmail || '');
+  setVal('sq-alt-phone', d.altPhone || '');
+
+  // Agency Information & Parameters
+  const abbr = (d.abbr || agencyId).toUpperCase();
+  setVal('sq-agency-id', 'MD-' + abbr + '-2026-041');
+  setSel('sq-agency-size', d.agencySize);
+  setVal('sq-system-name', d.systemName);
+  setSel('sq-system-type', d.systemType);
+  setSel('sq-data-class', d.dataClassification);
+  if(d.scope) setVal('sq-scope', d.scope);
+  if(d.notes) setVal('sq-notes', d.notes);
+
+  // IT Environment section
+  setSel('sq-fips', d.fips);
+  setSel('sq-env-execbranch', d.execBranch);
+  setSel('sq-env-doit', d.doitEnterprise);
+
+  // Assessment Assignment (right column)
+  setSel('sq-wave', d.wave);
+  if(d.pod) setSel('sq-pod', 'POD ' + d.pod.toUpperCase());
+  setSel('sq-assessor', d.leadAssessor);
+  setSel('sq-teamsize', d.teamSize);
+  if(d.startDate) setVal('sq-start', d.startDate);
+  if(d.endDate) setVal('sq-end', d.endDate);
+  setSel('sq-template', d.template);
+  setSel('sq-execbranch', d.execBranch);
+  setSel('sq-doit', d.doitEnterprise);
+  setSel('sq-matgroup', d.maturityGroup);
+
+  // Update topbar with agency name
+  const topbar = document.getElementById('topbar-title');
+  if(topbar && d.agencyName) topbar.innerHTML = 'Agency Setup & Intake<span>' + d.agencyName + '</span>';
+
+  // Update POD header display
+  if(d.pod) {
+    const podHeader = document.querySelector('[style*="font-size:2.2rem"]');
+    if(podHeader) podHeader.textContent = d.pod.toUpperCase();
+  }
+
+  // Update wave display in POD header area
+  if(d.wave) {
+    const waveDiv = document.querySelector('[style*="rgba(255,255,255,.15)"]');
+    if(waveDiv) waveDiv.textContent = d.wave;
+  }
+
+  console.log('[INTAKE] Pre-populated Step 1 from Create System data:', d);
 }
 
 // ---- INIT ----
@@ -4079,6 +4301,8 @@ buildRiskTable();
 buildPoamTable();
 buildAgencyTable();
 applyAgencyContextFromMain();
+populateFromIntake();
+renderAssessmentActivityLog();
 </script>
 </body>
 </html>

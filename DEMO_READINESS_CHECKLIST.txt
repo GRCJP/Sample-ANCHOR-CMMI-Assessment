@@ -1,0 +1,76 @@
+DEMO READINESS CHECKLIST
+========================
+
+Purpose
+-------
+This checklist explains what is now built into the demo and how to run the live walkthrough.
+
+What is implemented in the build
+--------------------------------
+1) Agency Selection & Assessment Management dashboard
+   - Base sample cohort reduced to 3 systems (MDOT, MDH, MSDE)
+   - Create New System supported from free-text intake modal
+   - Existing systems support Edit, Delete, and Open Assessment actions
+
+2) Open-assessment context protection
+   - If a selected agency has no saved assessment payload yet, a seed payload is created automatically
+   - This prevents fallback behavior that previously showed MDOT data
+
+3) Demo notifications and controls
+   - Toast notifications for create/update/delete/open actions
+   - Alert Settings panel with saved toggles:
+     * overdue milestone notifications
+     * assignment notifications
+     * evidence upload notifications
+     * critical finding notifications
+
+4) Logging activities
+   - Activity Log panel records key operations:
+     * created system
+     * updated system
+     * deleted system
+     * opened assessment
+     * alert settings changes
+     * demo readiness check runs
+
+5) Demo Readiness panel
+   - Includes a Run Readiness Check button
+   - Evaluates pass/fail for:
+     * 3-system base cohort
+     * create-modal key fields
+     * open/edit/delete dashboard actions
+     * activity-log and alert controls
+     * open-assessment context seeding logic
+
+Live demo runbook (recommended)
+-------------------------------
+A. Start state
+   1. Open main-dashboard.html
+   2. Confirm Demo Readiness panel shows checks passed (or click Run Readiness Check)
+
+B. Show management controls
+   1. In Agency Selection table, show Open Assessment / Edit / Delete buttons
+   2. Open Alert Settings and save changes
+   3. Show a new row in Activity Log confirming the change
+
+C. Create a new system (critical path)
+   1. Click Create New System Assessment
+   2. Enter Agency Name + Abbreviation + POC + environment inputs
+   3. Submit and allow auto-navigation to index.html?agency=<abbr>
+   4. Verify Step 1 fields are pre-populated for the new system
+
+D. Workflow progression
+   1. Move through assessment stages (intake, execution, findings, remediation, reporting)
+   2. Show risk prioritization and remediation assignments
+
+E. Return and edit/delete
+   1. Return to main dashboard
+   2. Edit the created system and save
+   3. Open again to confirm updated values flow through
+   4. Delete the created system and verify table update + log entry
+
+Presenter notes
+---------------
+- This is a live functional demo in a controlled environment.
+- Notification and role/governance behaviors are demonstrated in-app.
+- Activity and readiness evidence are visible directly from the dashboard.
