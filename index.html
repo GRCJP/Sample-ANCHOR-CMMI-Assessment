@@ -286,14 +286,28 @@
   .q-item label { font-size: .82rem; font-weight: 600; display: block; margin-bottom: 5px; }
   .q-item .q-sub { font-size: .75rem; color: var(--text-muted); margin-bottom: 5px; }
   .q-item input, .q-item select, .q-item textarea { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 8px 11px; font-size: .84rem; font-family: inherit; }
-  .q-item .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-  .q-item .radio-opt { display: flex; align-items: center; gap: 5px; font-size: .82rem; cursor: pointer; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; background: #fff; transition: all .15s; }
-  .q-item .radio-opt:hover { border-color: var(--primary-light); background: #dbeafe20; }
-  .q-item .radio-opt.selected { border-color: var(--primary-light); background: #dbeafe40; font-weight: 600; }
+  .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .radio-opt { display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; cursor: pointer; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; background: #fff; transition: all .15s; user-select: none; }
+  .radio-opt:hover { border-color: var(--primary-light); background: #dbeafe20; }
+  .radio-opt.selected { border-color: var(--primary-light); background: #dbeafe40; font-weight: 600; }
+  .q-item .radio-group { margin-top: 4px; }
+  .q-item .radio-opt { font-size: .82rem; }
   .score-preview { background: var(--primary); color: #fff; border-radius: 8px; padding: 16px 20px; }
   .score-preview .sp-label { font-size: .72rem; opacity: .75; text-transform: uppercase; letter-spacing: .5px; }
   .score-preview .sp-val { font-size: 2rem; font-weight: 800; }
   .score-preview .sp-desc { font-size: .78rem; opacity: .8; margin-top: 2px; }
+
+  /* PRE-ASSESS HORIZONTAL STEPPER */
+  .h-stepper { display:flex; align-items:flex-start; gap:0; margin:14px 0 4px; }
+  .h-step { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+  .h-step:not(:last-child)::after { content:''; position:absolute; top:14px; left:50%; width:100%; height:2px; background:var(--border); z-index:0; }
+  .h-step.done:not(:last-child)::after { background:#2563eb; }
+  .h-step-circle { width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; color:var(--text-muted); position:relative; z-index:1; }
+  .h-step.done .h-step-circle { background:#2563eb; border-color:#2563eb; color:#fff; }
+  .h-step.active .h-step-circle { background:#fff; border-color:#2563eb; color:#2563eb; box-shadow:0 0 0 3px #dbeafe; }
+  .h-step-label { font-size:.65rem; font-weight:600; text-align:center; margin-top:6px; color:var(--text-muted); max-width:80px; line-height:1.3; }
+  .h-step.done .h-step-label { color:#2563eb; }
+  .h-step.active .h-step-label { color:#1e40af; font-weight:700; }
 
   /* FINDING RESPONSE CARD */
   .finding-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
@@ -493,8 +507,7 @@
 <div id="main">
 <div class="topbar">
   <div class="topbar-title" id="topbar-title">
-    Pre-Assessment Questionnaire
-    <span>Maryland Dept. of Transportation (MDOT)</span>
+    Maryland Dept. of Transportation (MDOT)
   </div>
   <div class="topbar-right">
     <span class="badge badge-blue">🔒 NIST CSF 2.0</span>
@@ -514,65 +527,113 @@
     <p>Capture agency profile, IT environment, and security posture to configure the assessment. Pod assignment and wave scheduling are predefined by the client — this step sets up the tool for the full assessment process.</p>
   </div>
 
-  <div style="display:flex; gap:12px; align-items:stretch; margin-bottom:18px;">
-    <div class="anchor-banner" style="flex:1; margin-bottom:0;">
-      <div>🔗</div>
-      <div><strong>ANCHOR Framework — ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
-    </div>
-    <div style="background:linear-gradient(135deg,#1a3a5c,#2563eb); color:#fff; border-radius:10px; padding:14px 22px; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:200px; text-align:center; box-shadow:0 2px 8px rgba(37,99,235,.3);">
-      <div style="font-size:.65rem; text-transform:uppercase; letter-spacing:.08em; opacity:.8; margin-bottom:4px;">Assigned Pod</div>
-      <div style="font-size:1.5rem; font-weight:700; letter-spacing:.02em;">Pod Alpha</div>
-      <div style="font-size:.8rem; opacity:.85; margin-top:3px;">Large &nbsp;·&nbsp; 6–8 Assessors &nbsp;·&nbsp; 63 Days</div>
-      <div style="margin-top:8px; background:rgba(255,255,255,.15); border-radius:5px; padding:3px 10px; font-size:.7rem;">Wave 1 — Q1–Q2 2026</div>
+  <div class="anchor-banner" style="margin-bottom:10px;">
+    <div>🔗</div>
+    <div><strong>ANCHOR Framework — PRE-ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
+  </div>
+
+  <!-- ===== PRE-ASSESS PROGRESS BANNER ===== -->
+  <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px 20px 12px; margin-bottom:14px;">
+    <div style="font-size:.62rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Pre-Assessment Stage Progress</div>
+    <div class="h-stepper" style="margin:0;">
+      <div class="h-step done">
+        <div class="h-step-circle">✓</div>
+        <div class="h-step-label">Setup Tool &amp; Profile</div>
+      </div>
+      <div class="h-step active">
+        <div class="h-step-circle">2</div>
+        <div class="h-step-label">Confirm Assignment &amp; Schedule</div>
+      </div>
+      <div class="h-step">
+        <div class="h-step-circle">3</div>
+        <div class="h-step-label">Send Questionnaire</div>
+      </div>
+      <div class="h-step">
+        <div class="h-step-circle">4</div>
+        <div class="h-step-label">Receive Agency Responses</div>
+      </div>
+      <div class="h-step">
+        <div class="h-step-circle">5</div>
+        <div class="h-step-label">Issue Kick-Off Package</div>
+      </div>
     </div>
   </div>
 
-  <div class="grid-2">
-    <div>
-      <div class="q-section">
-        <div class="q-section-title">🏛 Agency Profile</div>
-        <div class="q-item">
-          <label>Agency Name</label>
-          <input type="text" id="sq-agency-name" value="Maryland Department of Transportation (MDOT)">
-        </div>
-        <div class="q-item">
-          <label>Primary IT/Security Contact — Name &amp; Title</label>
-          <input type="text" value="Lisa Harmon, CISO">
-        </div>
-        <div class="q-item">
-          <label>Primary Contact Email</label>
-          <input type="email" value="l.harmon@mdot.maryland.gov">
-        </div>
-        <div class="q-item">
-          <label>Primary Contact Phone</label>
-          <input type="tel" value="(410) 545-0300">
-        </div>
-        <div class="q-item">
-          <label>Alternative Contact — Name &amp; Title</label>
-          <input type="text" placeholder="e.g. John Smith, IT Director">
-        </div>
-        <div class="q-item">
-          <label>Alternative Contact Email</label>
-          <input type="email" placeholder="e.g. j.smith@agency.maryland.gov">
-        </div>
-        <div class="q-item">
-          <label>Alternative Contact Phone</label>
-          <input type="tel" placeholder="e.g. (410) 555-0100">
+  <div style="display:grid; grid-template-columns:1fr 380px; gap:16px; align-items:start;">
+
+    <!-- ===== LEFT COLUMN — all input forms ===== -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+
+      <!-- Agency Profile -->
+      <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #2563eb; border-radius:8px; padding:14px 16px;">
+        <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">🏛 Agency Profile</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="grid-column:1/-1;">
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Name</label>
+            <input type="text" id="sq-agency-name" value="Maryland Department of Transportation (MDOT)" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact — Name &amp; Title</label>
+            <input type="text" value="Lisa Harmon, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Email</label>
+            <input type="email" id="sq-primary-email" value="l.harmon@mdot.maryland.gov" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Phone</label>
+            <input type="tel" value="(410) 545-0300" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact — Name &amp; Title</label>
+            <input type="text" placeholder="e.g. John Smith, IT Director" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact Email</label>
+            <input type="email" id="sq-alt-email" placeholder="e.g. j.smith@agency.maryland.gov" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Alternative Contact Phone</label>
+            <input type="tel" placeholder="e.g. (410) 555-0100" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+          </div>
         </div>
       </div>
 
-      <div class="q-section">
-        <div class="q-section-title">☁️ IT Environment</div>
-        <div class="q-item">
-          <label>IT Complexity Tier</label>
-          <div class="radio-group">
-            <div class="radio-opt" onclick="selectOpt(this)">Simple (single on-prem)</div>
-            <div class="radio-opt" onclick="selectOpt(this)">Moderate (hybrid)</div>
-            <div class="radio-opt selected" onclick="selectOpt(this)">✅ Complex (multi-site + cloud)</div>
+      <!-- IT Environment -->
+      <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #0891b2; border-radius:8px; padding:14px 16px;">
+        <div style="font-size:.78rem; font-weight:800; color:#0891b2; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">☁️ IT Environment</div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Agency FTE Count</label>
+          <div class="radio-group" id="rg-fte">
+            <div class="radio-opt" onclick="scopeSelect(this,'fte',1)">1–250 FTEs</div>
+            <div class="radio-opt" onclick="scopeSelect(this,'fte',2)">251–1,000 FTEs</div>
+            <div class="radio-opt selected" onclick="scopeSelect(this,'fte',3)">✅ 1,001–5,000 FTEs</div>
+            <div class="radio-opt" onclick="scopeSelect(this,'fte',4)">5,000+ FTEs</div>
           </div>
         </div>
-        <div class="q-item">
-          <label>Cloud environments in use (select all that apply)</label>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">IT Complexity Tier</label>
+          <div class="radio-group" id="rg-itc">
+            <div class="radio-opt" onclick="scopeSelect(this,'itc',-1)">DoIT Managed</div>
+            <div class="radio-opt" onclick="scopeSelect(this,'itc',1)">Low</div>
+            <div class="radio-opt" onclick="scopeSelect(this,'itc',2)">Moderate</div>
+            <div class="radio-opt selected" onclick="scopeSelect(this,'itc',3)">✅ High</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Data Sensitivity</label>
+          <div class="radio-group" id="rg-data">
+            <div class="radio-opt" onclick="scopeSelect(this,'data',1)">Standard</div>
+            <div class="radio-opt" onclick="scopeSelect(this,'data',2)">Elevated — PII/PHI</div>
+            <div class="radio-opt selected" onclick="scopeSelect(this,'data',3)">✅ High — FTI/CJIS/HIPAA</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Cloud Environments (select all that apply)</label>
           <div class="radio-group">
             <div class="radio-opt selected" onclick="selectOpt(this)">✅ AWS GovCloud</div>
             <div class="radio-opt selected" onclick="selectOpt(this)">✅ Azure Government</div>
@@ -580,227 +641,325 @@
             <div class="radio-opt" onclick="selectOpt(this)">None</div>
           </div>
         </div>
-        <div class="q-item">
-          <label>Does the agency operate OT/ICS systems?</label>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">OT/ICS Systems</label>
           <div class="radio-group">
             <div class="radio-opt selected" onclick="selectOpt(this)">✅ Yes — limited interfaces</div>
             <div class="radio-opt" onclick="selectOpt(this)">Yes — full OT environment</div>
             <div class="radio-opt" onclick="selectOpt(this)">No</div>
           </div>
         </div>
-        <div class="q-item">
-          <label>Does the agency handle sensitive data? (select all)</label>
-          <div class="radio-group">
-            <div class="radio-opt selected" onclick="selectOpt(this)">✅ PII</div>
-            <div class="radio-opt selected" onclick="selectOpt(this)">✅ Financial</div>
-            <div class="radio-opt" onclick="selectOpt(this)">CJI</div>
-            <div class="radio-opt" onclick="selectOpt(this)">PHI/HIPAA</div>
-            <div class="radio-opt" onclick="selectOpt(this)">FTI (IRS Pub 1075)</div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">FIPS 199 Categorization</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <option selected>HIGH</option>
+              <option>MODERATE</option>
+              <option>LOW</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Executive Branch</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <option selected>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div style="grid-column:1/-1;">
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">DoIT Enterprise Agency</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <option selected>Yes</option>
+              <option>No</option>
+            </select>
           </div>
         </div>
-      </div>
 
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="notify('✅ Agency profile saved.')">💾 Save Agency Profile</button>
-      </div>
-    </div>
-
-    <div>
-      <div class="card">
-        <div class="card-title">📋 Assessment Assignment — Client Predefined</div>
-        <div class="info-box" style="margin-bottom:14px;">Pod size, wave placement, and assessor assignment are defined by the client prior to tool setup. Update the values below to match the confirmed engagement parameters.</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
-            <tbody>
-              <tr><td>Assessment Wave</td><td><input type="text" value="Wave 1 — Q1–Q2 2026" style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem; width:100%;"></td></tr>
-              <tr><td>Pod Assignment</td><td><input type="text" value="Pod Alpha — Large" style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem; width:100%;"></td></tr>
-              <tr><td>Lead Assessor</td><td><input type="text" value="J. Williams" style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem; width:100%;"></td></tr>
-              <tr><td>Team Size</td><td><select style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"><option>Large (6–8 assessors)</option><option selected>Standard (4–5 assessors)</option><option>Small (2–3 assessors)</option></select></td></tr>
-              <tr><td>Confirmed Start</td><td><input type="date" value="2026-04-07" style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"></td></tr>
-              <tr><td>Confirmed End</td><td><input type="date" value="2026-05-19" style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"></td></tr>
-              <tr><td>Assessment Template</td><td><select style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"><option selected>Standard Enterprise IT (High-Risk)</option><option>Standard Enterprise IT</option><option>Cloud-Only</option><option>OT/ICS</option></select></td></tr>
-              <tr><td>Executive Branch</td><td><select style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"><option selected>Yes</option><option>No</option></select></td></tr>
-              <tr><td>DoIT Enterprise</td><td><select style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"><option selected>Yes</option><option>No</option></select></td></tr>
-              <tr><td>Maturity Group</td><td><select style="border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-size:.8rem;"><option>Group A (0.0–1.4)</option><option selected>Group B (1.5–2.5)</option><option>Group C (2.6–3.4)</option><option>Group D (3.5–4.4)</option><option>Group E (4.5–5.0)</option></select></td></tr>
-            </tbody>
-          </table>
+        <div style="margin-top:12px;">
+          <button class="btn btn-primary btn-sm" onclick="notify('✅ IT Environment saved.')">💾 Save IT Environment</button>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-primary btn-sm" onclick="notify('✅ Assignment confirmed. Pipeline updated.')">✅ Confirm Assignment</button>
-        </div>
+
+        <!-- Hidden scoring elements — backend algo only -->
+        <span id="scope-pts-fte" style="display:none;">3</span>
+        <span id="scope-pts-itc" style="display:none;">3</span>
+        <span id="scope-pts-data" style="display:none;">3</span>
+        <span id="scope-total" style="display:none;">9</span>
+        <span id="scope-category-badge" style="display:none;">LARGE</span>
       </div>
 
-    </div>
-  </div>
-
-  <!-- Agency Information & Scope -->
-  <div class="grid-2" style="margin-top:20px;">
-    <div>
-      <div class="card">
-        <div class="card-title"><span class="icon">🏛</span> Agency Information &amp; Assessment Parameters</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Agency Name</label>
-            <input type="text" value="Maryland Department of Transportation (MDOT)">
+      <!-- Agency Information & Parameters -->
+      <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #7c3aed; border-radius:8px; padding:14px 16px;">
+        <div style="font-size:.78rem; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">📋 Agency Information &amp; Assessment Parameters</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency ID</label>
+            <input type="text" value="MD-MDOT-2026-041" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
-          <div class="form-group">
-            <label>Agency ID</label>
-            <input type="text" value="MD-MDOT-2026-041">
-          </div>
-          <div class="form-group">
-            <label>Primary Contact</label>
-            <input type="text" value="Lisa Harmon, CISO">
-          </div>
-          <div class="form-group">
-            <label>Contact Email</label>
-            <input type="text" value="l.harmon@mdot.maryland.gov">
-          </div>
-          <div class="form-group">
-            <label>Phone</label>
-            <input type="text" value="(410) 545-0300">
-          </div>
-          <div class="form-group">
-            <label>Agency Size</label>
-            <select>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Size</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>Large (500+ employees)</option>
               <option>Medium (100–499)</option>
               <option>Small (&lt;100)</option>
             </select>
           </div>
-          <div class="form-section-title">System / Environment Details</div>
-          <div class="form-group">
-            <label>System Name</label>
-            <input type="text" value="MDOT Enterprise IT Infrastructure">
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">System Name</label>
+            <input type="text" value="MDOT Enterprise IT Infrastructure" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
           </div>
-          <div class="form-group">
-            <label>System Type</label>
-            <select>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">System Type</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>Enterprise IT (On-Prem + Cloud)</option>
               <option>Cloud-Only (SaaS/IaaS)</option>
               <option>OT/ICS</option>
               <option>Network Infrastructure</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Data Classification</label>
-            <select>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Data Classification</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>High – PII, Financial, CJI</option>
               <option>Moderate – Internal Use</option>
               <option>Low – Public</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>FIPS 199 Categorization</label>
-            <select>
-              <option selected>HIGH</option>
-              <option>MODERATE</option>
-              <option>LOW</option>
-            </select>
-          </div>
-          <div class="form-section-title">Assessment Parameters</div>
-          <div class="form-group">
-            <label>Assessment Framework</label>
-            <select>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Assessment Framework</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>NIST CSF 2.0 + NIST SP 800-53 Rev 5</option>
               <option>NIST CSF 1.1</option>
               <option>CIS Controls v8</option>
               <option>ISO 27001</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Maturity Model</label>
-            <select>
+          <div>
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Maturity Model</label>
+            <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
               <option selected>CMMI (0–5 Scale)</option>
               <option>Tier-Based (1–4)</option>
             </select>
           </div>
-          <div class="form-group full">
-            <label>Scope Description</label>
-            <textarea rows="3">All enterprise IT systems, network infrastructure, cloud environments (AWS GovCloud, Azure Government), OT interfaces at transportation facilities, and third-party integrations. Excludes classified federal systems.</textarea>
+          <div style="grid-column:1/-1;">
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Scope Description</label>
+            <textarea rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">All enterprise IT systems, network infrastructure, cloud environments (AWS GovCloud, Azure Government), OT interfaces at transportation facilities, and third-party integrations. Excludes classified federal systems.</textarea>
           </div>
-          <div class="form-group full">
-            <label>Known Constraints / Notes</label>
-            <textarea rows="2">Limited documentation on legacy systems. Potential gaps in asset inventory for field offices. MDOT operates 24/7 — coordinate interview schedules carefully.</textarea>
+          <div style="grid-column:1/-1;">
+            <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Known Constraints / Notes</label>
+            <textarea rows="2" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit; resize:vertical;">Limited documentation on legacy systems. Potential gaps in asset inventory for field offices. MDOT operates 24/7 — coordinate interview schedules carefully.</textarea>
           </div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="notify('✅ Intake record saved. Assessment ID MD-MDOT-2026-041 created.')">💾 Save Intake Record</button>
-        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:8px; flex-wrap:wrap; padding:4px 0 8px;">
+        <button class="btn btn-primary" onclick="notify('✅ Agency profile saved. Assessment ID MD-MDOT-2026-041 created.')">💾 Save Profile &amp; Intake</button>
       </div>
     </div>
 
-    <div>
-      <div class="card">
-        <div class="card-title"><span class="icon">🗓</span> Assessment Timeline</div>
-        <div class="timeline">
-          <div class="tl-item done">
-            <div class="tl-date">Apr 7, 2026</div>
-            <div class="tl-text">Assessment Kick-off</div>
-            <div class="tl-sub">Introductory meeting, scope confirmation, document request list issued</div>
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+
+      <!-- POD + Scope Summary — primary tile -->
+      <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,.07);">
+        <!-- POD header -->
+        <div style="background:linear-gradient(135deg,#7c2d12,#c2410c); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <div style="font-size:.6rem; text-transform:uppercase; letter-spacing:.1em; opacity:.7; margin-bottom:4px;">Assessment Scope Category</div>
+            <div style="display:flex; align-items:baseline; gap:10px;">
+              <div style="font-size:2.2rem; font-weight:900; letter-spacing:.02em; line-height:1;">LARGE</div>
+            </div>
+            <div style="font-size:.72rem; opacity:.8; margin-top:3px;">6–8 Assessors &nbsp;·&nbsp; 63 Days</div>
           </div>
-          <div class="tl-item done">
-            <div class="tl-date">Apr 7–14, 2026</div>
-            <div class="tl-text">Document Collection &amp; Review</div>
-            <div class="tl-sub">Policies, procedures, prior assessments, network diagrams, asset inventories</div>
+          <div style="text-align:right;">
+            <div style="background:rgba(255,255,255,.15); border-radius:6px; padding:5px 12px; font-size:.72rem; font-weight:600; margin-bottom:6px;">Wave 1 — Q1–Q2 2026</div>
+            <div style="font-size:.68rem; opacity:.7;">Apr 7 – May 19, 2026</div>
           </div>
-          <div class="tl-item">
-            <div class="tl-date">Apr 14–25, 2026</div>
-            <div class="tl-text">Stakeholder Interviews</div>
-            <div class="tl-sub">IT leadership, security team, system owners, help desk, HR</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-date">Apr 21–28, 2026</div>
-            <div class="tl-text">Technical Testing &amp; Tool Scans</div>
-            <div class="tl-sub">Nessus vulnerability scan, network mapping, log review</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-date">Apr 28 – May 5, 2026</div>
-            <div class="tl-text">Analysis &amp; Risk Scoring</div>
-            <div class="tl-sub">CMMI maturity scoring, gap analysis, risk register population</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-date">May 5–12, 2026</div>
-            <div class="tl-text">Findings Review &amp; POA&amp;M</div>
-            <div class="tl-sub">Agency review of draft findings, remediation prioritization</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-date">May 19, 2026</div>
-            <div class="tl-text">Final SAR Delivery</div>
-            <div class="tl-sub">System Assessment Report delivered; briefed to MDOT leadership &amp; DoIT</div>
+        </div>
+        <!-- Scope summary body -->
+        <div style="padding:14px 16px;">
+          <div style="font-size:.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:8px;">Scope Summary</div>
+          <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Agency FTE Tier</td><td style="padding:5px 4px;"><span class="badge badge-blue">3 pts</span></td><td style="padding:5px 4px;">1,001–5,000 FTEs</td></tr>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">IT Complexity</td><td style="padding:5px 4px;"><span class="badge badge-orange">3 pts</span></td><td style="padding:5px 4px;">High — hybrid cloud, OT/ICS</td></tr>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Data Sensitivity</td><td style="padding:5px 4px;"><span class="badge badge-red">3 pts</span></td><td style="padding:5px 4px;">High — FTI, CJIS, HIPAA</td></tr>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Cloud Environments</td><td style="padding:5px 4px;"><span class="badge badge-green">In Scope</span></td><td style="padding:5px 4px;">AWS GovCloud, Azure Gov</td></tr>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">OT/ICS</td><td style="padding:5px 4px;"><span class="badge badge-orange">Partial</span></td><td style="padding:5px 4px;">Yes — limited interfaces</td></tr>
+              <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">FIPS 199</td><td style="padding:5px 4px;"><span class="badge badge-red">HIGH</span></td><td style="padding:5px 4px;">High impact categorization</td></tr>
+              <tr><td style="padding:5px 4px; color:var(--text-muted);">Assessment Scope</td><td style="padding:5px 4px;"><span id="ss-scope-pts" style="background:#c2410c; color:#fff; border-radius:4px; padding:2px 7px; font-size:.7rem; font-weight:700;">9 pts</span></td><td style="padding:5px 4px; font-weight:700;"><span id="ss-scope-cat" style="color:#c2410c;">LARGE</span></td></tr>
+            </tbody>
+          </table>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:10px;">
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:7px; padding:8px; text-align:center;">
+              <div style="font-size:.65rem; color:#b91c1c; font-weight:600; text-transform:uppercase;">FIPS Level</div>
+              <div style="font-size:1.1rem; font-weight:800; color:#dc2626;">HIGH</div>
+            </div>
+            <div id="ss-scope-header" style="background:#fff7ed; border:1px solid #fed7aa; border-radius:7px; padding:8px; text-align:center; background:#c2410c;">
+              <div style="font-size:.65rem; color:#fff; font-weight:600; text-transform:uppercase; opacity:.85;">Scope Category</div>
+              <div id="ss-scope-cat-card" style="font-size:1.1rem; font-weight:800; color:#fff;">LARGE</div>
+            </div>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; padding:8px; text-align:center;">
+              <div style="font-size:.65rem; color:#166534; font-weight:600; text-transform:uppercase;">Score</div>
+              <div style="font-size:1.1rem; font-weight:800; color:#16a34a;">9 pts</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title"><span class="icon">📋</span> Scope Summary</div>
-        <table>
-          <thead><tr><th>Area</th><th>Status</th><th>Notes</th></tr></thead>
+      <!-- Assessment Assignment -->
+      <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
+        <div style="font-size:.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">📋 Assessment Assignment — Client Predefined</div>
+        <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
           <tbody>
-            <tr><td>IT Complexity</td><td><span class="badge badge-green">Confirmed</span></td><td>Complex (multi-site + cloud)</td></tr>
-            <tr><td>Cloud Environments</td><td><span class="badge badge-green">In Scope</span></td><td>AWS GovCloud, Azure Government</td></tr>
-            <tr><td>OT/ICS Systems</td><td><span class="badge badge-orange">Partial</span></td><td>Yes — limited interfaces</td></tr>
-            <tr><td>Sensitive Data Types</td><td><span class="badge badge-green">Confirmed</span></td><td>PII, Financial</td></tr>
-            <tr><td>Data Classification</td><td><span class="badge badge-red">High</span></td><td>FIPS 199 HIGH</td></tr>
-            <tr><td>Assessment Framework</td><td><span class="badge badge-blue">Selected</span></td><td>NIST CSF 2.0 + SP 800-53 Rev 5</td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Assessment Wave</td><td style="padding:5px 4px;"><input type="text" value="Wave 1 — Q1–Q2 2026" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Pod Assignment</td><td style="padding:5px 4px;"><input type="text" value="POD LARGE" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Lead Assessor</td><td style="padding:5px 4px;"><input type="text" value="J. Williams" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Team Size</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Large (6–8 assessors)</option><option>Standard (4–5 assessors)</option><option>Small (2–3 assessors)</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed Start</td><td style="padding:5px 4px;"><input type="date" value="2026-04-07" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed End</td><td style="padding:5px 4px;"><input type="date" value="2026-05-19" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Template</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Standard Enterprise IT (High-Risk)</option><option>Standard Enterprise IT</option><option>Cloud-Only</option><option>OT/ICS</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Executive Branch</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
+            <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">DoIT Enterprise</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
+            <tr><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Maturity Group</td><td style="padding:5px 4px;"><select style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0–1.4)</option><option selected>Group B (1.5–2.5)</option><option>Group C (2.6–3.4)</option><option>Group D (3.5–4.4)</option><option>Group E (4.5–5.0)</option></select></td></tr>
           </tbody>
         </table>
-        <hr class="divider">
-        <div class="grid-3" style="gap:12px; margin-top:4px;">
-          <div class="stat-card accent">
-            <div class="stat-label">FIPS Risk Level</div>
-            <div class="stat-value" style="font-size:1.3rem">HIGH</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Pod Size</div>
-            <div class="stat-value" style="font-size:1.1rem">Large</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Assessment Days</div>
-            <div class="stat-value">63</div>
-          </div>
+        <div style="margin-top:10px;">
+          <button class="btn btn-primary btn-sm" onclick="notify('✅ Assignment confirmed. Pipeline updated.')">✅ Confirm Assignment</button>
         </div>
       </div>
+
+      <!-- Stage Actions -->
+      <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #059669; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
+        <div style="font-size:.78rem; font-weight:800; color:#059669; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">⚡ Stage Actions</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <button class="btn btn-primary btn-sm" style="justify-content:flex-start;" onclick="notify('📧 Pre-assessment questionnaire sent to l.harmon@mdot.maryland.gov')">📧 Send Pre-Assessment Questionnaire</button>
+          <button class="btn btn-accent btn-sm" style="justify-content:flex-start;" onclick="document.getElementById('kickoff-modal').style.display='flex'">📊 Send Kick-Off Presentation</button>
+          <button class="btn btn-outline btn-sm" style="justify-content:flex-start;" onclick="notify('✅ Assignment confirmed. Pipeline updated.')">✅ Confirm Assignment &amp; Lock Schedule</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== KICK-OFF METHODOLOGY MODAL ===== -->
+<div id="kickoff-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9000; align-items:center; justify-content:center; padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff; border-radius:12px; width:100%; max-width:780px; max-height:88vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <!-- Modal header -->
+    <div style="background:linear-gradient(135deg,#1a3a5c,#2563eb); color:#fff; padding:18px 24px; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; opacity:.75; margin-bottom:3px;">Pre-Assessment Kick-Off Package</div>
+        <div style="font-size:1.1rem; font-weight:700;">CMMI Cybersecurity Assessment — Methodology Overview</div>
+        <div style="font-size:.75rem; opacity:.8; margin-top:2px;">Maryland Dept. of Transportation (MDOT) &nbsp;·&nbsp; 8-Slide Overview</div>
+      </div>
+      <button onclick="document.getElementById('kickoff-modal').style.display='none'" style="background:rgba(255,255,255,.15); border:none; color:#fff; border-radius:6px; padding:6px 12px; cursor:pointer; font-size:.85rem;">✕ Close</button>
+    </div>
+    <!-- Slides -->
+    <div style="padding:20px 24px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #2563eb;">
+        <div style="font-size:.62rem; color:#2563eb; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 1 — Welcome</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">Engagement Overview &amp; Who We Are</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>Assurit Consulting Group — RFP BPM052516 awardee</li>
+          <li>Maryland DoIT statewide cybersecurity assessment program</li>
+          <li>ANCHOR Framework: structured delivery across ~90 agencies</li>
+          <li>Your engagement: MDOT Enterprise IT &amp; OT infrastructure</li>
+          <li>Key Assurit contacts, pod composition, lead assessor</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #7c3aed;">
+        <div style="font-size:.62rem; color:#7c3aed; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 2 — The Mandate</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">Why This Assessment &amp; Why CMMI</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>Maryland DoIT directive: standardized maturity across all state agencies</li>
+          <li>Federal alignment: FISMA, NIST SP 800-53 Rev 5, OMB M-22-09</li>
+          <li>CMMI 0–5 scale provides objective, repeatable scoring across agencies</li>
+          <li>Findings directly inform POA&amp;M prioritization and budget planning</li>
+          <li>Results reported to DoIT and agency leadership — executive-ready</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #0891b2;">
+        <div style="font-size:.62rem; color:#0891b2; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 3 — Framework</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">NIST CSF 2.0 — What We Assess</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>6 Functions: GOVERN · IDENTIFY · PROTECT · DETECT · RESPOND · RECOVER</li>
+          <li>Each function maps to NIST SP 800-53 Rev 5 controls</li>
+          <li>Controls assessed via EXAMINE, INTERVIEW, and TEST methods</li>
+          <li>MDOT scope: enterprise IT, cloud (AWS/Azure), OT interfaces, 3rd-party vendors</li>
+          <li>Assets identified, prioritized by criticality and data classification</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #059669;">
+        <div style="font-size:.62rem; color:#059669; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 4 — Process</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">End-to-End Assessment Lifecycle</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li><strong>PRE-ASSESS:</strong> Intake, scoping, questionnaire, schedule confirmation</li>
+          <li><strong>ASSESS:</strong> CSF workbook, stakeholder interviews, technical testing</li>
+          <li><strong>NORMALIZE:</strong> Evidence review, data reconciliation, CMMI scoring</li>
+          <li><strong>CONSOLIDATE:</strong> Gap analysis, risk register, finding validation</li>
+          <li><strong>REPORT:</strong> SAR delivery, POA&amp;M, executive briefing to MDOT &amp; DoIT</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #d97706;">
+        <div style="font-size:.62rem; color:#d97706; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 5 — Your Role</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">Pre-Assessment Questionnaire &amp; Your Responsibilities</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>Complete the pre-assessment questionnaire within 5–7 business days</li>
+          <li>Designate an agency POC for scheduling interviews (IT lead, CISO)</li>
+          <li>Identify system owners and stakeholders for each assessment area</li>
+          <li>Coordinate 24/7 operational constraints for interview scheduling</li>
+          <li>Primary contact: Lisa Harmon, CISO — l.harmon@mdot.maryland.gov</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #dc2626;">
+        <div style="font-size:.62rem; color:#dc2626; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 6 — Evidence</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">Artifact &amp; Evidence Requirements</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>Security policies, procedures, incident response plans, BCP/DR</li>
+          <li>Network diagrams, asset inventories, system boundary documentation</li>
+          <li>Prior assessments, audit findings, POA&amp;M history</li>
+          <li>Vulnerability scan results, patch management records</li>
+          <li>Secure upload via CyberAssess Agency Portal (role-based access)</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #4f46e5;">
+        <div style="font-size:.62rem; color:#4f46e5; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 7 — Scoring</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">CMMI Scoring &amp; Risk Identification</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li>0 — Nonexistent &nbsp;·&nbsp; 1 — Performed &nbsp;·&nbsp; 2 — Managed</li>
+          <li>3 — Defined &nbsp;·&nbsp; 4 — Measured &nbsp;·&nbsp; 5 — Optimized</li>
+          <li>Risks scored by likelihood, impact, and business criticality</li>
+          <li>Findings outside standard control maps flagged and reconciled</li>
+          <li>Consistent cross-agency scoring via standardized SRTM workbook</li>
+        </ul>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; border-top:3px solid #0f766e;">
+        <div style="font-size:.62rem; color:#0f766e; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Slide 8 — Deliverables</div>
+        <div style="font-size:.9rem; font-weight:700; margin-bottom:6px;">What You Receive &amp; Next Steps</div>
+        <ul style="font-size:.75rem; color:var(--text-muted); padding-left:16px; margin:0; line-height:1.7;">
+          <li><strong>SAR</strong> — System Assessment Report with full findings &amp; maturity scores</li>
+          <li><strong>POA&amp;M</strong> — Prioritized remediation plan with assigned owners &amp; timelines</li>
+          <li><strong>Executive Brief</strong> — Tailored for MDOT leadership &amp; DoIT audience</li>
+          <li>Kick-off: April 7, 2026 &nbsp;·&nbsp; SAR delivery: May 19, 2026</li>
+          <li>Questions? Contact J. Williams — lead assessor, Pod LARGE, Wave 1</li>
+        </ul>
+      </div>
+
+    </div>
+    <div style="padding:14px 24px 20px; display:flex; gap:10px; border-top:1px solid var(--border);">
+      <button class="btn btn-primary" onclick="notify('📊 Kick-off presentation sent to l.harmon@mdot.maryland.gov'); document.getElementById('kickoff-modal').style.display='none'">📧 Send to l.harmon@mdot.maryland.gov</button>
+      <button class="btn btn-outline" onclick="notify('📥 Exported: MDOT_Kickoff_Methodology.pptx')">📥 Export as PPTX</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('kickoff-modal').style.display='none'">Cancel</button>
     </div>
   </div>
 </div>
@@ -1941,7 +2100,7 @@ function showSection(id, el) {
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
   const titles = {
-    sq:'ASSESS — Agency Setup & Intake',
+    sq:'Maryland Dept. of Transportation (MDOT)',
     s2:'ASSESS — CSF Assessment Workbook', s3:'NORMALIZE — Evidence Collection',
     s4:'NORMALIZE — Risk & CMMI Scoring', s5:'CONSOLIDATE — POA&M & Remediation',
     s6:'REPORT — SAR Dashboard',
@@ -1949,8 +2108,8 @@ function showSection(id, el) {
     sw:'Workflow Templates & Configuration', settings:'Settings & Integration',
     sai:'Agency CSF Intake & Evidence Upload'
   };
-  const ctxMap = {sa:'MDOT — Agency Representative View', sw:'Assessment Configuration', sp:'Program Management Office (PMO)'};
-  const ctx = ctxMap[id] || 'Maryland Dept. of Transportation (MDOT)';
+  const ctxMap = {sq:'', sa:'MDOT — Agency Representative View', sw:'Assessment Configuration', sp:'Program Management Office (PMO)'};
+  const ctx = ctxMap[id] !== undefined ? ctxMap[id] : 'Maryland Dept. of Transportation (MDOT)';
   document.getElementById('topbar-title').innerHTML = (titles[id]||id) + `<span>${ctx}</span>`;
   if(id==='s2') setTimeout(initSrtm,100);
   if(id==='s4') setTimeout(initCharts4,100);
@@ -3148,6 +3307,40 @@ switchTab = function(el, id) {
   _origSwitchTab(el, id);
   if(id === 't2-summary') setTimeout(initSrtmSummary, 100);
 };
+
+// ---- SCOPE CATEGORY SCORING (backend algo) ----
+const scopeScores = {fte:3, itc:3, data:3};
+function scopeSelect(el, factor, pts) {
+  const grp = el.closest('.radio-group');
+  grp.querySelectorAll('.radio-opt').forEach(o => {
+    o.classList.remove('selected');
+    o.textContent = o.textContent.replace('✅ ','');
+  });
+  el.classList.add('selected');
+  el.textContent = '✅ ' + el.textContent;
+  scopeScores[factor] = pts;
+  updateScopeDisplay();
+}
+function updateScopeDisplay() {
+  const total = scopeScores.fte + scopeScores.itc + scopeScores.data;
+  let cat, scopeColor;
+  if(total <= 4){ cat='SMALL'; scopeColor='#16a34a'; }
+  else if(total <= 6){ cat='MEDIUM'; scopeColor='#2563eb'; }
+  else if(total <= 8){ cat='LARGE'; scopeColor='#c2410c'; }
+  else { cat='EXTRA LARGE'; scopeColor='#991b1b'; }
+  const ptsEl = document.getElementById('scope-total');
+  const badgeEl = document.getElementById('scope-category-badge');
+  if(ptsEl) ptsEl.textContent = total;
+  if(badgeEl) badgeEl.textContent = cat;
+  const scopeCatEl = document.getElementById('ss-scope-cat');
+  const scopePtsEl = document.getElementById('ss-scope-pts');
+  const scopeHdrEl = document.getElementById('ss-scope-header');
+  const scopeCatCard = document.getElementById('ss-scope-cat-card');
+  if(scopeCatEl){ scopeCatEl.textContent = cat; scopeCatEl.style.color = scopeColor; }
+  if(scopePtsEl){ scopePtsEl.textContent = total+' pts'; scopePtsEl.style.background = scopeColor; }
+  if(scopeHdrEl){ scopeHdrEl.style.background = scopeColor; }
+  if(scopeCatCard){ scopeCatCard.textContent = cat; }
+}
 
 // ---- QUESTIONNAIRE SCORING ----
 function selectOpt(el) {
