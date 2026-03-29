@@ -460,23 +460,23 @@ class AgencyAssessment {
   }
 
   initializeEvidenceSection() {
-    // Load evidence collection data
-    this.loadEvidenceData();
+    // Evidence data is rendered in static HTML; no dynamic load needed
+    console.log('Evidence section initialized');
   }
 
   initializeRiskSection() {
-    // Load risk assessment data
-    this.loadRiskData();
+    // Charts are initialized via initAgencyCharts() on page load
+    console.log('Risk section initialized');
   }
 
   initializePoamSection() {
-    // Load POA&M data
-    this.loadPoamData();
+    // POA&M data is rendered in static HTML
+    console.log('POA&M section initialized');
   }
 
   initializeSarSection() {
-    // Load SAR data
-    this.loadSarData();
+    // SAR charts are initialized via initAgencyCharts() on page load
+    console.log('SAR section initialized');
   }
 
   setupActivityTracking() {

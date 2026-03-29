@@ -27,65 +27,42 @@
       <div class="badge-md">BPM052516</div>
     </div>
     
-    <!-- Back to Master Tracker -->
-    <div class="nav-item" role="button" aria-expanded="false" tabindex="0" onclick="goToMasterTracker()">
-      <div>
-        Master Tracker
-      </div>
-    </div>
-    
     <div class="nav-section">MDOT Assessment Workflow</div>
     
-    <div class="nav-item active" role="button" aria-expanded="true" aria-controls="overview" tabindex="0">
-      <div>
-        Assessment Dashboard
-      </div>
+    <div class="nav-item active" onclick="showSection('overview',this)" role="button" tabindex="0">
+      <div>Assessment Dashboard</div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="questionnaire" tabindex="0">
-      <div>
-        Agency Questionnaire
-      </div>
+
+    <div class="nav-item" onclick="showSection('questionnaire',this)" role="button" tabindex="0">
+      <div>Agency Questionnaire</div>
       <div class="dot-done"></div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="intake" tabindex="0">
-      <div>
-        Intake & Scoping
-      </div>
+
+    <div class="nav-item" onclick="showSection('questionnaire',this)" role="button" tabindex="0">
+      <div>Intake &amp; Scoping</div>
       <div class="dot-done"></div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="mapping" tabindex="0">
-      <div>
-        NIST CSF Mapping
-      </div>
+
+    <div class="nav-item" onclick="showSection('mapping',this)" role="button" tabindex="0">
+      <div>NIST CSF Mapping</div>
       <div class="dot-done"></div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="evidence" tabindex="0">
-      <div>
-        Evidence Collection
-      </div>
+
+    <div class="nav-item" onclick="showSection('evidence',this)" role="button" tabindex="0">
+      <div>Evidence Collection</div>
       <div class="dot-done"></div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="risk" tabindex="0">
-      <div>
-        Risk & CMMI Scoring
-      </div>
+
+    <div class="nav-item" onclick="showSection('risk',this)" role="button" tabindex="0">
+      <div>Risk &amp; CMMI Scoring</div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="poam" tabindex="0">
-      <div>
-        POA&M Remediation
-      </div>
+
+    <div class="nav-item" onclick="showSection('poam',this)" role="button" tabindex="0">
+      <div>POA&amp;M Remediation</div>
     </div>
-    
-    <div class="nav-item" role="button" aria-expanded="false" aria-controls="sar" tabindex="0">
-      <div>
-        SAR Dashboard
-      </div>
+
+    <div class="nav-item" onclick="showSection('sar',this)" role="button" tabindex="0">
+      <div>SAR Dashboard</div>
     </div>
     
     <div class="sidebar-bottom">
@@ -341,48 +318,598 @@
         </div>
       </section>
 
-      <!-- QUESTIONNAIRE SECTION -->
+      <!-- QUESTIONNAIRE + INTAKE & SCOPING SECTION (combined) -->
       <section class="section" id="questionnaire" aria-hidden="true">
         <div class="page-header">
-          <h1 id="section-questionnaire-title">Pre-Assessment Security Questionnaire</h1>
-          <p>Completed questionnaire responses that determined pod assignment and assessment scope.</p>
+          <div class="step-tag">Step 1 | ANCHOR Phase 0–1</div>
+          <h1>Agency Setup &amp; Intake</h1>
+          <p>Capture agency profile, IT environment, and security posture to configure the assessment. Pod assignment and wave scheduling are predefined by the client.</p>
         </div>
 
-        <div class="success-box">
-          ✅ <strong>Questionnaire Completed</strong> - Complexity Score: 46/60 → Large Pod assigned. Assessment plan generated and approved.
+        <div class="anchor-banner">
+          <div><strong>ANCHOR Framework — PRE-ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
         </div>
 
-        <!-- Questionnaire Summary -->
+        <!-- PRE-ASSESS PROGRESS BANNER -->
+        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px 20px 12px; margin-bottom:14px;">
+          <div style="font-size:.62rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Pre-Assessment Stage Progress</div>
+          <div class="h-stepper" style="margin:0;">
+            <div class="h-step done"><div class="h-step-circle">✓</div><div class="h-step-label">Setup Tool &amp; Profile</div></div>
+            <div class="h-step active"><div class="h-step-circle">2</div><div class="h-step-label">Confirm Assignment &amp; Schedule</div></div>
+            <div class="h-step"><div class="h-step-circle">3</div><div class="h-step-label">Send Questionnaire</div></div>
+            <div class="h-step"><div class="h-step-circle">4</div><div class="h-step-label">Receive Agency Responses</div></div>
+            <div class="h-step"><div class="h-step-circle">5</div><div class="h-step-label">Issue Kick-Off Package</div></div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 380px; gap:16px; align-items:start;">
+
+          <!-- LEFT COLUMN -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+
+            <!-- Agency Profile -->
+            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #2563eb; border-radius:8px; padding:14px 16px;">
+              <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Agency Profile</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div style="grid-column:1/-1;">
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Name</label>
+                  <input type="text" id="sq-agency-name" value="Maryland Department of Transportation (MDOT)" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact — Name &amp; Title</label>
+                  <input type="text" id="sq-contact-name" value="Lisa Harmon, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Email</label>
+                  <input type="email" id="sq-primary-email" value="l.harmon@mdot.maryland.gov" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Phone</label>
+                  <input type="tel" id="sq-contact-phone" value="(410) 545-0300" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Assessment ID</label>
+                  <input type="text" id="sq-agency-id" value="MD-MDOT-2026-041" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                </div>
+              </div>
+            </div>
+
+            <!-- IT Environment -->
+            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #0891b2; border-radius:8px; padding:14px 16px;">
+              <div style="font-size:.78rem; font-weight:800; color:#0891b2; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">IT Environment</div>
+
+              <div style="margin-bottom:10px;">
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Agency FTE Count</label>
+                <div class="radio-group" id="rg-fte">
+                  <div class="radio-opt" onclick="scopeSelect(this,'fte',1)">1–250 FTEs</div>
+                  <div class="radio-opt" onclick="scopeSelect(this,'fte',2)">251–1,000 FTEs</div>
+                  <div class="radio-opt selected" onclick="scopeSelect(this,'fte',3)">✅ 1,001–5,000 FTEs</div>
+                  <div class="radio-opt" onclick="scopeSelect(this,'fte',4)">5,000+ FTEs</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:10px;">
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">IT Complexity Tier</label>
+                <div class="radio-group" id="rg-itc">
+                  <div class="radio-opt" onclick="scopeSelect(this,'itc',-1)">DoIT Managed</div>
+                  <div class="radio-opt" onclick="scopeSelect(this,'itc',1)">Low</div>
+                  <div class="radio-opt" onclick="scopeSelect(this,'itc',2)">Moderate</div>
+                  <div class="radio-opt selected" onclick="scopeSelect(this,'itc',3)">✅ High</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:10px;">
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Data Sensitivity / FIPS 199</label>
+                <div class="radio-group" id="rg-data">
+                  <div class="radio-opt" onclick="scopeSelect(this,'data',1)">Standard</div>
+                  <div class="radio-opt" onclick="scopeSelect(this,'data',2)">Elevated — PII/PHI</div>
+                  <div class="radio-opt selected" onclick="scopeSelect(this,'data',3)">✅ High — FTI/CJIS/HIPAA</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:10px;">
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Cloud Environments (select all that apply)</label>
+                <div class="radio-group">
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ AWS GovCloud</div>
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ Azure Government</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">Google Cloud</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">None</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:10px;">
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">OT/ICS Systems</label>
+                <div class="radio-group">
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ Yes — limited interfaces</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">Yes — full OT environment</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">No</div>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Sensitive Data Types</label>
+                <div class="radio-group">
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ PII</div>
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ Financial</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">PHI/HIPAA</div>
+                  <div class="radio-opt selected" onclick="selectOpt(this)">✅ CJIS</div>
+                  <div class="radio-opt" onclick="selectOpt(this)">FTI</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security Posture -->
+            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #7c3aed; border-radius:8px; padding:14px 16px;">
+              <div style="font-size:.78rem; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Security Posture</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Previous Assessment</label>
+                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                    <option>Never assessed</option>
+                    <option selected>1-2 years ago</option>
+                    <option>Within the past year</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">MFA Coverage</label>
+                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                    <option>Not deployed</option>
+                    <option selected>Partial — some users</option>
+                    <option>All users</option>
+                    <option>All users + phishing-resistant</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">SIEM Deployment</label>
+                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                    <option selected>No SIEM deployed</option>
+                    <option>Partial deployment</option>
+                    <option>Fully deployed</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">IR Plan Status</label>
+                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+                    <option>No plan</option>
+                    <option selected>Plan exists, not recently tested</option>
+                    <option>Plan tested within 12 months</option>
+                  </select>
+                </div>
+                <div style="grid-column:1/-1;">
+                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Self-Assessed CMMI Level</label>
+                  <div class="radio-group">
+                    <div class="radio-opt" onclick="selectOpt(this)">0 — Nonexistent</div>
+                    <div class="radio-opt" onclick="selectOpt(this)">1 — Performed</div>
+                    <div class="radio-opt selected" onclick="selectOpt(this)">✅ 2 — Managed</div>
+                    <div class="radio-opt" onclick="selectOpt(this)">3 — Defined</div>
+                    <div class="radio-opt" onclick="selectOpt(this)">4 — Measured</div>
+                    <div class="radio-opt" onclick="selectOpt(this)">5 — Optimized</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="confirmAssignmentAndLog()">Confirm Assignment</button>
+              <button class="btn btn-outline" onclick="confirmAssignmentAndLog(true)">Confirm &amp; Lock Schedule</button>
+              <button class="btn btn-outline" onclick="notify('Kick-off presentation sent to l.harmon@mdot.maryland.gov')">Send Kick-Off Package</button>
+              <button class="btn btn-outline" onclick="notify('Questionnaire exported: MDOT_PreAssess_Q.pdf')">Export PDF</button>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN — Scope Summary + Assignment -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+
+            <!-- POD + Scope Summary tile -->
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,.07);">
+              <div id="ss-scope-header" style="background:linear-gradient(135deg,#7c2d12,#c2410c); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <div style="font-size:.6rem; text-transform:uppercase; letter-spacing:.1em; opacity:.7; margin-bottom:4px;">Assessment Scope Category</div>
+                  <div style="font-size:2.2rem; font-weight:900; letter-spacing:.02em; line-height:1;" id="ss-scope-cat-card">LARGE</div>
+                  <div style="font-size:.72rem; opacity:.8; margin-top:3px;">6–8 Assessors &nbsp;·&nbsp; 63 Days</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="background:rgba(255,255,255,.15); border-radius:6px; padding:5px 12px; font-size:.72rem; font-weight:600; margin-bottom:6px;">Wave 1 — Q1–Q2 2026</div>
+                  <div style="font-size:.68rem; opacity:.7;">Apr 7 – May 19, 2026</div>
+                </div>
+              </div>
+              <div style="padding:14px 16px;">
+                <div style="font-size:.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:8px;">Scope Summary</div>
+                <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
+                  <tbody>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Agency FTE Tier</td><td style="padding:5px 4px;"><span class="badge badge-blue">3 pts</span></td><td style="padding:5px 4px;">1,001–5,000 FTEs</td></tr>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">IT Complexity</td><td style="padding:5px 4px;"><span class="badge badge-orange">3 pts</span></td><td style="padding:5px 4px;">High — hybrid cloud, OT/ICS</td></tr>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Data Sensitivity</td><td style="padding:5px 4px;"><span class="badge badge-red">3 pts</span></td><td style="padding:5px 4px;">High — FTI, CJIS, HIPAA</td></tr>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">Cloud Environments</td><td style="padding:5px 4px;"><span class="badge badge-green">In Scope</span></td><td style="padding:5px 4px;">AWS GovCloud, Azure Gov</td></tr>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">OT/ICS</td><td style="padding:5px 4px;"><span class="badge badge-orange">Partial</span></td><td style="padding:5px 4px;">Yes — limited interfaces</td></tr>
+                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted);">FIPS 199</td><td style="padding:5px 4px;"><span class="badge badge-red">HIGH</span></td><td style="padding:5px 4px;">High impact categorization</td></tr>
+                    <tr><td style="padding:5px 4px; color:var(--text-muted);">Scope Category</td><td style="padding:5px 4px;"><span id="ss-scope-pts" style="background:#c2410c; color:#fff; border-radius:4px; padding:2px 7px; font-size:.7rem; font-weight:700;">9 pts</span></td><td style="padding:5px 4px; font-weight:700;"><span id="ss-scope-cat" style="color:#c2410c;">LARGE</span></td></tr>
+                  </tbody>
+                </table>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:10px;">
+                  <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:7px; padding:8px; text-align:center;">
+                    <div style="font-size:.65rem; color:#b91c1c; font-weight:600; text-transform:uppercase;">FIPS Level</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#dc2626;">HIGH</div>
+                  </div>
+                  <div style="background:#c2410c; border-radius:7px; padding:8px; text-align:center;">
+                    <div style="font-size:.65rem; color:#fff; font-weight:600; text-transform:uppercase; opacity:.85;">Scope</div>
+                    <div id="ss-scope-cat-card2" style="font-size:1.1rem; font-weight:800; color:#fff;">LARGE</div>
+                  </div>
+                  <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:7px; padding:8px; text-align:center;">
+                    <div style="font-size:.65rem; color:#166534; font-weight:600; text-transform:uppercase;">Score</div>
+                    <div id="scope-total" style="font-size:1.1rem; font-weight:800; color:#16a34a;">9</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assessment Assignment -->
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
+              <div style="font-size:.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Assessment Assignment — Client Predefined</div>
+              <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
+                <tbody>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Assessment Wave</td><td style="padding:5px 4px;"><select id="sq-wave" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Wave 1 — Q1–Q2 2026</option><option>Wave 2 — Q3–Q4 2026</option><option>Wave 3 — Q1–Q2 2027</option><option>Wave 4 — Q3–Q4 2027</option></select></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Pod Assignment</td><td style="padding:5px 4px;"><select id="sq-pod" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>POD XL</option><option selected>POD LARGE</option><option>POD MEDIUM</option><option>POD SMALL</option></select></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Lead Assessor</td><td style="padding:5px 4px;"><select id="sq-assessor" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>J. Williams</option><option>S. Patel</option><option>R. Okafor</option><option>T. Adams</option><option>M. Chen</option></select></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Team Size</td><td style="padding:5px 4px;"><select id="sq-teamsize" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Large (6–8 assessors)</option><option>Standard (4–5 assessors)</option><option>Small (2–3 assessors)</option></select></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed Start</td><td style="padding:5px 4px;"><input id="sq-start" type="date" value="2026-04-07" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Confirmed End</td><td style="padding:5px 4px;"><input id="sq-end" type="date" value="2026-05-19" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
+                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Executive Branch</td><td style="padding:5px 4px;"><select id="sq-execbranch" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
+                  <tr><td style="padding:5px 4px; color:var(--text-muted); white-space:nowrap;">Maturity Group</td><td style="padding:5px 4px;"><select id="sq-matgroup" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0–1.4)</option><option selected>Group B (1.5–2.5)</option><option>Group C (2.6–3.4)</option><option>Group D (3.5–4.4)</option><option>Group E (4.5–5.0)</option></select></td></tr>
+                </tbody>
+              </table>
+              <div style="margin-top:10px;">
+                <button class="btn btn-primary btn-sm" onclick="confirmAssignmentAndLog()">Confirm Assignment</button>
+              </div>
+            </div>
+
+            <!-- Stage Actions -->
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #059669; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
+              <div style="font-size:.78rem; font-weight:800; color:#059669; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Stage Actions</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="btn btn-accent btn-sm" style="justify-content:flex-start;" onclick="notify('Kick-off presentation sent to l.harmon@mdot.maryland.gov')">Send Kick-Off Presentation</button>
+                <button class="btn btn-outline btn-sm" style="justify-content:flex-start;" onclick="confirmAssignmentAndLog(true)">Confirm Assignment &amp; Lock Schedule</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- INTAKE nav item now points to questionnaire — keep old id as alias -->
+      <section class="section" id="intake" aria-hidden="true">
+        <div class="page-header">
+          <h1>Intake &amp; Scoping</h1>
+          <p>Use the Agency Questionnaire section to access the full intake and scoping form.</p>
+        </div>
+        <div class="info-box">This section has been merged with <strong>Agency Questionnaire</strong>. Click "Agency Questionnaire" in the sidebar to access all intake and scoping fields.</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="showSection('questionnaire', document.querySelector('[onclick*=questionnaire]'))">Go to Agency Questionnaire</button>
+        </div>
+      </section>
+
+      <!-- NIST CSF MAPPING SECTION -->
+      <section class="section" id="mapping" aria-hidden="true">
+        <div class="page-header">
+          <h1>NIST CSF 2.0 Control Mapping — MDOT</h1>
+          <p>Map assessment controls across all six NIST CSF 2.0 functions. Each control links to NIST SP 800-53 Rev 5 and is scored using the CMMI 0–5 maturity scale.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-label">Total Controls</div><div class="stat-value">106</div><div class="stat-sub">NIST CSF 2.0 subcategories</div></div>
+          <div class="stat-card green"><div class="stat-label">Mapped</div><div class="stat-value">106</div><div class="stat-sub">100% coverage</div></div>
+          <div class="stat-card accent"><div class="stat-label">Assessed</div><div class="stat-value">72</div><div class="stat-sub">68% scored</div></div>
+          <div class="stat-card"><div class="stat-label">Avg CMMI</div><div class="stat-value">2.5</div><div class="stat-sub">Across scored controls</div></div>
+        </div>
+
         <div class="card">
-          <div class="card-title">📋 Questionnaire Summary</div>
-          <div class="grid-2">
-            <div>
-              <h3>Agency Profile</h3>
-              <p><strong>Agency Size:</strong> Large (500+ employees)</p>
-              <p><strong>IT Complexity:</strong> Complex (multi-site + cloud)</p>
-              <p><strong>Cloud Environments:</strong> AWS GovCloud, Azure Government</p>
-              <p><strong>OT/ICS Systems:</strong> Yes - limited interfaces</p>
-              <p><strong>Sensitive Data:</strong> PII, Financial</p>
-            </div>
-            <div>
-              <h3>Security Posture</h3>
-              <p><strong>Previous Assessment:</strong> 1-2 years ago</p>
-              <p><strong>MFA Coverage:</strong> Partial - some users</p>
-              <p><strong>SIEM Deployment:</strong> No SIEM deployed</p>
-              <p><strong>IR Plan Status:</strong> Plan exists, not recently tested</p>
-              <p><strong>Self-Assessed CMMI:</strong> Level 2 - Managed</p>
-            </div>
+          <div class="card-title">Control Mapping by NIST CSF Function</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>NIST CSF Function</th><th>Domain</th><th>Controls</th><th>Assessed</th><th>Avg CMMI</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td>14</td><td>12</td><td>2.4</td><td><span class="badge badge-blue">In Progress</span></td></tr>
+                <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td>22</td><td>16</td><td>2.8</td><td><span class="badge badge-blue">In Progress</span></td></tr>
+                <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td>28</td><td>20</td><td>3.1</td><td><span class="badge badge-blue">In Progress</span></td></tr>
+                <tr><td><span class="fn-tag fn-detect">DETECT</span></td><td>Monitoring &amp; Detection</td><td>16</td><td>10</td><td>2.2</td><td><span class="badge badge-orange">Needs Attention</span></td></tr>
+                <tr><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident Response</td><td>14</td><td>8</td><td>2.6</td><td><span class="badge badge-blue">In Progress</span></td></tr>
+                <tr><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Recovery Planning</td><td>12</td><td>6</td><td>2.0</td><td><span class="badge badge-orange">Needs Attention</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">NIST SP 800-53 Rev 5 Crosswalk (Sample)</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>CSF Subcategory</th><th>800-53 Control</th><th>Control Name</th><th>CMMI Score</th><th>Method</th></tr></thead>
+              <tbody>
+                <tr><td>GV.OC-01</td><td>PM-1, PM-2</td><td>Information Security Program Plan</td><td><strong>3</strong> — Defined</td><td>EXAMINE</td></tr>
+                <tr><td>GV.RM-01</td><td>RA-1, RA-2</td><td>Risk Management Strategy</td><td><strong>2</strong> — Managed</td><td>EXAMINE, INTERVIEW</td></tr>
+                <tr><td>ID.AM-01</td><td>CM-8</td><td>Information System Component Inventory</td><td><strong>2</strong> — Managed</td><td>TEST</td></tr>
+                <tr><td>PR.AC-01</td><td>AC-2, AC-3</td><td>Account Management</td><td><strong>3</strong> — Defined</td><td>EXAMINE, TEST</td></tr>
+                <tr><td>DE.CM-01</td><td>SI-4</td><td>Information System Monitoring</td><td><strong>1</strong> — Performed</td><td>TEST</td></tr>
+                <tr><td>RS.RP-01</td><td>IR-4, IR-5</td><td>Incident Handling</td><td><strong>2</strong> — Managed</td><td>INTERVIEW</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-outline" onclick="showSection('overview')">← Back to Overview</button>
-          <button class="btn btn-outline" onclick="notify('📥 Questionnaire exported: MDOT_PreAssess_Q.pdf')">📥 Export PDF</button>
+          <button class="btn btn-outline" onclick="showSection('overview')">Back to Overview</button>
+          <button class="btn btn-outline" onclick="notify('SRTM workbook exported: MDOT_SRTM_CSF2.xlsx')">Export SRTM</button>
         </div>
       </section>
 
-      <!-- OTHER SECTIONS WOULD GO HERE -->
-      <!-- For brevity, showing key sections only -->
+      <!-- EVIDENCE COLLECTION SECTION -->
+      <section class="section" id="evidence" aria-hidden="true">
+        <div class="page-header">
+          <h1>Evidence Collection — MDOT</h1>
+          <p>Track all evidence across documentation, interviews, and automated tools. Each item progresses through the full collection lifecycle ensuring assessment-ready completeness.</p>
+        </div>
+
+        <!-- Evidence lifecycle progress -->
+        <div class="card" style="margin-bottom:20px; padding:20px 24px;">
+          <div class="card-title">Evidence Collection Lifecycle</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:0; flex:1; position:relative;">
+              <div style="display:flex; flex-direction:column; align-items:center; z-index:2; flex:1;">
+                <div style="width:36px; height:36px; border-radius:50%; background:var(--accent2); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;">1</div>
+                <div style="font-size:.72rem; font-weight:700; margin-top:6px; color:var(--accent2);">Request</div>
+                <div style="font-size:.65rem; color:var(--text-muted);">58 of 58 sent</div>
+              </div>
+              <div style="flex:1; height:3px; background:var(--accent2); margin:0 -8px; z-index:1; margin-top:-18px;"></div>
+              <div style="display:flex; flex-direction:column; align-items:center; z-index:2; flex:1;">
+                <div style="width:36px; height:36px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;">2</div>
+                <div style="font-size:.72rem; font-weight:700; margin-top:6px; color:var(--accent);">Collection</div>
+                <div style="font-size:.65rem; color:var(--text-muted);">38 of 58 received</div>
+              </div>
+              <div style="flex:1; height:3px; background:linear-gradient(90deg,var(--accent) 60%,var(--border) 60%); margin:0 -8px; z-index:1; margin-top:-18px;"></div>
+              <div style="display:flex; flex-direction:column; align-items:center; z-index:2; flex:1;">
+                <div style="width:36px; height:36px; border-radius:50%; background:var(--border); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;">3</div>
+                <div style="font-size:.72rem; font-weight:700; margin-top:6px; color:var(--text-muted);">Review</div>
+                <div style="font-size:.65rem; color:var(--text-muted);">28 of 38 reviewed</div>
+              </div>
+              <div style="flex:1; height:3px; background:var(--border); margin:0 -8px; z-index:1; margin-top:-18px;"></div>
+              <div style="display:flex; flex-direction:column; align-items:center; z-index:2; flex:1;">
+                <div style="width:36px; height:36px; border-radius:50%; background:var(--border); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;">4</div>
+                <div style="font-size:.72rem; font-weight:700; margin-top:6px; color:var(--text-muted);">Acceptance</div>
+                <div style="font-size:.65rem; color:var(--text-muted);">22 of 28 accepted</div>
+              </div>
+              <div style="flex:1; height:3px; background:var(--border); margin:0 -8px; z-index:1; margin-top:-18px;"></div>
+              <div style="display:flex; flex-direction:column; align-items:center; z-index:2; flex:1;">
+                <div style="width:36px; height:36px; border-radius:50%; background:var(--border); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;">5</div>
+                <div style="font-size:.72rem; font-weight:700; margin-top:6px; color:var(--text-muted);">Complete</div>
+                <div style="font-size:.65rem; color:var(--text-muted);">22 of 58 final</div>
+              </div>
+            </div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:12px 16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:.78rem; font-weight:700; color:var(--primary);">Overall Evidence Completion</span>
+              <span style="font-size:.82rem; font-weight:800; color:var(--primary);">38%</span>
+            </div>
+            <div style="background:#e5e7eb; border-radius:6px; height:10px; overflow:hidden;">
+              <div style="width:38%; height:100%; background:linear-gradient(90deg,var(--accent2),#0d9488); border-radius:6px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-label">Total Items</div><div class="stat-value">58</div><div class="stat-sub">Across all domains</div></div>
+          <div class="stat-card green"><div class="stat-label">Collected</div><div class="stat-value">38</div><div class="stat-sub">66% received</div></div>
+          <div class="stat-card accent"><div class="stat-label">Pending</div><div class="stat-value">15</div><div class="stat-sub">Awaiting agency response</div></div>
+          <div class="stat-card red"><div class="stat-label">Not Available</div><div class="stat-value">5</div><div class="stat-sub">Flagged as gap</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Evidence Tracker</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Evidence Item</th><th>NIST Function</th><th>Category</th><th>Source</th><th>Status</th><th>Collected By</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td>E-001</td><td>Information Security Policy</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Policy</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>S. Patel</td><td style="font-size:.76rem; color:var(--text-muted);">Last updated Jan 2025</td></tr>
+                <tr><td>E-002</td><td>Risk Management Plan</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Policy</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>J. Williams</td><td style="font-size:.76rem; color:var(--text-muted);">Covers enterprise risk</td></tr>
+                <tr><td>E-003</td><td>Hardware Asset Inventory (CMDB)</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Technical</td><td>Tool</td><td><span class="badge badge-green">Collected</span></td><td>R. Okafor</td><td style="font-size:.76rem; color:var(--text-muted);">~40% gap estimated</td></tr>
+                <tr><td>E-004</td><td>Software Inventory</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Technical</td><td>Tool</td><td><span class="badge badge-orange">Pending</span></td><td>—</td><td style="font-size:.76rem; color:var(--text-muted);">Requested Apr 14, no response</td></tr>
+                <tr><td>E-005</td><td>Network Diagram</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Technical</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>R. Okafor</td><td style="font-size:.76rem; color:var(--text-muted);">Received Apr 15</td></tr>
+                <tr><td>E-006</td><td>Access Control Policy</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Policy</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>S. Patel</td><td style="font-size:.76rem; color:var(--text-muted);"></td></tr>
+                <tr><td>E-007</td><td>AD Configuration Review</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Technical</td><td>Tool</td><td><span class="badge badge-green">Collected</span></td><td>R. Okafor</td><td style="font-size:.76rem; color:var(--text-muted);">MFA gaps confirmed</td></tr>
+                <tr><td>E-008</td><td>Patch Management Logs (90d)</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Technical</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>J. Williams</td><td style="font-size:.76rem; color:var(--text-muted);">97-day avg CVE patch</td></tr>
+                <tr><td>E-009</td><td>SIEM/Log Management Config</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>Technical</td><td>Tool</td><td><span class="badge badge-red">Not Available</span></td><td>—</td><td style="font-size:.76rem; color:var(--text-muted);">No SIEM deployed — critical gap</td></tr>
+                <tr><td>E-010</td><td>Vulnerability Scan Results</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>Tool</td><td>Tool</td><td><span class="badge badge-green">Collected</span></td><td>R. Okafor</td><td style="font-size:.76rem; color:var(--text-muted);">Nessus scan Apr 21</td></tr>
+                <tr><td>E-011</td><td>Incident Response Plan</td><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Policy</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>J. Williams</td><td style="font-size:.76rem; color:var(--text-muted);">Dated 2022 — not tested</td></tr>
+                <tr><td>E-012</td><td>Business Continuity / DRP</td><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Policy</td><td>Documentation</td><td><span class="badge badge-green">Collected</span></td><td>S. Patel</td><td style="font-size:.76rem; color:var(--text-muted);"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" onclick="notify('Automated reminders sent to pending evidence owners')">Send Reminders</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('Evidence tracker exported: MDOT_Evidence_Log.xlsx')">Export</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('Evidence synced with ServiceNow GRC')">Sync to GRC</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Interview Schedule</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Interviewee</th><th>Role</th><th>Topics</th><th>Status</th><th>Assessor</th></tr></thead>
+              <tbody>
+                <tr><td>Apr 14</td><td>Lisa Harmon</td><td>CISO</td><td>Security strategy, governance, risk appetite</td><td><span class="badge badge-green">Complete</span></td><td>J. Williams</td></tr>
+                <tr><td>Apr 15</td><td>Marcus Webb</td><td>IT Director</td><td>Infrastructure, change management, patching</td><td><span class="badge badge-green">Complete</span></td><td>S. Patel</td></tr>
+                <tr><td>Apr 16</td><td>Dana Cruz</td><td>SOC Manager</td><td>Monitoring, incident response, log management</td><td><span class="badge badge-green">Complete</span></td><td>J. Williams</td></tr>
+                <tr><td>Apr 17</td><td>Tom Nguyen</td><td>Network Admin</td><td>Segmentation, firewall rules, VPN</td><td><span class="badge badge-green">Complete</span></td><td>R. Okafor</td></tr>
+                <tr><td>Apr 18</td><td>Amy Stockton</td><td>HR Director</td><td>Onboarding/offboarding, training</td><td><span class="badge badge-orange">Pending</span></td><td>S. Patel</td></tr>
+                <tr><td>Apr 21</td><td>Field Office Team</td><td>IT Staff</td><td>Local controls, physical security</td><td><span class="badge badge-orange">Pending</span></td><td>R. Okafor</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RISK & CMMI SCORING SECTION -->
+      <section class="section" id="risk" aria-hidden="true">
+        <div class="page-header">
+          <h1>Risk Register &amp; CMMI Scoring — MDOT</h1>
+          <p>Identify, analyze, and prioritize risks. Apply CMMI maturity scores across NIST CSF functions and map risks to business impact.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card accent"><div class="stat-label">Overall CMMI</div><div class="stat-value">2.5</div><div class="stat-sub">Target: 3.0</div></div>
+          <div class="stat-card red"><div class="stat-label">Critical Risks</div><div class="stat-value">4</div><div class="stat-sub">Immediate action</div></div>
+          <div class="stat-card"><div class="stat-label">High Risks</div><div class="stat-value">9</div><div class="stat-sub">30-day remediation</div></div>
+          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">72</div><div class="stat-sub">of 106 total</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">CMMI Maturity by Function</div>
+            <div class="chart-wrap-sm"><canvas id="radarChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Risk Distribution</div>
+            <div class="chart-wrap-sm"><canvas id="riskChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">CMMI Scoring Summary</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>NIST CSF Function</th><th>Domain</th><th>CMMI Score</th><th>Maturity Level</th><th>Target</th><th>Gap</th></tr></thead>
+              <tbody>
+                <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td><strong>2.4</strong></td><td>Managed</td><td>4.0</td><td style="color:var(--danger);font-weight:700;">-1.6</td></tr>
+                <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td><strong>2.8</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.2</td></tr>
+                <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td><strong>3.1</strong></td><td>Defined</td><td>4.0</td><td style="color:var(--warn);font-weight:700;">-0.9</td></tr>
+                <tr><td><span class="fn-tag fn-detect">DETECT</span></td><td>Monitoring &amp; Detection</td><td><strong>2.2</strong></td><td>Managed</td><td>4.0</td><td style="color:var(--danger);font-weight:700;">-1.8</td></tr>
+                <tr><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident Response</td><td><strong>2.6</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.4</td></tr>
+                <tr><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Recovery Planning</td><td><strong>2.0</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Risk Register</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Risk ID</th><th>Finding</th><th>NIST Function</th><th>Likelihood</th><th>Impact</th><th>Score</th><th>Priority</th></tr></thead>
+              <tbody>
+                <tr><td>R-001</td><td>No SIEM/continuous monitoring</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td>P1</td></tr>
+                <tr><td>R-002</td><td>MFA not enforced for privileged accounts</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td>P1</td></tr>
+                <tr><td>R-003</td><td>40% asset inventory gap</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>High</td><td>High</td><td><span class="badge badge-red">16</span></td><td>P1</td></tr>
+                <tr><td>R-004</td><td>IR Plan untested since 2022</td><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
+                <tr><td>R-005</td><td>Patch cycle exceeds 90-day SLA</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="showSection('overview')">Back to Overview</button>
+          <button class="btn btn-outline" onclick="notify('Risk register exported: MDOT_Risk_Register.xlsx')">Export Risk Register</button>
+        </div>
+      </section>
+
+      <!-- POA&M REMEDIATION SECTION -->
+      <section class="section" id="poam" aria-hidden="true">
+        <div class="page-header">
+          <h1>Plan of Action &amp; Milestones (POA&amp;M) — MDOT</h1>
+          <p>Prioritized remediation plan with assigned owners, timelines, and completion tracking. All items map back to NIST CSF findings.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-label">Total POA&amp;M Items</div><div class="stat-value">23</div><div class="stat-sub">Across all findings</div></div>
+          <div class="stat-card green"><div class="stat-label">Complete</div><div class="stat-value">5</div><div class="stat-sub">22% closed</div></div>
+          <div class="stat-card accent"><div class="stat-label">In Progress</div><div class="stat-value">12</div><div class="stat-sub">Actively remediated</div></div>
+          <div class="stat-card red"><div class="stat-label">Overdue</div><div class="stat-value">3</div><div class="stat-sub">Escalation required</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">POA&amp;M Tracker</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>POA&amp;M ID</th><th>Finding</th><th>Owner</th><th>Priority</th><th>Due Date</th><th>Status</th><th>% Complete</th></tr></thead>
+              <tbody>
+                <tr><td>PM-001</td><td>Deploy SIEM solution</td><td>M. Webb (IT Director)</td><td><span class="badge badge-red">Critical</span></td><td>Jul 15, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>35%</td></tr>
+                <tr><td>PM-002</td><td>Enforce MFA for all privileged accounts</td><td>D. Cruz (SOC Manager)</td><td><span class="badge badge-red">Critical</span></td><td>Jun 30, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>70%</td></tr>
+                <tr><td>PM-003</td><td>Complete CMDB asset inventory</td><td>T. Nguyen (Network Admin)</td><td><span class="badge badge-red">Critical</span></td><td>Jun 15, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>45%</td></tr>
+                <tr><td>PM-004</td><td>Update and test IR plan</td><td>D. Cruz (SOC Manager)</td><td><span class="badge badge-orange">High</span></td><td>Jul 30, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>10%</td></tr>
+                <tr><td>PM-005</td><td>Reduce patch cycle to &lt;30 days</td><td>T. Nguyen (Network Admin)</td><td><span class="badge badge-orange">High</span></td><td>Jun 30, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>20%</td></tr>
+                <tr><td>PM-006</td><td>Establish TPRM program</td><td>L. Harmon (CISO)</td><td><span class="badge badge-orange">High</span></td><td>Aug 15, 2026</td><td><span class="badge badge-gray">Not Started</span></td><td>0%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-outline" onclick="notify('POA&M exported: MDOT_POAM_v1.xlsx')">Export POA&amp;M</button>
+            <button class="btn btn-outline" onclick="notify('POA&M synced with ServiceNow GRC')">Sync to GRC</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SAR DASHBOARD SECTION -->
+      <section class="section" id="sar" aria-hidden="true">
+        <div class="page-header">
+          <h1>System Assessment Report (SAR) — MDOT</h1>
+          <p>Executive-ready assessment report with findings, maturity scores, and recommendations. Final deliverable for DoIT and agency leadership.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card accent"><div class="stat-label">Overall Maturity</div><div class="stat-value">2.5 / 5</div><div class="stat-sub">Managed → Defined</div></div>
+          <div class="stat-card red"><div class="stat-label">Critical Findings</div><div class="stat-value">4</div><div class="stat-sub">Immediate action required</div></div>
+          <div class="stat-card"><div class="stat-label">High Findings</div><div class="stat-value">9</div><div class="stat-sub">30-day remediation</div></div>
+          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">106</div><div class="stat-sub">Full CSF 2.0 coverage</div></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Findings by Function</div>
+            <div class="chart-wrap-sm"><canvas id="findingsChart"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Maturity Radar</div>
+            <div class="chart-wrap-sm"><canvas id="sarRadarChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">SAR Findings Summary</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Finding ID</th><th>Control Ref</th><th>Function</th><th>Description</th><th>CMMI</th><th>Risk</th></tr></thead>
+              <tbody>
+                <tr><td>F-001</td><td>DE.CM-01</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>No SIEM or continuous monitoring capability deployed</td><td><strong>1</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-002</td><td>PR.AC-06</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>MFA not enforced for privileged / administrative accounts</td><td><strong>1</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-003</td><td>ID.AM-01</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Hardware asset inventory has ~40% gap (CMDB incomplete)</td><td><strong>2</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-004</td><td>RS.RP-01</td><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident response plan not tested or exercised since 2022</td><td><strong>2</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-005</td><td>PR.IP-12</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Patch cycle averages 97 days — exceeds 30-day SLA</td><td><strong>2</strong></td><td><span class="badge badge-orange">High</span></td></tr>
+                <tr><td>F-006</td><td>GV.SC-01</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>No formal third-party risk management (TPRM) program</td><td><strong>0</strong></td><td><span class="badge badge-orange">High</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">SAR Deliverable Status</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Deliverable</th><th>Status</th><th>Due</th><th>Reviewer</th></tr></thead>
+              <tbody>
+                <tr><td>System Assessment Report (SAR)</td><td><span class="badge badge-blue">In Progress</span></td><td>May 19, 2026</td><td>J. Williams → DoIT</td></tr>
+                <tr><td>Plan of Action &amp; Milestones (POA&amp;M)</td><td><span class="badge badge-blue">In Progress</span></td><td>May 19, 2026</td><td>L. Harmon (CISO)</td></tr>
+                <tr><td>Executive Brief</td><td><span class="badge badge-gray">Pending</span></td><td>May 19, 2026</td><td>DoIT Leadership</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="notify('SAR report generated: MDOT_SAR_2026.pdf')">Generate SAR Report</button>
+            <button class="btn btn-outline" onclick="notify('Executive brief exported: MDOT_ExecBrief.pptx')">Export Executive Brief</button>
+            <button class="btn btn-outline" onclick="notify('SAR synced to ServiceNow GRC')">Sync to GRC</button>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>
@@ -467,42 +994,124 @@
       }
     }
     
-    function goToMasterTracker() {
-      console.log('Going to master tracker');
-      window.location.href = 'index-master.html';
+    // ── Intake / Scoping interactive functions ──────────────────────────
+    const scopeScores = { fte: 3, itc: 3, data: 3 };
+
+    function scopeSelect(el, factor, pts) {
+      const grp = el.closest('.radio-group');
+      if (grp) {
+        grp.querySelectorAll('.radio-opt').forEach(o => {
+          o.classList.remove('selected');
+          o.textContent = o.textContent.replace('✅ ', '');
+        });
+      }
+      el.classList.add('selected');
+      if (!el.textContent.startsWith('✅ ')) el.textContent = '✅ ' + el.textContent;
+      scopeScores[factor] = pts;
+      updateScopeDisplay();
     }
+
+    function updateScopeDisplay() {
+      const total = scopeScores.fte + scopeScores.itc + scopeScores.data;
+      let cat, scopeColor;
+      if (total <= 4)      { cat = 'SMALL';       scopeColor = '#16a34a'; }
+      else if (total <= 6) { cat = 'MEDIUM';      scopeColor = '#2563eb'; }
+      else if (total <= 8) { cat = 'LARGE';       scopeColor = '#c2410c'; }
+      else                 { cat = 'EXTRA LARGE'; scopeColor = '#991b1b'; }
+
+      const ptsEl       = document.getElementById('scope-total');
+      const scopeCatEl  = document.getElementById('ss-scope-cat');
+      const scopePtsEl  = document.getElementById('ss-scope-pts');
+      const scopeHdrEl  = document.getElementById('ss-scope-header');
+      const scopeCatCard2 = document.getElementById('ss-scope-cat-card2');
+
+      if (ptsEl)        ptsEl.textContent = total;
+      if (scopeCatEl)   { scopeCatEl.textContent = cat; scopeCatEl.style.color = scopeColor; }
+      if (scopePtsEl)   { scopePtsEl.textContent = total + ' pts'; scopePtsEl.style.background = scopeColor; }
+      if (scopeHdrEl)   scopeHdrEl.style.background = `linear-gradient(135deg,#7c2d12,${scopeColor})`;
+      if (scopeCatCard2){ scopeCatCard2.textContent = cat; }
+    }
+
+    function selectOpt(el) {
+      el.classList.toggle('selected');
+      if (el.classList.contains('selected')) {
+        if (!el.textContent.startsWith('✅ ')) el.textContent = '✅ ' + el.textContent;
+      } else {
+        el.textContent = el.textContent.replace('✅ ', '');
+      }
+    }
+
+    function confirmAssignmentAndLog(lockSchedule = false) {
+      notify(lockSchedule
+        ? 'Assignment confirmed and schedule locked.'
+        : 'Assignment confirmed.');
+    }
+    // ───────────────────────────────────────────────────────────────────
 
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('Agency DOM loaded, initializing...');
-      
-      // Set up click handlers for all nav items
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          console.log('Agency nav item clicked:', this);
-          
-          // Get the section ID from onclick attribute
-          const onclick = this.getAttribute('onclick');
-          if (onclick) {
-            const match = onclick.match(/showSection\('([^']+)'/);
-            if (match) {
-              showSection(match[1], this);
-            }
-          }
-        });
-        
-        // Set up keyboard navigation
-        item.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.click();
-          }
-        });
-      });
-
-      console.log('Agency initialization complete');
+      // Initialize charts if Chart.js is loaded
+      initAgencyCharts();
     });
+
+    function initAgencyCharts() {
+      // Radar chart for Risk section
+      const radarEl = document.getElementById('radarChart');
+      if (radarEl && typeof Chart !== 'undefined') {
+        new Chart(radarEl, {
+          type:'radar',
+          data:{
+            labels:['Govern','Identify','Protect','Detect','Respond','Recover'],
+            datasets:[
+              {label:'Current (CMMI)',data:[2.4,2.8,3.1,2.2,2.6,2.0],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',pointBackgroundColor:'#2563a8',borderWidth:2},
+              {label:'Target',data:[4,3,4,4,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],pointBackgroundColor:'#27ae60',borderWidth:2}
+            ]
+          },
+          options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}}
+        });
+      }
+      // Risk distribution doughnut
+      const riskEl = document.getElementById('riskChart');
+      if (riskEl && typeof Chart !== 'undefined') {
+        new Chart(riskEl, {
+          type:'doughnut',
+          data:{labels:['Critical','High','Medium','Low'],datasets:[{data:[4,9,7,3],backgroundColor:['#dc2626','#ea580c','#d97706','#16a34a'],borderWidth:0}]},
+          options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right'}}}
+        });
+      }
+      // SAR Findings bar chart
+      const findingsEl = document.getElementById('findingsChart');
+      if (findingsEl && typeof Chart !== 'undefined') {
+        new Chart(findingsEl, {
+          type:'bar',
+          data:{
+            labels:['Govern','Identify','Protect','Detect','Respond','Recover'],
+            datasets:[
+              {label:'Critical',data:[1,1,1,1,0,0],backgroundColor:'#dc2626',borderRadius:4},
+              {label:'High',data:[2,1,2,2,1,1],backgroundColor:'#ea580c',borderRadius:4},
+              {label:'Medium',data:[1,2,2,1,1,0],backgroundColor:'#d97706',borderRadius:4},
+              {label:'Low',data:[0,1,1,0,1,0],backgroundColor:'#16a34a',borderRadius:4}
+            ]
+          },
+          options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}},plugins:{legend:{position:'bottom'}}}
+        });
+      }
+      // SAR Radar
+      const sarRadarEl = document.getElementById('sarRadarChart');
+      if (sarRadarEl && typeof Chart !== 'undefined') {
+        new Chart(sarRadarEl, {
+          type:'radar',
+          data:{
+            labels:['Govern','Identify','Protect','Detect','Respond','Recover'],
+            datasets:[
+              {label:'Current',data:[2.4,2.8,3.1,2.2,2.6,2.0],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},
+              {label:'Target',data:[4,3,4,4,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}
+            ]
+          },
+          options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}}
+        });
+      }
+    }
   </script>
 </body>
 </html>
