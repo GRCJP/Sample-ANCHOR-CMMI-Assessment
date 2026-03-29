@@ -108,7 +108,7 @@
 
     <div class="nav-section">DASHBOARD</div>
     <div class="nav-item active" role="button" tabindex="0" onclick="showSection('portfolio', this)">
-      <div class="step-num" style="background:#27ae60">🏛</div>
+      <div class="step-num" style="background:#27ae60"></div>
       <div>
         <div style="font-size:.65rem; opacity:.6; font-weight:400;">MASTER TRACKER</div>
         Agency Portfolio
@@ -117,25 +117,25 @@
 
     <div class="nav-section">Capabilities</div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('sai', this)">
-      <div class="step-num" style="background:#065f46">📋</div>
+      <div class="step-num" style="background:#065f46"></div>
       <div><div style="font-size:.65rem; opacity:.6; font-weight:400;">AGENCY-FACING</div>CSF Intake &amp; Upload</div>
     </div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('sp', this)">
-      <div class="step-num" style="background:#0d9488">📅</div>
+      <div class="step-num" style="background:#0d9488"></div>
       <div>2-Year Pipeline</div>
     </div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('sa', this)">
-      <div class="step-num" style="background:rgba(255,255,255,.1)">🏛</div>
+      <div class="step-num" style="background:rgba(255,255,255,.1)"></div>
       <div>Agency Portal</div>
     </div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('sw', this)">
-      <div class="step-num" style="background:rgba(255,255,255,.1)">⚡</div>
+      <div class="step-num" style="background:rgba(255,255,255,.1)"></div>
       <div>Workflow Templates</div>
     </div>
 
     <div class="nav-section">System</div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('settings', this)">
-      <div class="step-num" style="background:#6b7280">⚙️</div>
+      <div class="step-num" style="background:#6b7280"></div>
       <div><div style="font-size:.65rem; opacity:.6; font-weight:400;">CONFIG</div>Settings &amp; Integration</div>
     </div>
 
@@ -166,7 +166,7 @@
           <h1>Manage Multi-Agency Assessment Portfolio</h1>
           <p>Select an agency to enter the full overview app. Use Create New System to launch Step 1 Pre-Assess modal and generate preliminary POD scoring when questionnaire responses are returned.</p>
           <div style="margin-top:10px;">
-            <a href="#agency-table" class="btn btn-primary btn-sm" style="text-decoration:none;">⬇ Jump to Agency Table</a>
+            <a href="#agency-table" class="btn btn-primary btn-sm" style="text-decoration:none;">Jump to Agency Table</a>
           </div>
         </div>
 
@@ -189,11 +189,11 @@
         <!-- ---- MATURITY DISTRIBUTION + COMPLETION PROGRESS ---- -->
         <div class="grid-2" style="margin-bottom:20px;">
           <div class="card">
-            <div class="card-title">📊 Statewide Maturity Distribution</div>
+            <div class="card-title">Statewide Maturity Distribution</div>
             <div class="chart-wrap-sm"><canvas id="mainStateChart"></canvas></div>
           </div>
           <div class="card">
-            <div class="card-title">📈 Assessment Completion Progress</div>
+            <div class="card-title">Assessment Completion Progress</div>
             <div style="margin-bottom:12px;">
               <div style="display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:4px;"><span>Overall Progress</span><span>54 / 90</span></div>
               <div class="progress-bar-wrap"><div class="progress-bar pb-blue" style="width:60%"></div></div>
@@ -211,18 +211,18 @@
               <div class="progress-bar-wrap"><div class="progress-bar pb-blue" style="width:63%"></div></div>
             </div>
             <hr class="divider">
-            <div class="warn-box" style="margin:0;">⚠️ <strong>8 agencies</strong> have not responded to intake requests. Escalation letters issued to agency heads. DoIT PM notified.</div>
+            <div class="warn-box" style="margin:0;"><strong>8 agencies</strong> have not responded to intake requests. Escalation letters issued to agency heads. DoIT PM notified.</div>
           </div>
         </div>
 
         <!-- ---- TREND CHARTS ---- -->
         <div class="grid-2" style="margin-bottom:20px;">
           <div class="card">
-            <div class="card-title">📈 Statewide Average Maturity — Historical Trend</div>
+            <div class="card-title">Statewide Average Maturity — Historical Trend</div>
             <div class="chart-wrap"><canvas id="mainTrendChart"></canvas></div>
           </div>
           <div class="card">
-            <div class="card-title">🔴 Critical Findings Over Time</div>
+            <div class="card-title">Critical Findings Over Time</div>
             <div class="chart-wrap"><canvas id="mainFindingsChart"></canvas></div>
           </div>
         </div>
@@ -230,11 +230,11 @@
         <!-- ---- MATURITY BY FUNCTION + TOP/AT-RISK ---- -->
         <div class="grid-2" style="margin-bottom:20px;">
           <div class="card">
-            <div class="card-title">📊 Maturity by NIST CSF Function — Statewide Avg</div>
+            <div class="card-title">Maturity by NIST CSF Function — Statewide Avg</div>
             <div class="chart-wrap-sm"><canvas id="mainFunctionChart"></canvas></div>
           </div>
           <div class="card">
-            <div class="card-title">🏆 Top Performing vs. At-Risk Agencies</div>
+            <div class="card-title">Top Performing vs. At-Risk Agencies</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Category</th><th>Agency</th><th>Maturity</th><th>Trend</th></tr></thead>
@@ -249,15 +249,15 @@
               </table>
             </div>
             <div class="btn-row">
-              <button class="btn btn-outline btn-sm" onclick="notify('📊 Trend report exported: MD_Statewide_Trend_Report_Q1_2026.pdf')">📥 Export Trend Report</button>
-              <button class="btn btn-outline btn-sm" onclick="notify('📧 Executive summary sent to DoIT leadership')">📧 Send to DoIT</button>
+              <button class="btn btn-outline btn-sm" onclick="notify('📊 Trend report exported: MD_Statewide_Trend_Report_Q1_2026.pdf')">Export Trend Report</button>
+              <button class="btn btn-outline btn-sm" onclick="notify('📧 Executive summary sent to DoIT leadership')">Send to DoIT</button>
             </div>
           </div>
         </div>
 
         <!-- ---- SCHEDULE / TIMELINE TRACKER ---- -->
         <div class="card" style="margin-bottom:20px;">
-          <div class="card-title">🗓 Assessment Schedule &amp; Timeline Tracker</div>
+          <div class="card-title">Assessment Schedule &amp; Timeline Tracker</div>
           <div class="info-box" style="margin-bottom:14px; font-size:.78rem;">Track assessment milestones, durations, and SLA compliance across the demo cohort. Colors indicate on-time (green), at-risk (amber), and overdue (red) status.</div>
 
           <div class="grid-4" style="margin-bottom:16px;">
@@ -381,11 +381,11 @@
 
           <div class="grid-2">
             <div class="card" style="margin-bottom:0;">
-              <div class="card-title">⏱ Cycle Time by Phase — Active Assessments</div>
+              <div class="card-title">Cycle Time by Phase — Active Assessments</div>
               <div class="chart-wrap-sm"><canvas id="mainCycleChart"></canvas></div>
             </div>
             <div class="card" style="margin-bottom:0;">
-              <div class="card-title">📅 SLA Compliance — Rolling 90 Days</div>
+              <div class="card-title">SLA Compliance — Rolling 90 Days</div>
               <div class="chart-wrap-sm"><canvas id="mainSlaChart"></canvas></div>
             </div>
           </div>
@@ -393,7 +393,7 @@
 
         <!-- ---- AGENCY TABLE ---- -->
         <div class="card" id="agency-table">
-          <div class="card-title">🏛 Agency Selection &amp; Assessment Management</div>
+          <div class="card-title">Agency Selection &amp; Assessment Management</div>
           <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
             <strong style="font-size:.72rem; color:var(--primary); white-space:nowrap;">Filters:</strong>
             <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
@@ -406,17 +406,26 @@
               <option>Wave: All</option><option>Wave 1</option><option>Wave 2</option><option>Wave 3+</option>
             </select>
             <input type="text" placeholder="Search agency..." style="padding:5px 9px; border-radius:6px; border:1px solid var(--border); font-size:.75rem; flex:1; min-width:120px;">
-            <button class="btn btn-primary btn-sm" onclick="notify('🔍 Filters applied')">🔍 Apply</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📥 Master tracker exported: MD_Statewide_Assessment_Tracker.xlsx')">📥 Export</button>
+            <button class="btn btn-primary btn-sm" onclick="notify('🔍 Filters applied')">Apply</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('📥 Master tracker exported: MD_Statewide_Assessment_Tracker.xlsx')">Export</button>
           </div>
           <div class="btn-row" style="margin-bottom:12px;">
-            <button class="btn btn-accent" onclick="openCreateAssessmentModal()">➕ Create New System Assessment</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminder batch sent to pending agencies')">📨 Send Intake Reminders</button>
+            <button class="btn btn-accent" onclick="openCreateAssessmentModal()">+ Create New System Assessment</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminder batch sent to pending agencies')">Send Intake Reminders</button>
           </div>
-          <div class="table-wrap">
-            <table>
+          <div class="table-wrap" style="overflow-x:auto;">
+            <table style="width:100%; table-layout:fixed;">
+              <colgroup>
+                <col style="width:22%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:9%;">
+                <col style="width:15%;">
+                <col style="width:8%;">
+                <col style="width:26%;">
+              </colgroup>
               <thead>
-                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Current Stage</th><th>Progress</th><th>Actions</th></tr>
+                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Stage</th><th>%</th><th>Actions</th></tr>
               </thead>
               <tbody id="portfolio-body">
               </tbody>
@@ -429,12 +438,12 @@
       <!-- ============================================================ CSF INTAKE & UPLOAD -->
       <section class="section" id="sai" aria-hidden="true">
         <div class="page-header">
-          <div class="step-tag" style="background:#065f46;">📋 AGENCY-FACING | Self-Service Portal</div>
+          <div class="step-tag" style="background:#065f46;">AGENCY-FACING | Self-Service Portal</div>
           <h1>Agency CSF Intake &amp; Evidence Upload Portal</h1>
           <p>Complete your NIST CSF 2.0 self-assessment and upload supporting evidence. Each response maps directly to CMMI maturity scoring — results flow live to your Assurit assessor's dashboard.</p>
         </div>
         <div class="anchor-banner">
-          <div>📋</div>
+          <div></div>
           <div><strong>ANCHOR — ASSESS Phase:</strong> Agency representatives answer targeted questions for each NIST CSF 2.0 subcategory and attach supporting evidence. Answers automatically update the CMMI maturity baseline and drive assessor on-site scope.</div>
         </div>
         <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1a3a5c,#2563a8); color:#fff; padding:16px 22px;">
@@ -448,9 +457,9 @@
               </div>
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-              <span style="background:rgba(39,174,96,.28); color:#9efcc9; padding:4px 10px; border-radius:12px; font-size:.72rem; font-weight:700;">🔒 Secure Session</span>
+              <span style="background:rgba(39,174,96,.28); color:#9efcc9; padding:4px 10px; border-radius:12px; font-size:.72rem; font-weight:700;">Secure Session</span>
               <span style="background:rgba(255,255,255,.15); color:#fff; padding:4px 10px; border-radius:12px; font-size:.72rem; font-weight:700;">Due: May 30, 2026</span>
-              <button class="btn" style="background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.35); padding:5px 14px; font-size:.78rem;" onclick="notify('💾 Progress saved.')">💾 Save Progress</button>
+              <button class="btn" style="background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.35); padding:5px 14px; font-size:.78rem;" onclick="notify('💾 Progress saved.')">Save Progress</button>
             </div>
           </div>
         </div>
@@ -469,7 +478,7 @@
           </div>
           <div>
             <div class="card live-score-panel" style="padding:20px;">
-              <div class="card-title" style="margin-bottom:14px;"><span class="icon">📊</span> Live CMMI Score</div>
+              <div class="card-title" style="margin-bottom:14px;">Live CMMI Score</div>
               <div class="lsp-ring-wrap">
                 <div class="lsp-ring" id="sai-ring" style="border-color:#e5e7eb;">
                   <div style="font-size:1.5rem; font-weight:800; line-height:1;" id="sai-ring-score">0.0</div>
@@ -487,8 +496,8 @@
               </div>
               <div style="border-top:1px solid var(--border); padding-top:14px;">
                 <div style="font-size:.72rem; color:var(--text-muted); margin-bottom:10px;">Evidence Uploads: <strong id="sai-upload-count">0</strong> of 60 files</div>
-                <button class="btn btn-primary" style="width:100%; margin-bottom:8px;" onclick="submitSaiIntake()">📤 Submit to Assessor</button>
-                <button class="btn btn-outline" style="width:100%; font-size:.78rem;" onclick="notify('📄 Draft baseline generated.')">📄 Generate Baseline Draft</button>
+                <button class="btn btn-primary" style="width:100%; margin-bottom:8px;" onclick="submitSaiIntake()">Submit to Assessor</button>
+                <button class="btn btn-outline" style="width:100%; font-size:.78rem;" onclick="notify('📄 Draft baseline generated.')">Generate Baseline Draft</button>
               </div>
             </div>
           </div>
@@ -498,12 +507,12 @@
       <!-- ============================================================ 2-YEAR PIPELINE -->
       <section class="section" id="sp" aria-hidden="true">
         <div class="page-header">
-          <div class="step-tag" style="background:#0d9488;">📅 OPTIMIZE | Program Management</div>
+          <div class="step-tag" style="background:#0d9488;">OPTIMIZE | Program Management</div>
           <h1>90-Agency Assessment Pipeline — 24-Month Schedule</h1>
           <p>Wave-based delivery across all Maryland state agencies. Each wave is sized to pod capacity and agency complexity.</p>
         </div>
         <div class="anchor-banner">
-          <div>📅</div>
+          <div></div>
           <div><strong>ANCHOR — Optimize Phase:</strong> The pipeline view gives DoIT and Assurit's PMO real-time visibility into all 90 assessments across the 24-month program. Waves are sequenced by agency risk tier and pod availability.</div>
         </div>
         <div class="grid-4" style="margin-bottom:20px;">
@@ -520,7 +529,7 @@
         </div>
         <div class="tab-content active" id="tp-gantt">
           <div class="card">
-            <div class="card-title">📅 24-Month Program Timeline — All 90 Agencies</div>
+            <div class="card-title">24-Month Program Timeline — All 90 Agencies</div>
             <div style="overflow-x:auto;">
               <div class="wave-month-header" style="min-width:900px;">
                 <div class="wave-month-label-spacer"></div>
@@ -551,14 +560,14 @@
             </table>
           </div>
           <div class="btn-row">
-            <button class="btn btn-outline btn-sm" onclick="notify('📥 Wave schedule exported')">📥 Export Wave Plan</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('🔗 Schedule synced to ServiceNow')">🔗 Sync to ServiceNow</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('📥 Wave schedule exported')">Export Wave Plan</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('🔗 Schedule synced to ServiceNow')">Sync to ServiceNow</button>
           </div>
         </div>
         <div class="tab-content" id="tp-pods">
           <div class="grid-2">
             <div class="card">
-              <div class="card-title">🫛 Pod Roster — Current Active Pods</div>
+              <div class="card-title">Pod Roster — Current Active Pods</div>
               <div class="table-wrap">
                 <table>
                   <thead><tr><th>Pod</th><th>Type</th><th>Lead</th><th>Staff</th><th>Current Agency</th><th>Utilization</th></tr></thead>
@@ -574,12 +583,12 @@
               </div>
             </div>
             <div class="card">
-              <div class="card-title">📊 Pod Capacity vs. Demand</div>
+              <div class="card-title">Pod Capacity vs. Demand</div>
               <div class="chart-wrap-sm"><canvas id="podCapacityChart"></canvas></div>
             </div>
           </div>
           <div class="card">
-            <div class="card-title">📐 Pod Sizing Logic — Driven by Questionnaire Score</div>
+            <div class="card-title">Pod Sizing Logic — Driven by Questionnaire Score</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Complexity Score</th><th>Pod Type</th><th>Team Size</th><th>Typical Duration</th><th>Evidence Items</th><th>CMMI Controls</th></tr></thead>
@@ -601,11 +610,11 @@
           </div>
           <div class="grid-2">
             <div class="card">
-              <div class="card-title">📈 Monthly Assessment Throughput</div>
+              <div class="card-title">Monthly Assessment Throughput</div>
               <div class="chart-wrap"><canvas id="throughputChart"></canvas></div>
             </div>
             <div class="card">
-              <div class="card-title">🚨 Active Issues &amp; Escalations</div>
+              <div class="card-title">Active Issues &amp; Escalations</div>
               <div class="table-wrap">
                 <table>
                   <thead><tr><th>Issue</th><th>Agency</th><th>Severity</th><th>Days Open</th><th>Status</th></tr></thead>
@@ -618,7 +627,7 @@
                 </table>
               </div>
               <div class="btn-row">
-                <button class="btn btn-outline btn-sm" onclick="notify('📧 Escalation report sent to DoIT OSM')">📧 Report to OSM</button>
+                <button class="btn btn-outline btn-sm" onclick="notify('📧 Escalation report sent to DoIT OSM')">Report to OSM</button>
               </div>
             </div>
           </div>
@@ -628,7 +637,7 @@
       <!-- ============================================================ AGENCY PORTAL -->
       <section class="section" id="sa" aria-hidden="true">
         <div class="page-header">
-          <div class="step-tag">🏛 Collaboration &amp; Stakeholder Engagement</div>
+          <div class="step-tag">Collaboration &amp; Stakeholder Engagement</div>
           <h1>Agency Portal — MDOT View</h1>
           <p>Agency representatives can upload evidence, respond to findings, and track their assessment status in real time.</p>
         </div>
@@ -647,7 +656,7 @@
             <div class="stat-card"><div class="stat-label">Assessment Progress</div><div class="stat-value">68%</div><div class="stat-sub">On track</div></div>
           </div>
           <div class="card">
-            <div class="card-title">📋 Evidence Request Status</div>
+            <div class="card-title">Evidence Request Status</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Requested Item</th><th>Due Date</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
@@ -665,30 +674,30 @@
         </div>
         <div class="tab-content" id="ta-upload">
           <div class="card">
-            <div class="card-title">📁 Upload Evidence — MDOT</div>
+            <div class="card-title">Upload Evidence — MDOT</div>
             <div class="form-grid" style="margin-bottom:16px;">
               <div class="form-group"><label>Evidence Category</label><select><option>Software Inventory</option><option>Security Training Records</option><option>Third-Party Vendor Contracts</option></select></div>
               <div class="form-group"><label>NIST CSF Function</label><select><option>IDENTIFY — Asset Management</option><option>PROTECT — Training</option><option>GOVERN — Risk Management</option></select></div>
               <div class="form-group" style="grid-column:1/-1;"><label>Description / Notes</label><textarea rows="2" placeholder="Describe what this document covers..."></textarea></div>
             </div>
             <div class="upload-zone" onclick="simulateUpload()">
-              <div class="upload-icon">📂</div>
+              <div class="upload-icon"></div>
               <div class="upload-label">Click to browse or drag &amp; drop files here</div>
               <div class="upload-sub">Supported: PDF, DOCX, XLSX, PNG, JPG | Max 50MB per file</div>
             </div>
             <div id="upload-list" style="margin-top:16px;"></div>
             <div class="btn-row">
-              <button class="btn btn-primary" onclick="simulateUpload()">📤 Submit Evidence</button>
+              <button class="btn btn-primary" onclick="simulateUpload()">Submit Evidence</button>
               <button class="btn btn-outline" onclick="notify('💾 Draft saved.')">Save Draft</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-title">📂 Previously Submitted Files</div>
+            <div class="card-title">Previously Submitted Files</div>
             <div>
-              <div class="upload-item"><div class="fi-icon">📄</div><div class="fi-name">MDOT_InfoSec_Policy_2025.pdf</div><div class="fi-size">1.2 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon">🗺</div><div class="fi-name">MDOT_Network_Diagram_v3.2.vsdx</div><div class="fi-size">4.7 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon">📊</div><div class="fi-name">MDOT_Patch_Logs_Q1_2026.xlsx</div><div class="fi-size">892 KB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon">📄</div><div class="fi-name">MDOT_Access_Control_Policy.pdf</div><div class="fi-size">540 KB</div><span class="badge badge-orange fi-status">Under Review</span></div>
+              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_InfoSec_Policy_2025.pdf</div><div class="fi-size">1.2 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
+              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Network_Diagram_v3.2.vsdx</div><div class="fi-size">4.7 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
+              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Patch_Logs_Q1_2026.xlsx</div><div class="fi-size">892 KB</div><span class="badge badge-green fi-status">Accepted</span></div>
+              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Access_Control_Policy.pdf</div><div class="fi-size">540 KB</div><span class="badge badge-orange fi-status">Under Review</span></div>
             </div>
           </div>
         </div>
@@ -713,17 +722,17 @@
             <div class="btn-row" style="margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="notify('✅ Response saved for F-005')">Save Response</button><select style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;"><option>Agency Concurs</option><option>Agency Disputes</option><option>Risk Accepted</option></select></div>
           </div>
           <div class="btn-row">
-            <button class="btn btn-primary" onclick="notify('✅ All responses submitted to Assurit')">📤 Submit All Responses</button>
+            <button class="btn btn-primary" onclick="notify('✅ All responses submitted to Assurit')">Submit All Responses</button>
             <button class="btn btn-outline" onclick="notify('💾 Draft responses saved')">Save Drafts</button>
           </div>
         </div>
         <div class="tab-content" id="ta-notif">
           <div class="card">
-            <div class="card-title">🔔 Notifications — MDOT</div>
+            <div class="card-title">Notifications — MDOT</div>
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#fef3cd; border:1px solid #f6cc6a;"><div style="font-size:1.2rem;">⚠️</div><div><div style="font-size:.85rem; font-weight:700;">Evidence Overdue: Software Inventory</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Due Apr 16 — now 8 days overdue.</div></div></div>
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#dbeafe; border:1px solid #93c5fd;"><div style="font-size:1.2rem;">📋</div><div><div style="font-size:.85rem; font-weight:700;">6 Draft Findings Ready for Review</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Respond by May 12, 2026.</div></div></div>
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#d4f4e2; border:1px solid #6fcf97;"><div style="font-size:1.2rem;">✅</div><div><div style="font-size:.85rem; font-weight:700;">Evidence Accepted: MDOT_InfoSec_Policy_2025.pdf</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Reviewed and accepted by assessor S. Patel.</div></div></div>
+              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#fef3cd; border:1px solid #f6cc6a;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">Evidence Overdue: Software Inventory</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Due Apr 16 — now 8 days overdue.</div></div></div>
+              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#dbeafe; border:1px solid #93c5fd;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">6 Draft Findings Ready for Review</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Respond by May 12, 2026.</div></div></div>
+              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#d4f4e2; border:1px solid #6fcf97;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">Evidence Accepted: MDOT_InfoSec_Policy_2025.pdf</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Reviewed and accepted by assessor S. Patel.</div></div></div>
             </div>
             <div class="btn-row">
               <button class="btn btn-outline btn-sm" onclick="notify('✅ All notifications marked as read')">Mark All Read</button>
@@ -735,7 +744,7 @@
       <!-- ============================================================ WORKFLOW TEMPLATES -->
       <section class="section" id="sw" aria-hidden="true">
         <div class="page-header">
-          <div class="step-tag">⚡ Workflow &amp; Assessment Management</div>
+          <div class="step-tag">Workflow &amp; Assessment Management</div>
           <h1>Workflow Templates &amp; Configurability</h1>
           <p>Select and customize assessment profiles by agency type, risk level, or system category. Templates vary requirements at each lifecycle stage.</p>
         </div>
@@ -749,44 +758,44 @@
           <div class="wf-grid" style="margin-bottom:20px;">
             <div class="wf-card selected" onclick="selectTemplate(this,'Standard Enterprise')">
               <span class="wf-badge badge badge-blue">Selected</span>
-              <div class="wf-title">🏛 Standard Enterprise IT</div>
+              <div class="wf-title">Standard Enterprise IT</div>
               <div class="wf-desc">Full NIST CSF 2.0 assessment for agencies with mixed on-prem/cloud infrastructure. Covers all 6 functions, 106 subcategories.</div>
               <div class="wf-stages"><span class="wf-stage">Intake</span><span class="wf-stage">Mapping</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~42 days | 4 assessors | 68 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'Small Agency')">
-              <div class="wf-title">🏢 Small Agency Streamlined</div>
+              <div class="wf-title">Small Agency Streamlined</div>
               <div class="wf-desc">Abbreviated assessment for agencies with &lt;100 employees and low-risk profiles.</div>
               <div class="wf-stages"><span class="wf-stage">Intake</span><span class="wf-stage">Mapping</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~21 days | 2 assessors | 32 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'OT/ICS')">
-              <div class="wf-title">⚙️ OT / ICS Systems</div>
+              <div class="wf-title">OT / ICS Systems</div>
               <div class="wf-desc">Specialized profile for operational technology environments. Includes ICS-specific controls (NIST SP 800-82).</div>
               <div class="wf-stages"><span class="wf-stage">OT Scoping</span><span class="wf-stage">CSF+800-82</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~56 days | 5 assessors | 84 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'Cloud-Native')">
-              <div class="wf-title">☁️ Cloud-Native (SaaS/IaaS)</div>
+              <div class="wf-title">Cloud-Native (SaaS/IaaS)</div>
               <div class="wf-desc">Tailored for cloud-first agencies. Emphasizes cloud security controls, shared responsibility, FedRAMP alignment.</div>
               <div class="wf-stages"><span class="wf-stage">Cloud Scoping</span><span class="wf-stage">CSF+FedRAMP</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~28 days | 3 assessors | 45 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'High-Risk')">
-              <div class="wf-title">🔴 High-Risk / Critical Agency</div>
+              <div class="wf-title">High-Risk / Critical Agency</div>
               <div class="wf-desc">Enhanced profile for agencies handling CJI, health records, or critical infrastructure.</div>
               <div class="wf-stages"><span class="wf-stage">Extended Intake</span><span class="wf-stage">Full CSF</span><span class="wf-stage">Tech Testing</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~63 days | 6 assessors | 92 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'Reassessment')">
-              <div class="wf-title">🔄 Reassessment / Follow-up</div>
+              <div class="wf-title">Reassessment / Follow-up</div>
               <div class="wf-desc">Focused reassessment for agencies completing POA&amp;M remediation.</div>
               <div class="wf-stages"><span class="wf-stage">POA&amp;M Review</span><span class="wf-stage">Evidence</span><span class="wf-stage">Verification</span><span class="wf-stage">Update SAR</span></div>
               <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~14 days | 2 assessors | 18 evidence items</div>
             </div>
           </div>
           <div class="card">
-            <div class="card-title">⚙️ Template Customization — Standard Enterprise IT</div>
+            <div class="card-title">Template Customization — Standard Enterprise IT</div>
             <div class="form-grid">
               <div class="form-group"><label>Evidence Collection Window</label><select><option>14 days</option><option selected>21 days</option><option>30 days</option></select></div>
               <div class="form-group"><label>Interview Depth</label><select><option>Minimal (2 sessions)</option><option selected>Standard (4–6 sessions)</option><option>Extended (8+ sessions)</option></select></div>
@@ -794,14 +803,14 @@
               <div class="form-group"><label>CMMI Scoring Weight</label><select><option>Equal weight all functions</option><option selected>Risk-weighted (Detect/Respond priority)</option></select></div>
             </div>
             <div class="btn-row">
-              <button class="btn btn-primary" onclick="notify('✅ Template configuration saved')">💾 Save Configuration</button>
-              <button class="btn btn-outline" onclick="notify('📋 Template cloned')">📋 Clone Template</button>
+              <button class="btn btn-primary" onclick="notify('✅ Template configuration saved')">Save Configuration</button>
+              <button class="btn btn-outline" onclick="notify('📋 Template cloned')">Clone Template</button>
             </div>
           </div>
         </div>
         <div class="tab-content" id="tw-lifecycle">
           <div class="card">
-            <div class="card-title">🔄 Assessment Lifecycle Stages — Standard Enterprise Template</div>
+            <div class="card-title">Assessment Lifecycle Stages — Standard Enterprise Template</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Stage</th><th>Activities</th><th>Required Approvals</th><th>Entry Criteria</th><th>Exit Criteria</th><th>Configurable</th></tr></thead>
@@ -820,7 +829,7 @@
         </div>
         <div class="tab-content" id="tw-rules">
           <div class="card">
-            <div class="card-title">⚡ Automated Workflow Rules</div>
+            <div class="card-title">Automated Workflow Rules</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Trigger</th><th>Condition</th><th>Automated Action</th><th>Active</th></tr></thead>
@@ -837,7 +846,7 @@
             </div>
             <div class="btn-row">
               <button class="btn btn-outline btn-sm" onclick="notify('⚡ New workflow rule added')">+ Add Rule</button>
-              <button class="btn btn-outline btn-sm" onclick="notify('📥 Workflow ruleset exported')">📥 Export Rules</button>
+              <button class="btn btn-outline btn-sm" onclick="notify('📥 Workflow ruleset exported')">Export Rules</button>
             </div>
           </div>
         </div>
@@ -853,7 +862,7 @@
 
         <div class="grid-2">
           <div class="card">
-            <div class="card-title">🔗 ServiceNow GRC Integration</div>
+            <div class="card-title">ServiceNow GRC Integration</div>
             <div class="form-grid">
               <div class="form-group" style="grid-column:1/-1;"><label>ServiceNow Instance URL</label><input value="https://maryland.service-now.com/grc"></div>
               <div class="form-group"><label>Integration User</label><input value="assurit_api_svc"></div>
@@ -868,7 +877,7 @@
             </div>
           </div>
           <div class="card">
-            <div class="card-title">👥 User Roles &amp; Access Control</div>
+            <div class="card-title">User Roles &amp; Access Control</div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Role</th><th>Access Level</th><th>Users</th></tr></thead>
@@ -890,7 +899,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title">📧 Email &amp; Notification Settings</div>
+          <div class="card-title">Email &amp; Notification Settings</div>
           <div class="form-grid">
           </div>
         </div>
@@ -909,7 +918,7 @@
 
         <!-- Agency & POD -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">🏛 Agency &amp; POD Assignment</div>
+          <div class="card-title">Agency &amp; POD Assignment</div>
           <input id="ca-original-key" type="hidden">
           <div class="form-grid">
             <div class="form-group"><label>Agency Name</label><input id="ca-agency-name" placeholder="e.g., Maryland Dept. of Transportation (MDOT)"></div>
@@ -922,7 +931,7 @@
 
         <!-- Point of Contact -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">👤 Point of Contact</div>
+          <div class="card-title">Point of Contact</div>
           <div class="form-grid">
             <div class="form-group"><label>Contact Name</label><input id="ca-recipient" placeholder="e.g., Lisa Harmon"></div>
             <div class="form-group"><label>Title / Role</label><input id="ca-title" placeholder="e.g., Chief Information Security Officer"></div>
@@ -935,7 +944,7 @@
 
         <!-- System Environment -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">☁️ System Environment</div>
+          <div class="card-title">System Environment</div>
           <div class="form-grid">
             <div class="form-group"><label>System Type</label><select id="ca-systype"><option value="Hybrid (On-Prem + Cloud)" selected>Hybrid (On-Prem + Cloud)</option><option value="Cloud-Only (SaaS/IaaS)">Cloud-Only (SaaS/IaaS)</option><option value="On-Premises Only">On-Premises Only</option><option value="OT/ICS">OT/ICS</option></select></div>
             <div class="form-group"><label>Agency Size</label><select id="ca-size"><option value="Large (500+ employees)">Large (500+ employees)</option><option value="Medium (100–499)">Medium (100–499)</option><option value="Small (<100)">Small (&lt;100)</option></select></div>
@@ -948,7 +957,7 @@
 
         <!-- Assessment Parameters -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
-          <div class="card-title">📋 Assessment Parameters</div>
+          <div class="card-title">Assessment Parameters</div>
           <div class="form-grid">
             <div class="form-group"><label>Lead Assessor</label><select id="ca-assessor"><option value="J. Williams" selected>J. Williams</option><option value="S. Patel">S. Patel</option><option value="R. Okafor">R. Okafor</option><option value="T. Adams">T. Adams</option><option value="M. Chen">M. Chen</option></select></div>
             <div class="form-group"><label>Team Size</label><select id="ca-teamsize"><option value="Large (6–8 assessors)">Large (6–8 assessors)</option><option value="Standard (4–5 assessors)">Standard (4–5 assessors)</option><option value="Small (2–3 assessors)">Small (2–3 assessors)</option></select></div>
@@ -964,7 +973,7 @@
         <div id="create-status" class="info-box" style="display:none;"></div>
 
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="createSystemAssessment()">🚀 Create System &amp; Open Assessment</button>
+          <button class="btn btn-primary" onclick="createSystemAssessment()">Create System &amp; Open Assessment</button>
           <button class="btn btn-outline" onclick="closeCreateAssessmentModal()">Cancel</button>
         </div>
       </div>
@@ -1230,16 +1239,18 @@
         const pod = getPod(id);
         const intakeBadge = intake==='Created' ? 'badge-green' : 'badge-gray';
         return `<tr>
-          <td>${a.name}</td>
+          <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.name}">${a.name}</td>
           <td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td>
           <td><span class="badge ${intakeBadge}">${intake}</span></td>
           <td>${pod}</td>
-          <td>${a.stage}</td>
+          <td style="font-size:.78rem;">${a.stage}</td>
           <td>${a.progress}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="openOverview('${id}')">Open Assessment</button>
-            <button class="btn btn-outline btn-sm" onclick="openCreateAssessmentModal('${id}')">Edit</button>
-            <button class="btn btn-outline btn-sm" onclick="deleteSystem('${id}')">Delete</button>
+            <div style="display:flex;gap:4px;flex-wrap:nowrap;">
+              <button class="btn btn-primary btn-sm" style="padding:4px 10px;font-size:.72rem;" onclick="openOverview('${id}')" title="Open Assessment">Open</button>
+              <button class="btn btn-outline btn-sm" style="padding:4px 7px;font-size:.82rem;" onclick="openCreateAssessmentModal('${id}')" title="Edit System">✏️</button>
+              <button class="btn btn-sm" style="padding:4px 7px;font-size:.82rem;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;" onclick="deleteSystem('${id}')" title="Delete System">🗑️</button>
+            </div>
           </td>
         </tr>`;
       }).join('');
