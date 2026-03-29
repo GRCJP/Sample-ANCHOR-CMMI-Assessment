@@ -26,20 +26,71 @@
             overflow-x: hidden;
         }
         
-        /* Baltimore cityscape background */
-        .cityscape-bg {
+        /* Left cityscape */
+        .cityscape-left {
             position: absolute;
-            bottom: 0;
             left: 0;
-            right: 0;
-            height: 250px;
-            opacity: 0.12;
+            bottom: 0;
+            width: 35%;
+            height: 100vh;
+            opacity: 0.15;
             z-index: 0;
         }
         
-        .cityscape-bg svg {
+        .cityscape-left svg {
             width: 100%;
             height: 100%;
+        }
+        
+        /* Right cityscape */
+        .cityscape-right {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 35%;
+            height: 100vh;
+            opacity: 0.15;
+            z-index: 0;
+        }
+        
+        .cityscape-right svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Maryland flag pattern overlay */
+        .md-pattern-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            opacity: 0.08;
+            background: 
+                linear-gradient(45deg, 
+                    #ffc107 0%, #ffc107 25%, 
+                    transparent 25%, transparent 50%, 
+                    #000 50%, #000 75%, 
+                    transparent 75%, transparent 100%);
+            background-size: 40px 40px;
+            border-radius: 0 0 100% 0;
+        }
+        
+        .md-pattern-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            opacity: 0.08;
+            background: 
+                linear-gradient(-45deg, 
+                    #dc2626 0%, #dc2626 25%, 
+                    #fff 25%, #fff 50%, 
+                    #dc2626 50%, #dc2626 75%, 
+                    #fff 75%, #fff 100%);
+            background-size: 40px 40px;
+            border-radius: 0 0 0 100%;
         }
         
         .login-container {
@@ -50,18 +101,17 @@
             justify-content: center;
             min-height: 100vh;
             padding: 40px 20px;
-            margin: 0 auto;
-            max-width: 100%;
         }
         
         .login-card {
             background: white;
             border-radius: 24px;
-            max-width: 480px;
+            max-width: 500px;
             width: 100%;
             padding: 50px 45px;
             box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
             text-align: center;
+            position: relative;
         }
         
         /* Maryland Logo */
@@ -85,9 +135,10 @@
         }
         
         .login-subtitle {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #64748b;
             margin-bottom: 10px;
+            line-height: 1.4;
         }
         
         .login-tagline {
@@ -344,6 +395,14 @@
             opacity: 1;
         }
         
+        @media (max-width: 768px) {
+            .cityscape-left,
+            .cityscape-right {
+                width: 25%;
+                opacity: 0.1;
+            }
+        }
+        
         @media (max-width: 480px) {
             .login-card {
                 padding: 40px 30px;
@@ -352,45 +411,125 @@
             .md-logo img {
                 height: 40px;
             }
+            
+            .cityscape-left,
+            .cityscape-right {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Baltimore Cityscape Background -->
-    <div class="cityscape-bg">
-        <svg viewBox="0 0 1200 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <!-- Simplified Baltimore skyline -->
-            <rect x="0" y="150" width="70" height="100" fill="rgba(255,255,255,0.4)"/>
-            <rect x="80" y="120" width="55" height="130" fill="rgba(255,255,255,0.35)"/>
-            <rect x="145" y="140" width="65" height="110" fill="rgba(255,255,255,0.4)"/>
-            <rect x="220" y="100" width="80" height="150" fill="rgba(255,255,255,0.45)"/>
-            <rect x="310" y="80" width="70" height="170" fill="rgba(255,255,255,0.4)"/>
-            <rect x="390" y="110" width="60" height="140" fill="rgba(255,255,255,0.35)"/>
-            <rect x="460" y="70" width="90" height="180" fill="rgba(255,255,255,0.5)"/>
-            <rect x="560" y="90" width="75" height="160" fill="rgba(255,255,255,0.4)"/>
-            <rect x="645" y="120" width="65" height="130" fill="rgba(255,255,255,0.35)"/>
-            <rect x="720" y="100" width="80" height="150" fill="rgba(255,255,255,0.45)"/>
-            <rect x="810" y="130" width="60" height="120" fill="rgba(255,255,255,0.4)"/>
-            <rect x="880" y="110" width="70" height="140" fill="rgba(255,255,255,0.35)"/>
-            <rect x="960" y="140" width="55" height="110" fill="rgba(255,255,255,0.4)"/>
-            <rect x="1025" y="150" width="50" height="100" fill="rgba(255,255,255,0.35)"/>
-            <rect x="1085" y="160" width="45" height="90" fill="rgba(255,255,255,0.3)"/>
-            
-            <!-- Building windows -->
-            <g fill="rgba(255,255,255,0.7)">
-                <rect x="230" y="115" width="7" height="9"/>
-                <rect x="242" y="115" width="7" height="9"/>
-                <rect x="254" y="115" width="7" height="9"/>
-                <rect x="230" y="130" width="7" height="9"/>
-                <rect x="242" y="130" width="7" height="9"/>
-                <rect x="254" y="130" width="7" height="9"/>
+    <!-- Maryland flag patterns -->
+    <div class="md-pattern-left"></div>
+    <div class="md-pattern-right"></div>
+    
+    <!-- Left Baltimore Cityscape -->
+    <div class="cityscape-left">
+        <svg viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
+            <!-- Detailed Baltimore skyline - left side -->
+            <g transform="translate(0, 400)">
+                <!-- Buildings with varying heights -->
+                <rect x="20" y="200" width="60" height="200" fill="rgba(255,255,255,0.5)"/>
+                <rect x="90" y="150" width="50" height="250" fill="rgba(255,255,255,0.4)"/>
+                <rect x="150" y="180" width="55" height="220" fill="rgba(255,255,255,0.45)"/>
+                <rect x="215" y="120" width="70" height="280" fill="rgba(255,255,255,0.55)"/>
+                <rect x="295" y="100" width="60" height="300" fill="rgba(255,255,255,0.5)"/>
+                <rect x="365" y="140" width="35" height="260" fill="rgba(255,255,255,0.4)"/>
                 
-                <rect x="470" y="85" width="9" height="10"/>
-                <rect x="484" y="85" width="9" height="10"/>
-                <rect x="498" y="85" width="9" height="10"/>
-                <rect x="470" y="100" width="9" height="10"/>
-                <rect x="484" y="100" width="9" height="10"/>
-                <rect x="498" y="100" width="9" height="10"/>
+                <!-- Iconic Baltimore buildings -->
+                <rect x="225" y="80" width="50" height="40" fill="rgba(255,255,255,0.6)"/>
+                <polygon points="225,80 250,50 275,80" fill="rgba(255,255,255,0.65)"/>
+                
+                <!-- Windows -->
+                <g fill="rgba(255,255,255,0.8)">
+                    <rect x="30" y="220" width="8" height="10"/>
+                    <rect x="42" y="220" width="8" height="10"/>
+                    <rect x="54" y="220" width="8" height="10"/>
+                    <rect x="30" y="240" width="8" height="10"/>
+                    <rect x="42" y="240" width="8" height="10"/>
+                    <rect x="54" y="240" width="8" height="10"/>
+                    
+                    <rect x="100" y="170" width="7" height="9"/>
+                    <rect x="112" y="170" width="7" height="9"/>
+                    <rect x="124" y="170" width="7" height="9"/>
+                    <rect x="100" y="185" width="7" height="9"/>
+                    <rect x="112" y="185" width="7" height="9"/>
+                    <rect x="124" y="185" width="7" height="9"/>
+                    
+                    <rect x="230" y="135" width="9" height="11"/>
+                    <rect x="244" y="135" width="9" height="11"/>
+                    <rect x="258" y="135" width="9" height="11"/>
+                    <rect x="230" y="155" width="9" height="11"/>
+                    <rect x="244" y="155" width="9" height="11"/>
+                    <rect x="258" y="155" width="9" height="11"/>
+                    
+                    <rect x="305" y="115" width="8" height="10"/>
+                    <rect x="318" y="115" width="8" height="10"/>
+                    <rect x="331" y="115" width="8" height="10"/>
+                    <rect x="305" y="135" width="8" height="10"/>
+                    <rect x="318" y="135" width="8" height="10"/>
+                    <rect x="331" y="135" width="8" height="10"/>
+                </g>
+            </g>
+        </svg>
+    </div>
+    
+    <!-- Right Baltimore Cityscape -->
+    <div class="cityscape-right">
+        <svg viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
+            <!-- Detailed Baltimore skyline - right side -->
+            <g transform="translate(0, 400)">
+                <!-- Buildings with varying heights -->
+                <rect x="0" y="160" width="45" height="240" fill="rgba(255,255,255,0.4)"/>
+                <rect x="55" y="110" width="65" height="290" fill="rgba(255,255,255,0.5)"/>
+                <rect x="130" y="90" width="55" height="310" fill="rgba(255,255,255,0.55)"/>
+                <rect x="195" y="130" width="60" height="270" fill="rgba(255,255,255,0.45)"/>
+                <rect x="265" y="170" width="50" height="230" fill="rgba(255,255,255,0.4)"/>
+                <rect x="325" y="190" width="55" height="210" fill="rgba(255,255,255,0.45)"/>
+                
+                <!-- Harbor features -->
+                <rect x="140" y="60" width="35" height="30" fill="rgba(255,255,255,0.6)"/>
+                <polygon points="140,60 157.5,35 175,60" fill="rgba(255,255,255,0.65)"/>
+                
+                <!-- Windows -->
+                <g fill="rgba(255,255,255,0.8)">
+                    <rect x="10" y="180" width="7" height="9"/>
+                    <rect x="22" y="180" width="7" height="9"/>
+                    <rect x="10" y="195" width="7" height="9"/>
+                    <rect x="22" y="195" width="7" height="9"/>
+                    
+                    <rect x="65" y="125" width="9" height="11"/>
+                    <rect x="79" y="125" width="9" height="11"/>
+                    <rect x="93" y="125" width="9" height="11"/>
+                    <rect x="65" y="145" width="9" height="11"/>
+                    <rect x="79" y="145" width="9" height="11"/>
+                    <rect x="93" y="145" width="9" height="11"/>
+                    
+                    <rect x="140" y="105" width="8" height="10"/>
+                    <rect x="153" y="105" width="8" height="10"/>
+                    <rect x="166" y="105" width="8" height="10"/>
+                    <rect x="140" y="125" width="8" height="10"/>
+                    <rect x="153" y="125" width="8" height="10"/>
+                    <rect x="166" y="125" width="8" height="10"/>
+                    
+                    <rect x="205" y="145" width="8" height="10"/>
+                    <rect x="218" y="145" width="8" height="10"/>
+                    <rect x="231" y="145" width="8" height="10"/>
+                    <rect x="205" y="165" width="8" height="10"/>
+                    <rect x="218" y="165" width="8" height="10"/>
+                    <rect x="231" y="165" width="8" height="10"/>
+                    
+                    <rect x="275" y="185" width="7" height="9"/>
+                    <rect x="287" y="185" width="7" height="9"/>
+                    <rect x="275" y="200" width="7" height="9"/>
+                    <rect x="287" y="200" width="7" height="9"/>
+                    
+                    <rect x="335" y="205" width="7" height="9"/>
+                    <rect x="347" y="205" width="7" height="9"/>
+                    <rect x="335" y="220" width="7" height="9"/>
+                    <rect x="347" y="220" width="7" height="9"/>
+                </g>
             </g>
         </svg>
     </div>
@@ -403,7 +542,7 @@
             </div>
             
             <h1 class="login-title">Anchor Platform</h1>
-            <div class="login-subtitle">Department of Information Technology</div>
+            <div class="login-subtitle">Maryland Department of Information Technology</div>
             <div class="login-tagline">Cybersecurity Assessment & Risk Management</div>
             
             <div class="badge badge-green">☁️ AWS Cloud Platform</div>
