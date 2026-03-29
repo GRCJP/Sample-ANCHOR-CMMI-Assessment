@@ -2340,33 +2340,65 @@
         <p style="font-size:.78rem;color:#6b7280;">If you have questions, contact your lead assessor or reply to this email.</p>`;
     }
 
-    function sendInvitation() {
-      const name = document.getElementById('inv-name')?.value?.trim();
-      const email = document.getElementById('inv-email')?.value?.trim();
-      const role = document.getElementById('inv-role')?.value;
-      if(!name||!email||!role) { alert('Please fill in Name, Email, and Role before sending.'); return; }
-      const agency = document.getElementById('inv-agency')?.value || 'All';
-      const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);
-      const users = getIamUsers();
-      const newUser = {
-        id:'u'+Date.now(), name, email, role, agency,
-        status:'Pending', lastActive:'Invite sent '+new Date().toLocaleDateString(), avatar:initials
-      };
-      users.push(newUser);
-      saveIamUsers(users);
-      renderIamUsers(users);
-      notify(`Invitation sent to ${name} (${email}) as ${role}`);
-      // Reset form
-      ['inv-name','inv-email','inv-msg'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
-      const roleEl = document.getElementById('inv-role'); if(roleEl) roleEl.value='';
-      const agEl = document.getElementById('inv-agency'); if(agEl) agEl.value='';
-      toggleAgencyField();
-      updateEmailPreview();
+    const INVITE_API = 'https://imfybzzoni.execute-api.us-east-1.amazonaws.com/invite';
+
+    async function sendInvitation() {
+      const name   = document.getElementById('inv-name')?.value?.trim();
+      const email  = document.getElementById('inv-email')?.value?.trim();
+      const role   = document.getElementById('inv-role')?.value;
+      if (!name || !email || !role) { notify('Please fill in Name, Email, and Role before sending.'); return; }
+      const agency  = document.getElementById('inv-agency')?.value || 'ALL';
+      const message = document.getElementById('inv-msg')?.value?.trim() || '';
+
+      notify('Sending invitation…');
+
+      try {
+        const res = await fetch(INVITE_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, role, agency, message })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // Add to local user list as Pending
+          const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);
+          const users = getIamUsers();
+          users.push({ id:'u'+Date.now(), name, email, role, agency,
+            status:'Pending', lastActive:'Invite sent '+new Date().toLocaleDateString(), avatar:initials });
+          saveIamUsers(users);
+          renderIamUsers(users);
+          notify(`✅ Invitation email sent to ${email} via anchor@assurit.com`);
+          // Reset form
+          ['inv-name','inv-email','inv-msg'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+          const roleEl = document.getElementById('inv-role'); if(roleEl) roleEl.value='';
+          const agEl   = document.getElementById('inv-agency'); if(agEl) agEl.value='';
+          updateEmailPreview();
+        } else {
+          notify(`⚠️ ${data.error || 'Could not send invitation.'}`);
+        }
+      } catch(err) {
+        notify('⚠️ Network error — invitation not sent. Check console.');
+        console.error('Invite error:', err);
+      }
     }
 
-    function sendTestEmail() {
-      const email = document.getElementById('inv-email')?.value?.trim() || 'your email';
-      notify(`Test email sent to ${email} — check inbox to verify delivery`);
+    async function sendTestEmail() {
+      const email = document.getElementById('inv-email')?.value?.trim();
+      const name  = document.getElementById('inv-name')?.value?.trim() || 'Test User';
+      if (!email) { notify('Enter an email address first.'); return; }
+      notify('Sending test email…');
+      try {
+        const res  = await fetch(INVITE_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, role: 'Assessor', agency: 'ALL', message: 'This is a test invitation from the Anchor Platform.' })
+        });
+        const data = await res.json();
+        notify(data.success ? `✅ Test email sent to ${email} — check inbox` : `⚠️ ${data.error}`);
+      } catch(err) {
+        notify('⚠️ Network error — test email not sent.');
+      }
     }
 
     // Initialize IAM when section loads
