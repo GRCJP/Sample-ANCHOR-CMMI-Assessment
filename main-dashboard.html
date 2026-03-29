@@ -2162,7 +2162,7 @@
       const session = localStorage.getItem('anchor_session');
       if (!session) {
         // Redirect to login if no session
-        window.location.href = 'login.html';
+        window.location.href = 'index.html?session=expired';
         return;
       }
       
@@ -2200,7 +2200,7 @@
       }
       
       setTimeout(() => {
-        window.location.href = 'login.html?logout=true';
+        window.location.href = 'index.html?logout=true';
       }, 500);
     }
 
