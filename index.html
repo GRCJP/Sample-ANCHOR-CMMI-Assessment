@@ -3,33 +3,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Anchor Platform</title>
-    <meta name="description" content="Maryland DoIT Cybersecurity Assessment Platform - Login">
-    <link rel="stylesheet" href="src/css/main.css">
-    <link rel="stylesheet" href="src/css/components.css">
-    <link rel="stylesheet" href="src/css/accessibility.css">
+    <title>Login - Anchor Platform | Maryland DoIT</title>
+    <meta name="description" content="Maryland Department of Information Technology - Cybersecurity Assessment Platform">
     
     <!-- AWS SDK -->
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1490.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.0/dist/amazon-cognito-identity.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #b8c6db 0%, #d4dfe8 50%, #e8eef3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Prominent Baltimore Cityscape - Left */
+        .cityscape-left {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40%;
+            height: 80vh;
+            opacity: 0.25;
+            z-index: 0;
+        }
+        
+        .cityscape-left svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Prominent Baltimore Cityscape - Right */
+        .cityscape-right {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 40%;
+            height: 80vh;
+            opacity: 0.25;
+            z-index: 0;
+        }
+        
+        .cityscape-right svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .md-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .md-logo img {
+            height: 45px;
+            width: auto;
+        }
+        
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .login-tagline {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        
+        .badge-green {
+            background: #d4f4e2;
+            color: #065f46;
+        }
+        
+        .badge-center {
+            display: block;
+            text-align: center;
+        }
+        
+        .login-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.85rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-help {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 6px;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+        
+        .forgot-password {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 13px 24px;
+            font-size: 0.95rem;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .demo-section {
+            border-top: 2px solid #f1f5f9;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .demo-section h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1e293b;
+            text-align: center;
+        }
+        
+        .demo-dropdown {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #1e293b;
+            background: white;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .demo-dropdown:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        /* System Notice - Compact */
+        .system-notice {
+            margin-top: 20px;
+            padding: 12px;
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .notice-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 6px;
+        }
+        
+        .notice-text {
+            font-size: 0.7rem;
+            color: #78350f;
+            line-height: 1.4;
+        }
+        
+        .login-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 20px;
+        }
+        
+        .security-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+        
+        .platform-info {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            margin-bottom: 15px;
+        }
+        
+        .assurit-branding {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .assurit-text {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        
+        .assurit-logo img {
+            height: 24px;
+            width: auto;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
+        .assurit-logo img:hover {
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .cityscape-left,
+            .cityscape-right {
+                width: 30%;
+                opacity: 0.15;
+            }
+            
+            .login-card {
+                padding: 35px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cityscape-left,
+            .cityscape-right {
+                display: none;
+            }
+            
+            .login-card {
+                padding: 30px 25px;
+            }
+            
+            .md-logo img {
+                height: 38px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Left Baltimore Cityscape - More Prominent -->
+    <div class="cityscape-left">
+        <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
+            <g transform="translate(0, 100)">
+                <!-- Tall buildings with more detail -->
+                <rect x="30" y="250" width="70" height="250" fill="#7a8fa3"/>
+                <rect x="110" y="180" width="65" height="320" fill="#6b7f92"/>
+                <rect x="185" y="220" width="75" height="280" fill="#7a8fa3"/>
+                <rect x="270" y="140" width="80" height="360" fill="#5c6f82"/>
+                <rect x="360" y="120" width="70" height="380" fill="#6b7f92"/>
+                <rect x="440" y="170" width="60" height="330" fill="#7a8fa3"/>
+                
+                <!-- Iconic spire building -->
+                <rect x="285" y="90" width="50" height="50" fill="#5c6f82"/>
+                <polygon points="285,90 310,50 335,90" fill="#4a5d70"/>
+                
+                <!-- Windows pattern -->
+                <g fill="rgba(255,255,255,0.4)">
+                    <!-- Building 1 windows -->
+                    <rect x="40" y="270" width="10" height="12"/>
+                    <rect x="55" y="270" width="10" height="12"/>
+                    <rect x="70" y="270" width="10" height="12"/>
+                    <rect x="40" y="290" width="10" height="12"/>
+                    <rect x="55" y="290" width="10" height="12"/>
+                    <rect x="70" y="290" width="10" height="12"/>
+                    <rect x="40" y="310" width="10" height="12"/>
+                    <rect x="55" y="310" width="10" height="12"/>
+                    <rect x="70" y="310" width="10" height="12"/>
+                    
+                    <!-- Building 2 windows -->
+                    <rect x="120" y="200" width="10" height="12"/>
+                    <rect x="135" y="200" width="10" height="12"/>
+                    <rect x="150" y="200" width="10" height="12"/>
+                    <rect x="120" y="220" width="10" height="12"/>
+                    <rect x="135" y="220" width="10" height="12"/>
+                    <rect x="150" y="220" width="10" height="12"/>
+                    <rect x="120" y="240" width="10" height="12"/>
+                    <rect x="135" y="240" width="10" height="12"/>
+                    <rect x="150" y="240" width="10" height="12"/>
+                    
+                    <!-- Building 3 windows -->
+                    <rect x="195" y="240" width="10" height="12"/>
+                    <rect x="210" y="240" width="10" height="12"/>
+                    <rect x="225" y="240" width="10" height="12"/>
+                    <rect x="195" y="260" width="10" height="12"/>
+                    <rect x="210" y="260" width="10" height="12"/>
+                    <rect x="225" y="260" width="10" height="12"/>
+                    
+                    <!-- Tall building windows -->
+                    <rect x="280" y="160" width="11" height="14"/>
+                    <rect x="296" y="160" width="11" height="14"/>
+                    <rect x="312" y="160" width="11" height="14"/>
+                    <rect x="280" y="185" width="11" height="14"/>
+                    <rect x="296" y="185" width="11" height="14"/>
+                    <rect x="312" y="185" width="11" height="14"/>
+                    <rect x="280" y="210" width="11" height="14"/>
+                    <rect x="296" y="210" width="11" height="14"/>
+                    <rect x="312" y="210" width="11" height="14"/>
+                    
+                    <!-- Building 5 windows -->
+                    <rect x="370" y="140" width="10" height="12"/>
+                    <rect x="385" y="140" width="10" height="12"/>
+                    <rect x="400" y="140" width="10" height="12"/>
+                    <rect x="370" y="165" width="10" height="12"/>
+                    <rect x="385" y="165" width="10" height="12"/>
+                    <rect x="400" y="165" width="10" height="12"/>
+                </g>
+            </g>
+        </svg>
+    </div>
+    
+    <!-- Right Baltimore Cityscape - More Prominent -->
+    <div class="cityscape-right">
+        <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
+            <g transform="translate(0, 100)">
+                <!-- Tall buildings with more detail -->
+                <rect x="0" y="190" width="60" height="310" fill="#7a8fa3"/>
+                <rect x="70" y="130" width="75" height="370" fill="#5c6f82"/>
+                <rect x="155" y="100" width="70" height="400" fill="#6b7f92"/>
+                <rect x="235" y="160" width="80" height="340" fill="#7a8fa3"/>
+                <rect x="325" y="210" width="65" height="290" fill="#6b7f92"/>
+                <rect x="400" y="240" width="70" height="260" fill="#7a8fa3"/>
+                
+                <!-- Harbor building with spire -->
+                <rect x="165" y="70" width="50" height="30" fill="#5c6f82"/>
+                <polygon points="165,70 190,40 215,70" fill="#4a5d70"/>
+                
+                <!-- Windows pattern -->
+                <g fill="rgba(255,255,255,0.4)">
+                    <!-- Building 1 windows -->
+                    <rect x="10" y="210" width="10" height="12"/>
+                    <rect x="25" y="210" width="10" height="12"/>
+                    <rect x="40" y="210" width="10" height="12"/>
+                    <rect x="10" y="230" width="10" height="12"/>
+                    <rect x="25" y="230" width="10" height="12"/>
+                    <rect x="40" y="230" width="10" height="12"/>
+                    
+                    <!-- Building 2 windows -->
+                    <rect x="80" y="150" width="11" height="14"/>
+                    <rect x="96" y="150" width="11" height="14"/>
+                    <rect x="112" y="150" width="11" height="14"/>
+                    <rect x="80" y="175" width="11" height="14"/>
+                    <rect x="96" y="175" width="11" height="14"/>
+                    <rect x="112" y="175" width="11" height="14"/>
+                    <rect x="80" y="200" width="11" height="14"/>
+                    <rect x="96" y="200" width="11" height="14"/>
+                    <rect x="112" y="200" width="11" height="14"/>
+                    
+                    <!-- Tallest building windows -->
+                    <rect x="165" y="120" width="10" height="12"/>
+                    <rect x="180" y="120" width="10" height="12"/>
+                    <rect x="195" y="120" width="10" height="12"/>
+                    <rect x="165" y="140" width="10" height="12"/>
+                    <rect x="180" y="140" width="10" height="12"/>
+                    <rect x="195" y="140" width="10" height="12"/>
+                    <rect x="165" y="160" width="10" height="12"/>
+                    <rect x="180" y="160" width="10" height="12"/>
+                    <rect x="195" y="160" width="10" height="12"/>
+                    
+                    <!-- Building 4 windows -->
+                    <rect x="245" y="180" width="10" height="12"/>
+                    <rect x="260" y="180" width="10" height="12"/>
+                    <rect x="275" y="180" width="10" height="12"/>
+                    <rect x="245" y="200" width="10" height="12"/>
+                    <rect x="260" y="200" width="10" height="12"/>
+                    <rect x="275" y="200" width="10" height="12"/>
+                    
+                    <!-- Building 5 windows -->
+                    <rect x="335" y="230" width="10" height="12"/>
+                    <rect x="350" y="230" width="10" height="12"/>
+                    <rect x="335" y="250" width="10" height="12"/>
+                    <rect x="350" y="250" width="10" height="12"/>
+                    
+                    <!-- Building 6 windows -->
+                    <rect x="410" y="260" width="10" height="12"/>
+                    <rect x="425" y="260" width="10" height="12"/>
+                    <rect x="410" y="280" width="10" height="12"/>
+                    <rect x="425" y="280" width="10" height="12"/>
+                </g>
+            </g>
+        </svg>
+    </div>
     <div class="login-container">
         <div class="login-card">
-            <div class="login-header">
-                <div class="brand">Anchor Platform</div>
-                <div class="sub">Maryland DoIT Assessment Platform</div>
-                <div class="badge badge-green">AWS Cloud Platform</div>
+            <!-- Maryland Logo -->
+            <div class="md-logo">
+                <img src="https://cdn.maryland.gov/mdwds/0.43.0/img/md_wordmark_horizontal.svg" alt="State of Maryland">
+            </div>
+            
+            <h1 class="login-title">Anchor Platform</h1>
+            <div class="login-subtitle">Maryland Department of Information Technology</div>
+            <div class="login-tagline">Cybersecurity Assessment & Risk Management</div>
+            
+            <div class="badge-center">
+                <span class="badge badge-green">☁️ AWS Cloud Platform</span>
             </div>
             
             <form id="loginForm" class="login-form">
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" required 
-                           placeholder="Enter your email" 
+                           placeholder="Enter your email address" 
                            aria-describedby="email-help">
                     <div id="email-help" class="form-help">
-                        Enter your registered email address
+                        Use your registered Maryland DoIT email
                     </div>
                 </div>
                 
@@ -39,21 +542,20 @@
                            placeholder="Enter your password"
                            aria-describedby="password-help">
                     <div id="password-help" class="form-help">
-                        Enter your password
+                        Enter your secure password
                     </div>
                 </div>
                 
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox" id="remember" name="remember">
-                        <span class="checkmark"></span>
-                        Remember me
+                        <span>Remember me</span>
                     </label>
                     <a href="#" class="forgot-password">Forgot password?</a>
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
-                    <span class="btn-text">Sign In</span>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span class="btn-text">Sign in to Platform</span>
                     <span class="btn-loading" style="display: none;">
                         <span class="spinner"></span>
                         Signing in...
@@ -67,366 +569,73 @@
             </div>
             
             <div class="demo-section">
-                <h3>Demo Accounts</h3>
-                <div class="demo-accounts">
-                    <div class="demo-account" data-email="admin@anchor.com" data-password="Anchor123!">
-                        <div class="demo-role badge badge-red">Administrator</div>
-                        <div class="demo-info">
-                            <div class="demo-email">admin@anchor.com</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button class="btn btn-outline btn-sm btn-fill-demo">Fill</button>
-                    </div>
-
-                    <div class="demo-account" data-email="j.williams@assurit.com" data-password="Anchor123!">
-                        <div class="demo-role badge badge-blue">Lead Assessor</div>
-                        <div class="demo-info">
-                            <div class="demo-email">j.williams@assurit.com</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button class="btn btn-outline btn-sm btn-fill-demo">Fill</button>
-                    </div>
-
-                    <div class="demo-account" data-email="l.harmon@mdot.maryland.gov" data-password="Anchor123!">
-                        <div class="demo-role badge badge-orange">Agency POC — MDOT</div>
-                        <div class="demo-info">
-                            <div class="demo-email">l.harmon@mdot.maryland.gov</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button class="btn btn-outline btn-sm btn-fill-demo">Fill</button>
-                    </div>
+                <h3>Quick Access (Demo)</h3>
+                <select id="demoAccountSelect" class="demo-dropdown" onchange="fillDemoAccount()">
+                    <option value="">— Select Demo Account —</option>
+                    <option value="admin@anchor.com|Anchor123!">Administrator (Full Access)</option>
+                    <option value="j.williams@assurit.com|Anchor123!">Lead Assessor (Assessment Management)</option>
+                    <option value="l.harmon@mdot.maryland.gov|Anchor123!">Agency POC — MDOT</option>
+                </select>
+            </div>
+            
+            <!-- System Use Notification - Compact, no AC-8 -->
+            <div class="system-notice">
+                <div class="notice-title">⚠️ System Use Notification</div>
+                <div class="notice-text">
+                    You are accessing a U.S. Government information system. Use of this system constitutes consent to monitoring, interception, recording, and disclosure. Unauthorized use may result in criminal or civil penalties.
                 </div>
             </div>
             
             <div class="login-footer">
                 <div class="security-notice">
-                    <span class="icon">🔒</span>
+                    <span>🔒</span>
                     <span>Secure login powered by AWS Cognito</span>
                 </div>
                 <div class="platform-info">
-                    Platform v2.4.1 | AWS Cloud | Free Tier
+                    Platform v2.4.1 | Cloud Infrastructure
+                </div>
+                
+                <!-- Assurit Branding -->
+                <div class="assurit-branding">
+                    <div class="assurit-text">In partnership with</div>
+                    <a href="https://www.assurit.com" target="_blank" class="assurit-logo">
+                        <img src="https://www.assurit.com/wp-content/uploads/assurit_logo@2x.png" alt="Assurit Consulting Group">
+                    </a>
                 </div>
             </div>
-        </div>
-        
-        <div class="login-background">
-            <div class="bg-pattern"></div>
-            <div class="bg-overlay"></div>
         </div>
     </div>
     
     <!-- Loading overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="loading-content">
-            <div class="spinner-large"></div>
-            <div class="loading-text">Authenticating...</div>
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="text-align: center; color: white;">
+            <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;"></div>
+            <div style="font-size: 18px;">Authenticating...</div>
         </div>
     </div>
-
-    <style>
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-        }
-        
-        .login-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 0;
-        }
-        
-        .bg-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
-        }
-        
-        .bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.1);
-        }
-        
-        .login-card {
-            position: relative;
-            z-index: 1;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            padding: 40px;
-            width: 100%;
-            max-width: 420px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .brand {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        
-        .sub {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-        
-        .login-form {
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        
-        .form-help {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-        
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text);
-        }
-        
-        .checkbox-label input[type="checkbox"] {
-            margin-right: 8px;
-        }
-        
-        .forgot-password {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        
-        .btn-full {
-            width: 100%;
-            padding: 14px 20px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .btn-loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        .spinner-large {
-            width: 40px;
-            height: 40px;
-            border: 3px solid transparent;
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error-message {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .demo-section {
-            border-top: 1px solid var(--border);
-            padding-top: 24px;
-            margin-bottom: 24px;
-        }
-        
-        .demo-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-        
-        .demo-accounts {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .demo-account {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-        
-        .demo-account:hover {
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .demo-role {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-        
-        .demo-info {
-            flex: 1;
-        }
-        
-        .demo-email {
-            font-weight: 600;
-            color: var(--text);
-            font-size: 14px;
-        }
-        
-        .demo-password {
-            color: var(--text-muted);
-            font-size: 12px;
-            font-family: monospace;
-        }
-        
-        .btn-fill-demo {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-        
-        .login-footer {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        
-        .security-notice {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        
-        .loading-content {
-            text-align: center;
-            color: white;
-        }
-        
-        .loading-text {
-            margin-top: 16px;
-            font-size: 16px;
-        }
-        
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 30px 20px;
-            }
-            
-            .demo-account {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .btn-fill-demo {
-                align-self: stretch;
-            }
-        }
-    </style>
 
     <!-- Scripts -->
     <script src="src/js/aws-auth.js"></script>
     <script src="src/js/login.js"></script>
+    
+    <script>
+        // Demo account dropdown functionality
+        function fillDemoAccount() {
+            const select = document.getElementById('demoAccountSelect');
+            const value = select.value;
+            
+            if (value) {
+                const [email, password] = value.split('|');
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = password;
+                
+                // Reset dropdown
+                select.value = '';
+                
+                // Focus password field
+                document.getElementById('password').focus();
+            }
+        }
+    </script>
 </body>
 </html>
