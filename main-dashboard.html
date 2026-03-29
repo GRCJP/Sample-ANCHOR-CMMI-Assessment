@@ -171,16 +171,17 @@
         </div>
 
         <!-- ---- STATEWIDE OVERVIEW METRICS ---- -->
-        <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card green"><div class="stat-label">Assessments Complete</div><div class="stat-value">23</div><div class="stat-sub">of 90 agencies (26%)</div></div>
-          <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value">31</div><div class="stat-sub">Active assessments</div></div>
-          <div class="stat-card accent"><div class="stat-label">Scheduled</div><div class="stat-value">28</div><div class="stat-sub">Kick-off pending</div></div>
-          <div class="stat-card red"><div class="stat-label">Unresponsive</div><div class="stat-value">8</div><div class="stat-sub">Escalation required</div></div>
+        <div class="grid-4" style="margin-bottom:20px;" id="overview-stats">
+          <!-- Stats will be populated by JavaScript -->
+          <div class="stat-card green"><div class="stat-label">Assessments Complete</div><div class="stat-value" id="stat-complete">23</div><div class="stat-sub">of <span id="stat-total">90</span> agencies (<span id="stat-pct">26</span>%)</div></div>
+          <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value" id="stat-progress">31</div><div class="stat-sub">Active assessments</div></div>
+          <div class="stat-card accent"><div class="stat-label">Scheduled</div><div class="stat-value" id="stat-scheduled">28</div><div class="stat-sub">Kick-off pending</div></div>
+          <div class="stat-card red"><div class="stat-label">Unresponsive</div><div class="stat-value" id="stat-unresponsive">8</div><div class="stat-sub">Escalation required</div></div>
         </div>
 
         <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card accent"><div class="stat-label">Avg Statewide Maturity</div><div class="stat-value">2.9</div><div class="stat-sub">Up from 2.1 (Jan 2025)</div></div>
-          <div class="stat-card green"><div class="stat-label">Critical Findings Closed</div><div class="stat-value">38</div><div class="stat-sub">Across 23 completed agencies</div></div>
+          <div class="stat-card accent"><div class="stat-label">Avg Statewide Maturity</div><div class="stat-value" id="stat-maturity">2.9</div><div class="stat-sub">Up from 2.1 (Jan 2025)</div></div>
+          <div class="stat-card green"><div class="stat-label">Critical Findings Closed</div><div class="stat-value" id="stat-findings">38</div><div class="stat-sub">Across <span id="stat-finding-agencies">23</span> completed agencies</div></div>
           <div class="stat-card"><div class="stat-label">POA&amp;M Items Tracked</div><div class="stat-value">312</div><div class="stat-sub">Across all agencies</div></div>
           <div class="stat-card"><div class="stat-label">Avg Days to SAR</div><div class="stat-value">41</div><div class="stat-sub">Large: 63 · Med: 42 · Small: 21</div></div>
         </div>
@@ -891,14 +892,6 @@
         <div class="card">
           <div class="card-title">📧 Email &amp; Notification Settings</div>
           <div class="form-grid">
-            <div class="form-group"><label>SMTP Relay</label><input value="smtp.maryland.gov:587"></div>
-            <div class="form-group"><label>From Address</label><input value="cyberassess@doit.maryland.gov"></div>
-            <div class="form-group"><label>Questionnaire Template</label><select><option>Standard Pre-Assess v2</option><option>Abbreviated</option></select></div>
-            <div class="form-group"><label>Reminder Interval</label><select><option>3 days</option><option selected>5 days</option><option>7 days</option></select></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary btn-sm" onclick="notify('✅ Email settings saved')">Save Settings</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📧 Test email sent to admin inbox')">Send Test Email</button>
           </div>
         </div>
       </section>
@@ -1827,8 +1820,72 @@
       });
     }
 
+    // ---- DYNAMIC STATS CALCULATION ----
+    function calculateDynamicStats() {
+      const allAgencies = getAllAgencies();
+      const agencyIds = Object.keys(allAgencies);
+      const total = agencyIds.length;
+      
+      let complete = 0, inProgress = 0, scheduled = 0, unresponsive = 0;
+      let totalMaturity = 0, maturityCount = 0;
+      
+      agencyIds.forEach(id => {
+        const stored = JSON.parse(localStorage.getItem(`assessment_${id}`) || '{}');
+        const status = stored.status || allAgencies[id].status || 'Scheduled';
+        
+        if (status === 'Complete' || allAgencies[id].progress === '100%') {
+          complete++;
+        } else if (status === 'In Progress' || status === 'Updated' || status === 'Created') {
+          inProgress++;
+        } else if (status === 'Scheduled' || status === 'Not Started') {
+          scheduled++;
+        }
+        
+        // Check for unresponsive (no recent update in 14 days)
+        if (stored.updatedAt) {
+          const lastUpdate = new Date(stored.updatedAt);
+          const daysSince = (new Date() - lastUpdate) / (1000 * 60 * 60 * 24);
+          if (daysSince > 14 && status !== 'Complete') {
+            unresponsive++;
+          }
+        }
+        
+        // Calculate maturity from stored data
+        if (stored.cmmiScore || stored.maturityScore) {
+          totalMaturity += parseFloat(stored.cmmiScore || stored.maturityScore);
+          maturityCount++;
+        }
+      });
+      
+      const avgMaturity = maturityCount > 0 ? (totalMaturity / maturityCount).toFixed(1) : '2.9';
+      const pct = total > 0 ? Math.round((complete / total) * 100) : 0;
+      
+      return { complete, inProgress, scheduled, unresponsive, total, pct, avgMaturity };
+    }
+    
+    function updateOverviewStats() {
+      const stats = calculateDynamicStats();
+      
+      const elComplete = document.getElementById('stat-complete');
+      const elTotal = document.getElementById('stat-total');
+      const elPct = document.getElementById('stat-pct');
+      const elProgress = document.getElementById('stat-progress');
+      const elScheduled = document.getElementById('stat-scheduled');
+      const elUnresponsive = document.getElementById('stat-unresponsive');
+      const elMaturity = document.getElementById('stat-maturity');
+      
+      if (elComplete) elComplete.textContent = stats.complete;
+      if (elTotal) elTotal.textContent = stats.total;
+      if (elPct) elPct.textContent = stats.pct;
+      if (elProgress) elProgress.textContent = stats.inProgress;
+      if (elScheduled) elScheduled.textContent = stats.scheduled;
+      if (elUnresponsive) elUnresponsive.textContent = stats.unresponsive;
+      if (elMaturity) elMaturity.textContent = stats.avgMaturity;
+    }
+
     // ---- INIT ----
     renderPortfolio();
+    updateOverviewStats();
     setTimeout(initPortfolioCharts, 150);
   </script>
 </body>

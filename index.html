@@ -677,7 +677,8 @@
         </div>
 
         <div style="margin-top:12px;">
-          <button class="btn btn-primary btn-sm" onclick="notify('✅ IT Environment saved.')">💾 Save IT Environment</button>
+          <button class="btn btn-primary btn-sm" onclick="saveStep1Data()">💾 Save IT Environment</button>
+          <span id="save-status" style="font-size:.78rem; color:var(--accent2); margin-left:8px; opacity:0; transition:opacity 0.3s;">✅ Saved</span>
         </div>
 
         <!-- Hidden scoring elements — backend algo only -->
@@ -4209,6 +4210,63 @@ function submitSaiIntake() {
   }
   notify('📤 CSF Intake submitted to assessor S. Patel. Confirmation: ACG-MDOT-CSF-2026-0042. You will receive an email summary within 24 hours.');
   logAssessmentActivityEvent('Questionnaire / Intake', 'Questionnaire Submitted', `${answered}/${total} controls submitted to assessor.`, answered < total ? 0 : -1, 'Lisa Harmon', 'Agency Representative');
+}
+
+// ---- SAVE STEP 1 DATA ----
+function saveStep1Data() {
+  const params = new URLSearchParams(window.location.search);
+  const agencyId = params.get('agency');
+  if(!agencyId) {
+    notify('⚠️ No agency selected');
+    return;
+  }
+  
+  // Read all form fields
+  const payload = {
+    agency: agencyId,
+    agencyName: document.getElementById('sq-agency-name')?.value || '',
+    recipient: document.getElementById('sq-contact-name')?.value?.split(',')[0]?.trim() || '',
+    contactTitle: document.getElementById('sq-contact-name')?.value?.split(',')[1]?.trim() || '',
+    email: document.getElementById('sq-primary-email')?.value || '',
+    phone: document.getElementById('sq-contact-phone')?.value || '',
+    altName: document.getElementById('sq-alt-name')?.value || '',
+    altEmail: document.getElementById('sq-alt-email')?.value || '',
+    altPhone: document.getElementById('sq-alt-phone')?.value || '',
+    systemName: document.getElementById('sq-system-name')?.value || '',
+    agencySize: document.getElementById('sq-agency-size')?.value || '',
+    systemType: document.getElementById('sq-system-type')?.value || '',
+    dataClassification: document.getElementById('sq-data-class')?.value || '',
+    fips: document.getElementById('sq-fips')?.value || '',
+    execBranch: document.getElementById('sq-env-execbranch')?.value || '',
+    doitEnterprise: document.getElementById('sq-env-doit')?.value || '',
+    wave: document.getElementById('sq-wave')?.value || '',
+    pod: document.getElementById('sq-pod')?.value?.replace('POD ', '') || '',
+    leadAssessor: document.getElementById('sq-assessor')?.value || '',
+    teamSize: document.getElementById('sq-teamsize')?.value || '',
+    template: document.getElementById('sq-template')?.value || '',
+    maturityGroup: document.getElementById('sq-matgroup')?.value || '',
+    startDate: document.getElementById('sq-start')?.value || '',
+    endDate: document.getElementById('sq-end')?.value || '',
+    scope: document.getElementById('sq-scope')?.value || '',
+    notes: document.getElementById('sq-notes')?.value || '',
+    status: 'Updated',
+    updatedAt: new Date().toISOString()
+  };
+  
+  // Get existing data to preserve createdAt
+  const existing = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
+  payload.createdAt = existing.createdAt || new Date().toISOString();
+  payload.abbr = existing.abbr || agencyId.toUpperCase();
+  
+  // Save to localStorage
+  localStorage.setItem(`assessment_${agencyId}`, JSON.stringify(payload));
+  localStorage.setItem('activeAssessment', JSON.stringify(payload));
+  
+  // Update UI
+  notify('✅ Agency data saved successfully');
+  logAssessmentActivityEvent('Intake & Scoping', 'Data Updated', 'Step 1 intake form updated', 0);
+  
+  console.log('[STEP 1] Saved agency data:', payload);
 }
 
 // ---- POPULATE FROM INTAKE (Create System modal in main-dashboard) ----
