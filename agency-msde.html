@@ -42,10 +42,6 @@
       <div>CSF Assessment</div>
     </div>
 
-    <div class="nav-item" onclick="showSection('mapping',this)" role="button" tabindex="0">
-      <div>NIST CSF Mapping</div>
-    </div>
-
     <div class="nav-item" onclick="showSection('risk',this)" role="button" tabindex="0">
       <div>Risk &amp; CMMI Scoring</div>
     </div>
@@ -64,7 +60,7 @@
     </div>
 
     <div class="sidebar-bottom">
-      Office of the Comptroller of Maryland<br>
+      Maryland State Dept. of Education (MSDE)<br>
       Lead Assessor: S. Patel &nbsp;|&nbsp; Started: May 5, 2026
     </div>
   </nav>
@@ -75,7 +71,7 @@
     <header class="topbar">
       <div class="topbar-title" id="topbar-title">
         MSDE Assessment Dashboard
-        <span>Office of the Comptroller of Maryland</span>
+        <span>Maryland State Dept. of Education (MSDE)</span>
       </div>
       <div class="topbar-right">
         <span class="badge badge-blue" aria-label="Framework">&#128274; NIST CSF 2.0</span>
@@ -346,42 +342,6 @@
         </div>
       </section>
 
-      <!-- NIST CSF MAPPING SECTION -->
-      <section class="section" id="mapping" aria-hidden="true">
-        <div class="page-header">
-          <h1>NIST CSF 2.0 Control Mapping &#8212; MSDE</h1>
-          <p>Map assessment controls across all six NIST CSF 2.0 functions. Each control links to NIST SP 800-53 Rev 5 and is scored using the CMMI 0&#8211;5 maturity scale.</p>
-        </div>
-
-        <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card"><div class="stat-label">Total Controls</div><div class="stat-value">106</div><div class="stat-sub">NIST CSF 2.0 subcategories</div></div>
-          <div class="stat-card green"><div class="stat-label">Mapped</div><div class="stat-value">106</div><div class="stat-sub">100% coverage</div></div>
-          <div class="stat-card accent"><div class="stat-label">Assessed</div><div class="stat-value">0</div><div class="stat-sub">0% scored</div></div>
-          <div class="stat-card"><div class="stat-label">Avg CMMI</div><div class="stat-value">&#8212;</div><div class="stat-sub">Pending assessment</div></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Control Mapping by NIST CSF Function</div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>NIST CSF Function</th><th>Domain</th><th>Controls</th><th>Assessed</th><th>Avg CMMI</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td>14</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-                <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td>22</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-                <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td>28</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-                <tr><td><span class="fn-tag fn-detect">DETECT</span></td><td>Monitoring &amp; Detection</td><td>16</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-                <tr><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident Response</td><td>14</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-                <tr><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Recovery Planning</td><td>12</td><td>0</td><td>&#8212;</td><td><span class="badge badge-gray">Pending</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="notify('SRTM workbook exported: MSDE_SRTM_CSF2.xlsx')">Export SRTM</button>
-        </div>
-      </section>
-
       <!-- CSF ASSESSMENT SECTION -->
       <section class="section" id="csf" aria-hidden="true">
         <div class="page-header">
@@ -395,34 +355,34 @@
           <div style="font-size:.62rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">CSF Assessment Progress</div>
           <div class="h-stepper" style="margin:0;">
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">GOVERN</div>
-              <div class="h-step-date">5 controls</div>
+              <div class="h-step-date">Feb 24–26</div>
             </div>
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">IDENTIFY</div>
-              <div class="h-step-date">4 controls</div>
+              <div class="h-step-date">Feb 27–Mar 3</div>
             </div>
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">PROTECT</div>
-              <div class="h-step-date">5 controls</div>
+              <div class="h-step-date">Mar 4–10</div>
             </div>
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">DETECT</div>
-              <div class="h-step-date">3 controls</div>
+              <div class="h-step-date">Mar 11–15</div>
             </div>
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">RESPOND</div>
-              <div class="h-step-date">3 controls</div>
+              <div class="h-step-date">Mar 16–20</div>
             </div>
             <div class="h-step done">
-              <div class="h-step-circle">&#10003;</div>
+              <div class="h-step-circle">✓</div>
               <div class="h-step-label">RECOVER</div>
-              <div class="h-step-date">3 controls</div>
+              <div class="h-step-date">Mar 21–25</div>
             </div>
           </div>
           <div style="background:#e5e7eb; border-radius:6px; height:8px; overflow:hidden; margin-top:12px;">
@@ -604,50 +564,56 @@
         </div>
       </section>
 
-      <!-- RISK & CMMI SCORING SECTION -->
+      <!-- RISK REGISTER SECTION -->
       <section class="section" id="risk" aria-hidden="true">
         <div class="page-header">
           <h1>Risk Register &amp; CMMI Scoring &#8212; MSDE</h1>
-          <p>Identify, analyze, and prioritize risks. Apply CMMI maturity scores across NIST CSF functions and map risks to business impact.</p>
+          <p>Final risk register from completed NIST CSF 2.0 assessment. All 106 controls assessed across six functions. Findings mapped to POA&amp;M items.</p>
         </div>
 
         <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card accent"><div class="stat-label">Overall CMMI</div><div class="stat-value">1.8</div><div class="stat-sub">Target: 3.0</div></div>
-          <div class="stat-card red"><div class="stat-label">Critical Risks</div><div class="stat-value">0</div><div class="stat-sub">Identified to date</div></div>
-          <div class="stat-card"><div class="stat-label">High Risks</div><div class="stat-value">0</div><div class="stat-sub">Pending assessment</div></div>
-          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">0</div><div class="stat-sub">of 42 total</div></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-title">CMMI Maturity by Function</div>
-            <div class="chart-wrap-sm"><canvas id="radarChart"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Risk Distribution</div>
-            <div class="chart-wrap-sm"><canvas id="riskChart"></canvas></div>
-          </div>
+          <div class="stat-card accent"><div class="stat-label">Overall CMMI</div><div class="stat-value">2.3</div><div class="stat-sub">Target: 3.0</div></div>
+          <div class="stat-card red"><div class="stat-label">Critical Risks</div><div class="stat-value">3</div><div class="stat-sub">P1 findings</div></div>
+          <div class="stat-card"><div class="stat-label">High Risks</div><div class="stat-value">7</div><div class="stat-sub">30-day remediation</div></div>
+          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">106</div><div class="stat-sub">Full CSF 2.0 coverage</div></div>
         </div>
 
         <div class="card">
-          <div class="card-title">CMMI Scoring Summary</div>
+          <div class="card-title">CMMI Maturity by Function — Final Scores</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>NIST CSF Function</th><th>Domain</th><th>CMMI Score</th><th>Maturity Level</th><th>Target</th><th>Gap</th></tr></thead>
               <tbody>
-                <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td><strong>1.8</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.2</td></tr>
-                <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td><strong>2.0</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-1.0</td></tr>
-                <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td><strong>2.2</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.8</td></tr>
-                <tr><td><span class="fn-tag fn-detect">DETECT</span></td><td>Monitoring &amp; Detection</td><td><strong>1.5</strong></td><td>Performed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.5</td></tr>
-                <tr><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident Response</td><td><strong>1.8</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.2</td></tr>
-                <tr><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Recovery Planning</td><td><strong>1.6</strong></td><td>Performed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.4</td></tr>
+                <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td><strong>2.1</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-0.9</td></tr>
+                <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td><strong>2.5</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.5</td></tr>
+                <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td><strong>2.8</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.2</td></tr>
+                <tr><td><span class="fn-tag fn-detect">DETECT</span></td><td>Monitoring &amp; Detection</td><td><strong>1.9</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-1.1</td></tr>
+                <tr><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Incident Response</td><td><strong>2.4</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.6</td></tr>
+                <tr><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Recovery Planning</td><td><strong>2.1</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-0.9</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Risk Register</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Risk ID</th><th>Finding</th><th>NIST Function</th><th>Likelihood</th><th>Impact</th><th>Score</th><th>Priority</th></tr></thead>
+              <tbody>
+                <tr><td>R-001</td><td>No SIEM or centralized log management</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td>P1</td></tr>
+                <tr><td>R-002</td><td>Student PII data classification incomplete</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">16</span></td><td>P1</td></tr>
+                <tr><td>R-003</td><td>Incident response plan lacks tabletop exercises</td><td><span class="fn-tag fn-respond">RESPOND</span></td><td>Medium</td><td>Critical</td><td><span class="badge badge-red">15</span></td><td>P1</td></tr>
+                <tr><td>R-004</td><td>Vendor access not consistently reviewed</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
+                <tr><td>R-005</td><td>Patch management cycle averages 60 days</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
+                <tr><td>R-006</td><td>Backup recovery not tested within 12 months</td><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-outline" onclick="notify('Risk register exported: MSDE_Risk_Register.xlsx')">Export Risk Register</button>
+          <button class="btn btn-outline" onclick="notify('Risk register exported: MSDE_Risk_Register_Final.xlsx')">Export Risk Register</button>
         </div>
       </section>
 
@@ -655,19 +621,35 @@
       <section class="section" id="poam" aria-hidden="true">
         <div class="page-header">
           <h1>Plan of Action &amp; Milestones (POA&amp;M) &#8212; MSDE</h1>
-          <p>Prioritized remediation plan with assigned owners, timelines, and completion tracking. All items map back to NIST CSF findings.</p>
+          <p>Prioritized remediation plan generated from SAR findings. Delivered to DoIT Apr 1, 2026. Agency remediation underway.</p>
         </div>
 
         <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card"><div class="stat-label">Total POA&amp;M Items</div><div class="stat-value">0</div><div class="stat-sub">Pending assessment</div></div>
-          <div class="stat-card green"><div class="stat-label">Complete</div><div class="stat-value">0</div><div class="stat-sub">0% closed</div></div>
-          <div class="stat-card accent"><div class="stat-label">In Progress</div><div class="stat-value">0</div><div class="stat-sub">Not yet started</div></div>
-          <div class="stat-card red"><div class="stat-label">Overdue</div><div class="stat-value">0</div><div class="stat-sub">None identified</div></div>
+          <div class="stat-card"><div class="stat-label">Total POA&amp;M Items</div><div class="stat-value">18</div><div class="stat-sub">From SAR findings</div></div>
+          <div class="stat-card green"><div class="stat-label">Complete</div><div class="stat-value">4</div><div class="stat-sub">22% closed</div></div>
+          <div class="stat-card accent"><div class="stat-label">In Progress</div><div class="stat-value">11</div><div class="stat-sub">Actively remediated</div></div>
+          <div class="stat-card red"><div class="stat-label">Overdue</div><div class="stat-value">0</div><div class="stat-sub">On track</div></div>
         </div>
 
         <div class="card">
           <div class="card-title">POA&amp;M Tracker</div>
-          <div class="info-box">POA&amp;M items will be populated upon completion of the CSF Assessment phase.</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>POA&amp;M ID</th><th>Finding</th><th>Owner</th><th>Priority</th><th>Due Date</th><th>Status</th><th>% Complete</th></tr></thead>
+              <tbody>
+                <tr><td>PM-001</td><td>Deploy centralized SIEM/log aggregation</td><td>B. Osei (IT Director)</td><td><span class="badge badge-red">Critical</span></td><td>Jun 30, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>25%</td></tr>
+                <tr><td>PM-002</td><td>Complete student PII data classification</td><td>P. Hall (CISO)</td><td><span class="badge badge-red">Critical</span></td><td>May 31, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>60%</td></tr>
+                <tr><td>PM-003</td><td>Conduct IR tabletop exercise</td><td>P. Hall (CISO)</td><td><span class="badge badge-red">Critical</span></td><td>May 15, 2026</td><td><span class="badge badge-green">Complete</span></td><td>100%</td></tr>
+                <tr><td>PM-004</td><td>Formalize vendor access review process</td><td>C. Williams (GRC Lead)</td><td><span class="badge badge-orange">High</span></td><td>Jun 15, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>40%</td></tr>
+                <tr><td>PM-005</td><td>Reduce patch cycle to &lt;30 days</td><td>B. Osei (IT Director)</td><td><span class="badge badge-orange">High</span></td><td>Jun 30, 2026</td><td><span class="badge badge-blue">In Progress</span></td><td>50%</td></tr>
+                <tr><td>PM-006</td><td>Perform backup restoration test</td><td>B. Osei (IT Director)</td><td><span class="badge badge-orange">High</span></td><td>May 30, 2026</td><td><span class="badge badge-green">Complete</span></td><td>100%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-outline" onclick="notify('POA&M exported: MSDE_POAM_v2.xlsx')">Export POA&amp;M</button>
+            <button class="btn btn-outline" onclick="notify('POA&M synced with ServiceNow GRC')">Sync to GRC</button>
+          </div>
         </div>
       </section>
 
@@ -675,36 +657,49 @@
       <section class="section" id="sar" aria-hidden="true">
         <div class="page-header">
           <h1>System Assessment Report (SAR) &#8212; MSDE</h1>
-          <p>Executive-ready assessment report with findings, maturity scores, and recommendations. Final deliverable for DoIT and agency leadership.</p>
+          <p>SAR delivered to DoIT Apr 1, 2026. Executive brief presented Apr 3, 2026. POA&amp;M remediation currently in progress under agency ownership.</p>
         </div>
 
         <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card accent"><div class="stat-label">Overall Maturity</div><div class="stat-value">1.8 / 5</div><div class="stat-sub">Preliminary estimate</div></div>
-          <div class="stat-card red"><div class="stat-label">Critical Findings</div><div class="stat-value">0</div><div class="stat-sub">Pending assessment</div></div>
-          <div class="stat-card"><div class="stat-label">High Findings</div><div class="stat-value">0</div><div class="stat-sub">Pending assessment</div></div>
-          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">0</div><div class="stat-sub">of 42 total</div></div>
+          <div class="stat-card green"><div class="stat-label">Overall Maturity</div><div class="stat-value">2.3 / 5</div><div class="stat-sub">Managed level</div></div>
+          <div class="stat-card red"><div class="stat-label">Critical Findings</div><div class="stat-value">3</div><div class="stat-sub">P1 — active remediation</div></div>
+          <div class="stat-card"><div class="stat-label">High Findings</div><div class="stat-value">7</div><div class="stat-sub">30-day remediation plan</div></div>
+          <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">106</div><div class="stat-sub">Full CSF 2.0 coverage</div></div>
         </div>
 
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-title">Projected Maturity Radar</div>
-            <div class="chart-wrap-sm"><canvas id="sarRadarChart"></canvas></div>
+        <div class="card">
+          <div class="card-title">SAR Findings Summary</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Finding ID</th><th>Control Ref</th><th>Function</th><th>Description</th><th>CMMI</th><th>Risk</th></tr></thead>
+              <tbody>
+                <tr><td>F-001</td><td>DE.CM-01</td><td><span class="fn-tag fn-detect">DETECT</span></td><td>No SIEM or centralized log management deployed</td><td><strong>1</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-002</td><td>ID.AM-05</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Student PII data classification scheme incomplete</td><td><strong>2</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-003</td><td>RS.RP-01</td><td><span class="fn-tag fn-respond">RESPOND</span></td><td>IR plan lacks formal tabletop exercises — untested</td><td><strong>2</strong></td><td><span class="badge badge-red">Critical</span></td></tr>
+                <tr><td>F-004</td><td>GV.SC-04</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Vendor access not consistently reviewed or audited</td><td><strong>2</strong></td><td><span class="badge badge-orange">High</span></td></tr>
+                <tr><td>F-005</td><td>PR.IP-12</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Patch cycle averages 60 days — exceeds 30-day SLA</td><td><strong>2</strong></td><td><span class="badge badge-orange">High</span></td></tr>
+                <tr><td>F-006</td><td>RC.RP-01</td><td><span class="fn-tag fn-recover">RECOVER</span></td><td>Backup recovery not tested within last 12 months</td><td><strong>2</strong></td><td><span class="badge badge-orange">High</span></td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="card">
-            <div class="card-title">SAR Deliverable Status</div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Deliverable</th><th>Status</th><th>Due</th><th>Reviewer</th></tr></thead>
-                <tbody>
-                  <tr><td>System Assessment Report (SAR)</td><td><span class="badge badge-gray">Pending</span></td><td>Jun 16, 2026</td><td>S. Patel &#8594; DoIT</td></tr>
-                  <tr><td>Plan of Action &amp; Milestones (POA&amp;M)</td><td><span class="badge badge-gray">Pending</span></td><td>Jun 16, 2026</td><td>D. Kim (CISO)</td></tr>
-                  <tr><td>Executive Brief</td><td><span class="badge badge-gray">Pending</span></td><td>Jun 16, 2026</td><td>DoIT Leadership</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-outline" onclick="notify('SAR generation pending assessment completion')">Generate SAR Report</button>
-            </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">SAR Deliverable Status</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Deliverable</th><th>Status</th><th>Delivered</th><th>Reviewer</th></tr></thead>
+              <tbody>
+                <tr><td>System Assessment Report (SAR)</td><td><span class="badge badge-green">Delivered</span></td><td>Apr 1, 2026</td><td>S. Patel &#8594; DoIT</td></tr>
+                <tr><td>Plan of Action &amp; Milestones (POA&amp;M)</td><td><span class="badge badge-green">Delivered</span></td><td>Apr 1, 2026</td><td>P. Hall (CISO)</td></tr>
+                <tr><td>Executive Brief</td><td><span class="badge badge-green">Presented</span></td><td>Apr 3, 2026</td><td>DoIT Leadership</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="notify('SAR downloaded: MSDE_SAR_Final_2026.pdf')">Download SAR Report</button>
+            <button class="btn btn-outline" onclick="notify('Executive brief downloaded: MSDE_ExecBrief_Final.pptx')">Download Executive Brief</button>
+            <button class="btn btn-outline" onclick="notify('POA&M status synced to ServiceNow GRC')">Sync to GRC</button>
           </div>
         </div>
       </section>
@@ -745,11 +740,11 @@
     }
 
     function updateSectionTitle(sectionId) {
-      const titles = { overview:'Assessment Dashboard', questionnaire:'Pre-Assessment Questionnaire', intake:'Intake & Scoping', mapping:'NIST CSF Mapping', evidence:'Evidence Collection', risk:'Risk & CMMI Scoring', poam:'POA&M Remediation', sar:'SAR Dashboard' };
+      const titles = { overview:'Assessment Dashboard', questionnaire:'Pre-Assessment Questionnaire', intake:'Intake & Scoping', evidence:'Evidence Collection', risk:'Risk & CMMI Scoring', poam:'POA&M Remediation', sar:'SAR Dashboard' };
       const title = titles[sectionId] || 'Assessment';
       const titleElement = document.getElementById('topbar-title');
       if (titleElement) {
-        titleElement.innerHTML = `${title} - Office of the Comptroller of Maryland<span>Current Stage: SAR Delivered</span>`;
+        titleElement.innerHTML = `${title} - Maryland State Dept. of Education (MSDE)<span>Current Stage: SAR Delivered</span>`;
       }
     }
 

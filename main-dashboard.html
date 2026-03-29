@@ -142,16 +142,13 @@
     </div>
 
     <div class="nav-section">System</div>
-    <div class="nav-item" onclick="showSection('iam', this)" role="button" tabindex="0">
-      <div>User Management</div>
-    </div>
     <div class="nav-item" role="button" tabindex="0" onclick="showSection('settings', this)">
-      <div>Settings &amp; Integration</div>
+      <div>Settings</div>
     </div>
 
     <div class="sidebar-bottom">
       Maryland DGS / DoIT &nbsp;|&nbsp; Demo Cohort<br>
-      6 agencies &nbsp;|&nbsp; RFP demonstration flow
+      3 agencies &nbsp;|&nbsp; RFP demonstration flow
     </div>
   </nav>
 
@@ -162,8 +159,8 @@
         <span>Main Entry Point</span>
       </div>
       <div class="topbar-right">
-        <span class="badge badge-blue">6 Agencies</span>
-        <span class="badge badge-orange">2 Scheduled</span>
+        <span class="badge badge-blue">3 Agencies</span>
+        <span class="badge badge-orange">2 In Progress</span>
         <span class="badge badge-green">1 Complete</span>
         <button class="btn btn-outline btn-sm" onclick="logout()" style="margin-left: 10px;">🚪 Logout</button>
         <div class="user-menu">
@@ -871,311 +868,268 @@
         </div>
       </section>
 
-      <!-- ============================================================ IAM -->
-      <section class="section" id="iam" aria-hidden="true">
-        <div class="page-header">
-          <h1>User Management &amp; Access Control</h1>
-          <p>Invite agency POCs, create assessors, configure Maryland DoIT overwatch access, and manage end-to-end platform access for all assessment participants.</p>
-        </div>
-
-        <!-- Stats row -->
-        <div class="grid-4" style="margin-bottom:20px;">
-          <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value" id="iam-total">9</div><div class="stat-sub">Active accounts</div></div>
-          <div class="stat-card green"><div class="stat-label">Active</div><div class="stat-value" id="iam-active">7</div><div class="stat-sub">Logged in within 30 days</div></div>
-          <div class="stat-card accent"><div class="stat-label">Pending Invites</div><div class="stat-value" id="iam-pending">2</div><div class="stat-sub">Awaiting account setup</div></div>
-          <div class="stat-card"><div class="stat-label">Roles</div><div class="stat-value">5</div><div class="stat-sub">Configured access tiers</div></div>
-        </div>
-
-        <!-- Tab bar -->
-        <div class="tab-bar">
-          <div class="tab active" onclick="switchTab(this,'iam-users')">Users &amp; Access</div>
-          <div class="tab" onclick="switchTab(this,'iam-invite')">Invite &amp; Onboard</div>
-          <div class="tab" onclick="switchTab(this,'iam-roles')">Role Matrix</div>
-          <div class="tab" onclick="switchTab(this,'iam-audit')">Audit Log</div>
-        </div>
-
-        <!-- ===== USERS TAB ===== -->
-        <div class="tab-content active" id="iam-users">
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-              <div class="card-title" style="margin-bottom:0;">Platform Users</div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <select id="iam-filter-role" onchange="filterIamUsers()" style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;">
-                  <option value="">All Roles</option>
-                  <option value="Program Manager">Program Manager</option>
-                  <option value="Lead Assessor">Lead Assessor</option>
-                  <option value="Assessor">Assessor</option>
-                  <option value="Agency POC">Agency POC</option>
-                  <option value="DoIT Reviewer">DoIT Reviewer</option>
-                </select>
-                <select id="iam-filter-status" onchange="filterIamUsers()" style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;">
-                  <option value="">All Status</option>
-                  <option value="Active">Active</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-                <button class="btn btn-primary btn-sm" onclick="switchTab(document.querySelector('#iam .tab-bar .tab:nth-child(2)'), 'iam-invite')">+ Invite User</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table id="iam-user-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Agency</th>
-                    <th>Status</th>
-                    <th>Last Active</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="iam-user-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== INVITE TAB ===== -->
-        <div class="tab-content" id="iam-invite">
-          <div style="display:grid; grid-template-columns:1fr 420px; gap:20px; align-items:start;">
-            <div>
-              <div class="card">
-                <div class="card-title">Invite New User</div>
-                <div class="info-box" style="margin-bottom:16px;">Users receive a secure invitation email with a one-time login link. Agency POCs will see only their agency questionnaire and evidence upload. DoIT Reviewers get read-only access to all assessments.</div>
-                <div class="form-grid">
-                  <div class="form-group"><label>Full Name</label><input id="inv-name" placeholder="e.g., Lisa Harmon" oninput="updateEmailPreview()"></div>
-                  <div class="form-group"><label>Email Address</label><input id="inv-email" type="email" placeholder="name@agency.maryland.gov" oninput="updateEmailPreview()"></div>
-                  <div class="form-group"><label>Role</label>
-                    <select id="inv-role" onchange="updateEmailPreview(); toggleAgencyField()">
-                      <option value="">— Select Role —</option>
-                      <option value="Program Manager">Program Manager</option>
-                      <option value="Lead Assessor">Lead Assessor</option>
-                      <option value="Assessor">Assessor</option>
-                      <option value="Agency POC">Agency POC</option>
-                      <option value="DoIT Reviewer">DoIT Reviewer (Overwatch)</option>
-                    </select>
-                  </div>
-                  <div class="form-group" id="inv-agency-field" style="display:none;">
-                    <label>Agency Assignment</label>
-                    <select id="inv-agency" onchange="updateEmailPreview()">
-                      <option value="">— Select Agency —</option>
-                      <option value="MDOT">Maryland Dept. of Transportation (MDOT)</option>
-                      <option value="MDH">Maryland Dept. of Health (MDH)</option>
-                      <option value="MSDE">MD State Dept. of Education (MSDE)</option>
-                      <option value="DPSCS">MD Dept. of Public Safety &amp; Correctional Services</option>
-                      <option value="Comptroller">Office of the Comptroller of Maryland</option>
-                      <option value="Labor">Maryland Department of Labor</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="grid-column:1/-1;"><label>Personal Message (optional)</label><textarea id="inv-message" rows="2" placeholder="Add a personal note to the invitation email..." oninput="updateEmailPreview()"></textarea></div>
-                </div>
-                <div class="btn-row">
-                  <button class="btn btn-primary" onclick="sendInvitation()">Send Invitation Email</button>
-                  <button class="btn btn-outline" onclick="updateEmailPreview()">Preview Email</button>
-                  <button class="btn btn-outline" onclick="sendTestEmail()">Send Test to Myself</button>
-                </div>
-              </div>
-
-              <!-- Bulk invite -->
-              <div class="card" style="margin-top:16px;">
-                <div class="card-title">Bulk Invite via CSV</div>
-                <div class="info-box">Upload a CSV with columns: Name, Email, Role, Agency. All users will receive individual invitation emails.</div>
-                <div style="border:2px dashed var(--border); border-radius:8px; padding:24px; text-align:center; background:#fafbfd; margin-top:10px;">
-                  <div style="font-size:.85rem; color:var(--text-muted); margin-bottom:8px;">Drag &amp; drop CSV file here or</div>
-                  <button class="btn btn-outline btn-sm" onclick="notify('CSV upload panel opened — select file to bulk invite users')">Browse File</button>
-                  <div style="font-size:.72rem; color:var(--text-muted); margin-top:8px;">Supported: .csv · Max 500 rows</div>
-                </div>
-                <div class="btn-row" style="margin-top:10px;">
-                  <button class="btn btn-outline btn-sm" onclick="notify('CSV template downloaded: Anchor_User_Import_Template.csv')">Download Template</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Email preview panel -->
-            <div>
-              <div class="card" style="position:sticky; top:70px;">
-                <div class="card-title">Email Preview</div>
-                <div id="email-preview-panel" style="border:1px solid var(--border); border-radius:8px; overflow:hidden; font-size:.8rem;">
-                  <div style="background:#1e3a5f; color:#fff; padding:12px 16px;">
-                    <div style="font-size:.65rem; opacity:.7; margin-bottom:2px;">From: noreply@anchor.maryland-doit.gov</div>
-                    <div style="font-size:.65rem; opacity:.7; margin-bottom:6px;" id="prev-to">To: —</div>
-                    <div style="font-weight:700; font-size:.88rem;" id="prev-subject">Subject: You've been invited to the Anchor Platform</div>
-                  </div>
-                  <div style="padding:16px; background:#fff;">
-                    <div style="text-align:center; margin-bottom:14px;">
-                      <div style="font-size:1rem; font-weight:800; color:#1e3a5f;">Anchor Platform</div>
-                      <div style="font-size:.7rem; color:#6b7280;">Maryland DoIT Cybersecurity Assessment Program</div>
-                    </div>
-                    <div id="prev-body" style="line-height:1.6; color:#374151;">
-                      <p>You have been invited to join the <strong>Anchor Platform</strong> — Maryland's statewide cybersecurity assessment system powered by Assurit Consulting Group.</p>
-                      <p style="color:#6b7280; font-style:italic;">Fill out the form to generate a personalized email preview.</p>
-                    </div>
-                    <div style="text-align:center; margin:16px 0;">
-                      <div style="display:inline-block; background:#2563eb; color:#fff; padding:10px 24px; border-radius:6px; font-weight:700; font-size:.82rem;">Accept Invitation &amp; Set Password</div>
-                    </div>
-                    <div style="border-top:1px solid #e5e7eb; padding-top:10px; font-size:.7rem; color:#9ca3af; text-align:center;">
-                      Anchor Platform · Assurit Consulting Group · Maryland DoIT RFP BPM052516<br>
-                      This invitation expires in 72 hours.
-                    </div>
-                  </div>
-                </div>
-                <div style="font-size:.72rem; color:var(--text-muted); margin-top:8px; text-align:center;">Live preview — updates as you type</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== ROLE MATRIX TAB ===== -->
-        <div class="tab-content" id="iam-roles">
-          <div class="card">
-            <div class="card-title">Role Access Matrix</div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Capability</th>
-                    <th style="text-align:center;">Program Manager</th>
-                    <th style="text-align:center;">Lead Assessor</th>
-                    <th style="text-align:center;">Assessor</th>
-                    <th style="text-align:center;">Agency POC</th>
-                    <th style="text-align:center;">DoIT Reviewer</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="background:#f8fafc;"><td colspan="6" style="font-weight:700; font-size:.72rem; color:var(--primary); text-transform:uppercase; letter-spacing:.5px; padding:8px 12px;">Agency Dashboard</td></tr>
-                  <tr><td>View all agencies</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td></tr>
-                  <tr><td>Create / edit systems</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>Delete systems</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>Export portfolio report</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td></tr>
-                  <tr style="background:#f8fafc;"><td colspan="6" style="font-weight:700; font-size:.72rem; color:var(--primary); text-transform:uppercase; letter-spacing:.5px; padding:8px 12px;">Agency Assessment</td></tr>
-                  <tr><td>View intake &amp; scoping</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅ (own agency)</td><td style="text-align:center;">Read only</td></tr>
-                  <tr><td>Complete questionnaire</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅ (own agency)</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>Score CSF controls (SRTM)</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>Upload evidence artifacts</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅ (own agency)</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>View risk register</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">Read only</td><td style="text-align:center;">Read only</td></tr>
-                  <tr><td>View &amp; edit POA&amp;M</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">Read only</td></tr>
-                  <tr><td>Access SAR Dashboard</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td></tr>
-                  <tr style="background:#f8fafc;"><td colspan="6" style="font-weight:700; font-size:.72rem; color:var(--primary); text-transform:uppercase; letter-spacing:.5px; padding:8px 12px;">Platform Administration</td></tr>
-                  <tr><td>Manage users / invite</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>Configure integrations</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td></tr>
-                  <tr><td>View audit log</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">Read only</td></tr>
-                  <tr><td>2-Year Pipeline / PMO</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">Read only</td><td style="text-align:center;">—</td><td style="text-align:center;">✅</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top:16px;">
-            <div class="card">
-              <div class="card-title">Agency POC Experience</div>
-              <p style="font-size:.82rem; color:var(--text-muted); margin-bottom:12px;">When an Agency POC logs in, they see a simplified portal scoped to their agency only:</p>
-              <ul style="font-size:.82rem; line-height:2; padding-left:18px; color:var(--text);">
-                <li>Pre-Assessment Questionnaire (editable)</li>
-                <li>Evidence Upload — attach documents per control</li>
-                <li>Assessment Status — read-only progress view</li>
-                <li>Notifications — receive assessor messages</li>
-                <li>Interview Scheduling — confirm availability</li>
-              </ul>
-              <div class="btn-row" style="margin-top:12px;">
-                <button class="btn btn-outline btn-sm" onclick="window.location.href='agency-mdot.html'">Preview Agency POC View</button>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-title">DoIT Reviewer (Overwatch) Experience</div>
-              <p style="font-size:.82rem; color:var(--text-muted); margin-bottom:12px;">Maryland DoIT reviewers see a read-only aggregate view:</p>
-              <ul style="font-size:.82rem; line-height:2; padding-left:18px; color:var(--text);">
-                <li>All agency dashboards (read-only)</li>
-                <li>Statewide maturity trends &amp; metrics</li>
-                <li>Critical findings summary (all agencies)</li>
-                <li>SAR deliverables when published</li>
-                <li>2-Year pipeline &amp; wave scheduling</li>
-              </ul>
-              <div class="btn-row" style="margin-top:12px;">
-                <button class="btn btn-outline btn-sm" onclick="notify('DoIT Reviewer portal preview loaded — read-only aggregate view')">Preview Reviewer View</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ===== AUDIT LOG TAB ===== -->
-        <div class="tab-content" id="iam-audit">
-          <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <div class="card-title" style="margin-bottom:0;">Platform Audit Log</div>
-              <div style="display:flex; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="notify('Audit log exported: Anchor_Audit_Log_2026.csv')">Export CSV</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Timestamp</th><th>User</th><th>Role</th><th>Action</th><th>Target</th><th>Result</th></tr></thead>
-                <tbody id="iam-audit-tbody">
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-22 09:41</td><td>J. Williams</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Opened Assessment</td><td>MDOT</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-22 09:38</td><td>A. Torres</td><td><span class="badge badge-orange">Agency POC</span></td><td>Uploaded Evidence</td><td>DPSCS — E-004</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-22 09:15</td><td>R. Okafor</td><td><span class="badge badge-blue">Assessor</span></td><td>Scored Control</td><td>DPSCS — DE.CM-01</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-21 16:52</td><td>admin</td><td><span class="badge badge-red">Program Manager</span></td><td>Invited User</td><td>p.hall@msde.maryland.gov</td><td><span class="badge badge-green">Email Sent</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-21 14:30</td><td>S. Patel</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Opened Assessment</td><td>MSDE</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-21 11:05</td><td>L. Harmon</td><td><span class="badge badge-orange">Agency POC</span></td><td>Submitted Questionnaire</td><td>MDOT</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-21 10:48</td><td>M. Chen</td><td><span class="badge badge-blue">Assessor</span></td><td>Opened Assessment</td><td>Labor</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-20 15:22</td><td>DoIT.Reviewer</td><td><span class="badge" style="background:#f3e8ff;color:#7c3aed;">DoIT Reviewer</span></td><td>Viewed SAR</td><td>MSDE — Final SAR</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-20 14:10</td><td>J. Williams</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Exported SRTM</td><td>MDOT</td><td><span class="badge badge-green">Success</span></td></tr>
-                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-19 09:00</td><td>admin</td><td><span class="badge badge-red">Program Manager</span></td><td>Created System</td><td>Comptroller</td><td><span class="badge badge-green">Success</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SYSTEM SETTINGS SECTION -->
+      <!-- ============================================================ SETTINGS -->
       <section class="section" id="settings" aria-hidden="true">
         <div class="page-header">
-          <h1>Settings &amp; Integration</h1>
-          <p>Platform configuration, ServiceNow GRC integration, user roles, and audit logs.</p>
+          <h1>Settings</h1>
+          <p>Platform user management, system integrations, and activity monitoring for the Anchor Platform.</p>
         </div>
 
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-title">ServiceNow GRC Integration</div>
-            <div class="form-grid">
-              <div class="form-group" style="grid-column:1/-1;"><label>ServiceNow Instance URL</label><input value="https://maryland.service-now.com/grc"></div>
-              <div class="form-group"><label>Integration User</label><input value="assurit_api_svc"></div>
-              <div class="form-group"><label>Auth Method</label><select><option>OAuth 2.0</option><option>API Key</option></select></div>
-              <div class="form-group"><label>Sync Frequency</label><select><option>Real-time</option><option>Every 15 min</option><option>Hourly</option></select></div>
-              <div class="form-group"><label>Data Modules</label><select><option>Risk + POA&amp;M + Evidence</option></select></div>
-            </div>
-            <div class="success-box" style="margin-top:14px;">✅ Integration active. Last sync: Today 09:42 AM. 847 records synced.</div>
-            <div class="btn-row">
-              <button class="btn btn-primary btn-sm" onclick="notify('🔗 Test sync complete: 847 records, 0 errors')">Test Connection</button>
-              <button class="btn btn-outline btn-sm" onclick="notify('📋 Integration logs opened')">View Logs</button>
+        <!-- Top-level Settings tabs -->
+        <div class="tab-bar">
+          <div class="tab active" onclick="switchSettingsTab(this,'st-users')">User Management</div>
+          <div class="tab" onclick="switchSettingsTab(this,'st-integrations')">Integrations</div>
+          <div class="tab" onclick="switchSettingsTab(this,'st-activity')">Activity Log</div>
+        </div>
+
+        <!-- ===== USER MANAGEMENT TAB ===== -->
+        <div class="tab-content active" id="st-users">
+          <!-- Stats row -->
+          <div class="grid-4" style="margin-bottom:20px;">
+            <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value" id="iam-total">9</div><div class="stat-sub">Active accounts</div></div>
+            <div class="stat-card green"><div class="stat-label">Active</div><div class="stat-value" id="iam-active">8</div><div class="stat-sub">Logged in within 30 days</div></div>
+            <div class="stat-card accent"><div class="stat-label">Pending Invites</div><div class="stat-value" id="iam-pending">1</div><div class="stat-sub">Awaiting account setup</div></div>
+            <div class="stat-card"><div class="stat-label">Roles</div><div class="stat-value">5</div><div class="stat-sub">Configured access tiers</div></div>
+          </div>
+
+          <!-- Sub-tabs within User Management -->
+          <div class="tab-bar" style="border-bottom-color: var(--border);">
+            <div class="tab active" style="font-size:.75rem;" onclick="switchIamTab(this,'iam-users')">Users &amp; Access</div>
+            <div class="tab" style="font-size:.75rem;" onclick="switchIamTab(this,'iam-invite')">Invite &amp; Onboard</div>
+            <div class="tab" style="font-size:.75rem;" onclick="switchIamTab(this,'iam-roles')">Role Matrix</div>
+          </div>
+
+          <!-- Users & Access sub-tab -->
+          <div class="tab-content active" id="iam-users">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                <div class="card-title" style="margin-bottom:0;">Platform Users</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <select id="iam-filter-role" onchange="filterIamUsers()" style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;">
+                    <option value="">All Roles</option>
+                    <option value="Program Manager">Program Manager</option>
+                    <option value="Lead Assessor">Lead Assessor</option>
+                    <option value="Assessor">Assessor</option>
+                    <option value="Agency POC">Agency POC</option>
+                    <option value="DoIT Reviewer">DoIT Reviewer</option>
+                  </select>
+                  <select id="iam-filter-status" onchange="filterIamUsers()" style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                  <button class="btn btn-primary btn-sm" onclick="switchIamTab(document.querySelector('[onclick*=\'iam-invite\']'), 'iam-invite')">+ Invite User</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Agency</th>
+                      <th>Status</th>
+                      <th>Last Active</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="iam-users-table"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-title">User Roles &amp; Access Control</div>
+
+          <!-- Invite & Onboard sub-tab -->
+          <div class="tab-content" id="iam-invite">
+            <div style="display:grid; grid-template-columns:1fr 380px; gap:20px; align-items:start;">
+              <div>
+                <div class="card">
+                  <div class="card-title">Invite New User</div>
+                  <div class="info-box" style="margin-bottom:14px;">Users receive a secure invitation email with a one-time login link. Agency POCs will see only their agency questionnaire and evidence upload. DoIT Reviewers get read-only access to all assessments.</div>
+                  <div class="form-grid">
+                    <div class="form-group"><label>Full Name</label><input id="inv-name" placeholder="e.g., Lisa Harmon" oninput="updateEmailPreview()"></div>
+                    <div class="form-group"><label>Email Address</label><input id="inv-email" placeholder="name@agency.maryland.gov" oninput="updateEmailPreview()"></div>
+                    <div class="form-group"><label>Role</label>
+                      <select id="inv-role" onchange="updateEmailPreview()">
+                        <option value="">— Select Role —</option>
+                        <option>Program Manager</option>
+                        <option>Lead Assessor</option>
+                        <option>Assessor</option>
+                        <option>Agency POC</option>
+                        <option>DoIT Reviewer</option>
+                      </select>
+                    </div>
+                    <div class="form-group"><label>Agency</label>
+                      <select id="inv-agency" onchange="updateEmailPreview()">
+                        <option value="">— Select Agency —</option>
+                        <option>MDOT</option>
+                        <option>DPSCS</option>
+                        <option>MSDE</option>
+                        <option>All Agencies</option>
+                      </select>
+                    </div>
+                    <div class="form-group" style="grid-column:1/-1;"><label>Personal Message (optional)</label><textarea id="inv-msg" rows="2" placeholder="Add a personal note to the invitation email..." oninput="updateEmailPreview()"></textarea></div>
+                  </div>
+                  <div class="btn-row">
+                    <button class="btn btn-primary" onclick="sendInvitation()">Send Invitation Email</button>
+                    <button class="btn btn-outline" onclick="updateEmailPreview()">Preview Email</button>
+                    <button class="btn btn-outline" onclick="sendTestEmail()">Send Test to Myself</button>
+                  </div>
+                </div>
+                <div class="card" style="margin-top:14px;">
+                  <div class="card-title">Bulk Invite via CSV</div>
+                  <div class="info-box">Upload a CSV with columns: Name, Email, Role, Agency. All users will receive individual invitation emails.</div>
+                  <div style="border:2px dashed var(--border); border-radius:8px; padding:20px; text-align:center; color:var(--text-muted); font-size:.82rem;">
+                    Drag &amp; drop CSV file here or
+                    <button class="btn btn-outline btn-sm" style="margin-left:8px;" onclick="notify('CSV upload ready — select file to continue')">Browse File</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="position:sticky; top:20px;">
+                <div class="card-title">Email Preview</div>
+                <div id="email-preview-box" style="border:1px solid var(--border); border-radius:8px; overflow:hidden; font-size:.78rem;">
+                  <div style="background:#1e3a5f; color:#fff; padding:10px 14px; font-size:.72rem;">
+                    <div>From: noreply@anchor.maryland-doit.gov</div>
+                    <div>To: —</div>
+                    <div style="font-weight:700; margin-top:4px;">Subject: You've been invited to the Anchor Platform</div>
+                  </div>
+                  <div style="padding:14px;" id="email-preview-body">
+                    <div style="text-align:center; background:#f1f5f9; border-radius:6px; padding:12px; margin-bottom:12px;">
+                      <div style="font-weight:800; font-size:1rem; color:#1e3a5f;">Anchor Platform</div>
+                      <div style="font-size:.7rem; color:#64748b;">Maryland DoIT Cybersecurity Assessment Program</div>
+                    </div>
+                    <p style="color:#374151;">Dear [Recipient Name],</p>
+                    <p style="color:#374151;">You have been invited to join the <strong>Anchor Platform</strong> — Maryland's statewide cybersecurity assessment system powered by Assurit Consulting Group.</p>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px; margin:10px 0; font-size:.74rem;">
+                      <strong>Your Access Details:</strong><br>
+                      Role: —<br>
+                      Portal: <span style="color:#2563eb;">https://anchor.maryland-doit.gov</span><br>
+                      Expires: <span id="inv-expiry"></span>
+                    </div>
+                    <p style="color:#374151; font-size:.74rem;">If you have questions, contact your lead assessor or reply to this email.</p>
+                    <div style="text-align:center; margin:14px 0;">
+                      <span style="background:#2563eb; color:#fff; padding:8px 18px; border-radius:6px; font-size:.78rem; font-weight:700;">Accept Invitation &amp; Set Password</span>
+                    </div>
+                    <div style="font-size:.68rem; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:8px;">
+                      Anchor Platform · Assurit Consulting Group · Maryland DoIT<br>
+                      RFP BPM052516<br>
+                      <em id="inv-expiry-note">This invitation expires in 72 hours.</em>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size:.68rem; color:var(--text-muted); margin-top:8px; text-align:center;">Live preview — updates as you type</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Role Matrix sub-tab -->
+          <div class="tab-content" id="iam-roles">
+            <div class="card">
+              <div class="card-title">Role Access Capability Matrix</div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Capability</th>
+                      <th style="text-align:center;">Program Manager</th>
+                      <th style="text-align:center;">Lead Assessor</th>
+                      <th style="text-align:center;">Assessor</th>
+                      <th style="text-align:center;">Agency POC</th>
+                      <th style="text-align:center;">DoIT Reviewer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>View Agency Dashboard</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">Own only</td><td style="text-align:center;">✅ (read)</td></tr>
+                    <tr><td>Complete Intake &amp; Scoping</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">Own only</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>Score CSF Controls</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>Upload Evidence</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>View Risk Register</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">Own only</td><td style="text-align:center;">✅ (read)</td></tr>
+                    <tr><td>Edit POA&amp;M Items</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>Generate SAR Report</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>Invite &amp; Manage Users</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr>
+                    <tr><td>View All Agencies</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">✅ (read)</td></tr>
+                    <tr><td>Platform Settings</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td><td style="text-align:center;">❌</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== INTEGRATIONS TAB ===== -->
+        <div class="tab-content" id="st-integrations">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">ServiceNow GRC Integration</div>
+              <div class="form-grid">
+                <div class="form-group" style="grid-column:1/-1;"><label>ServiceNow Instance URL</label><input value="https://maryland.service-now.com/grc"></div>
+                <div class="form-group"><label>Integration User</label><input value="assurit_api_svc"></div>
+                <div class="form-group"><label>Auth Method</label><select><option>OAuth 2.0</option><option>API Key</option></select></div>
+                <div class="form-group"><label>Sync Frequency</label><select><option>Real-time</option><option>Every 15 min</option><option>Hourly</option></select></div>
+                <div class="form-group"><label>Data Modules</label><select><option>Risk + POA&amp;M + Evidence</option></select></div>
+              </div>
+              <div class="success-box" style="margin-top:14px;">✅ Integration active. Last sync: Today 09:42 AM. 847 records synced.</div>
+              <div class="btn-row">
+                <button class="btn btn-primary btn-sm" onclick="notify('🔗 Test sync complete: 847 records, 0 errors')">Test Connection</button>
+                <button class="btn btn-outline btn-sm" onclick="notify('📋 Integration logs opened')">View Logs</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Email &amp; Notification Settings</div>
+              <div class="form-grid">
+                <div class="form-group" style="grid-column:1/-1;"><label>SMTP Host</label><input value="smtp.maryland.gov" placeholder="smtp.example.com"></div>
+                <div class="form-group"><label>Port</label><input value="587" placeholder="587"></div>
+                <div class="form-group"><label>Auth</label><select><option>TLS</option><option>SSL</option></select></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>From Address</label><input value="noreply@anchor.maryland-doit.gov"></div>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-outline btn-sm" onclick="notify('📧 Test email sent to admin@anchor.maryland-doit.gov')">Send Test Email</button>
+                <button class="btn btn-primary btn-sm" onclick="notify('✅ Email settings saved')">Save Settings</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:14px;">
+            <div class="card-title">Connected Systems</div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Role</th><th>Access Level</th><th>Users</th></tr></thead>
+                <thead><tr><th>System</th><th>Type</th><th>Status</th><th>Last Sync</th><th>Records</th></tr></thead>
                 <tbody>
-                  <tr><td>Program Manager</td><td>Full access (all agencies)</td><td>2</td></tr>
-                  <tr><td>Lead Assessor</td><td>Full access (assigned agencies)</td><td>8</td></tr>
-                  <tr><td>Assessor</td><td>Read/write (assigned agency)</td><td>24</td></tr>
-                  <tr><td>Agency Rep</td><td>Evidence upload, view own agency</td><td>6</td></tr>
-                  <tr><td>DoIT Reviewer</td><td>Read-only (all agencies)</td><td>5</td></tr>
-                  <tr><td>Executive</td><td>Dashboard/summary only</td><td>3</td></tr>
+                  <tr><td>ServiceNow GRC</td><td>GRC Platform</td><td><span class="badge badge-green">Connected</span></td><td>Today 09:42</td><td>847</td></tr>
+                  <tr><td>Maryland DoIT SSO</td><td>Identity Provider</td><td><span class="badge badge-green">Connected</span></td><td>Always on</td><td>—</td></tr>
+                  <tr><td>AWS S3 Evidence Vault</td><td>Storage</td><td><span class="badge badge-green">Connected</span></td><td>Real-time</td><td>—</td></tr>
+                  <tr><td>MDOT SharePoint</td><td>Document Store</td><td><span class="badge badge-orange">Pending Auth</span></td><td>—</td><td>—</td></tr>
                 </tbody>
               </table>
             </div>
-            <div class="btn-row">
-              <button class="btn btn-outline btn-sm" onclick="notify('👥 User management panel opened')">Manage Users</button>
-              <button class="btn btn-outline btn-sm" onclick="notify('📋 Audit log exported')">View Audit Log</button>
-            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Email &amp; Notification Settings</div>
-          <div class="form-grid">
+        <!-- ===== ACTIVITY LOG TAB ===== -->
+        <div class="tab-content" id="st-activity">
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div class="card-title" style="margin-bottom:0;">Platform Activity Log</div>
+              <button class="btn btn-outline btn-sm" onclick="notify('📋 Activity log exported: AnchorPlatform_ActivityLog.csv')">Export Log</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Timestamp</th><th>User</th><th>Role</th><th>Action</th><th>Detail</th><th>IP</th></tr></thead>
+                <tbody id="settings-audit-table">
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-28 10:14</td><td>J. Williams</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Scored Control</td><td>MDOT — PR.AC-01 → CMMI 3</td><td>192.168.1.42</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-28 09:52</td><td>R. Okafor</td><td><span class="badge badge-blue">Assessor</span></td><td>Uploaded Evidence</td><td>DPSCS — Network Diagram v2.pdf</td><td>10.0.0.15</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-28 09:42</td><td>system</td><td><span class="badge badge-gray">Integration</span></td><td>GRC Sync</td><td>ServiceNow — 847 records synced</td><td>internal</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-27 17:31</td><td>A. Torres</td><td><span class="badge badge-orange">Agency POC</span></td><td>Uploaded Evidence</td><td>DPSCS — IS Policy v3.docx</td><td>172.16.0.8</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-27 16:45</td><td>J. Williams</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Invited User</td><td>a.torres@dpscs.maryland.gov — Agency POC</td><td>192.168.1.42</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-27 14:22</td><td>S. Patel</td><td><span class="badge badge-blue">Lead Assessor</span></td><td>Completed Section</td><td>MSDE — SAR delivered to DoIT</td><td>192.168.1.55</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-25 11:10</td><td>L. Harmon</td><td><span class="badge badge-orange">Agency POC</span></td><td>Logged In</td><td>MDOT — Agency POC view</td><td>10.100.5.22</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-24 09:05</td><td>admin</td><td><span class="badge badge-red">Program Manager</span></td><td>System Config</td><td>Created new assessment — DPSCS Wave 1</td><td>192.168.1.1</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-23 15:48</td><td>DoIT Reviewer</td><td><span class="badge badge-gray">DoIT Reviewer</span></td><td>Viewed Report</td><td>MSDE — SAR Draft review</td><td>10.50.1.100</td></tr>
+                  <tr><td style="font-size:.75rem; color:var(--text-muted);">2026-04-21 16:52</td><td>admin</td><td><span class="badge badge-red">Program Manager</span></td><td>Invited User</td><td>p.hall@msde.maryland.gov — Agency POC</td><td>192.168.1.1</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </section>
@@ -1260,11 +1214,8 @@
   <script>
     const AGENCIES = {
       mdot:{name:'Maryland Dept. of Transportation (MDOT)', status:'In Progress', stage:'Evidence Collection', progress:'65%'},
-      mdh:{name:'Maryland Dept. of Health (MDH)', status:'In Progress', stage:'Risk Assessment', progress:'45%'},
-      msde:{name:'Maryland State Dept. of Education (MSDE)', status:'Complete', stage:'SAR Delivered', progress:'100%'},
-      comptroller:{name:'Office of the Comptroller of Maryland', status:'Scheduled', stage:'Intake & Scoping', progress:'15%'},
       dpscs:{name:'MD Dept. of Public Safety & Correctional Services', status:'In Progress', stage:'CSF Assessment', progress:'35%'},
-      labor:{name:'Maryland Department of Labor', status:'In Progress', stage:'Evidence Collection', progress:'28%'}
+      msde:{name:'Maryland State Dept. of Education (MSDE)', status:'Complete', stage:'SAR Delivered', progress:'100%'}
     };
     const ACTIVITY_LOG_KEY = 'demo_activity_log';
 
@@ -1276,13 +1227,12 @@
       if(sec) { sec.classList.add('active'); sec.setAttribute('aria-hidden','false'); }
       if(el) el.classList.add('active');
       const titles = {
-        portfolio:'Agency Dashboard', settings:'Settings & Integration',
+        portfolio:'Agency Dashboard', settings:'Settings',
         sai:'Agency CSF Intake & Evidence Upload', sp:'2-Year Assessment Pipeline',
         sa:'Agency Portal (MDOT View)', sw:'Workflow Templates & Configuration',
-        iam:'User Management & Access Control',
       };
       const topbar = document.querySelector('.topbar-title');
-      if(topbar) topbar.innerHTML = `${titles[id]||'Dashboard'}<span>Main Entry Point (6-Agency Demo Cohort)</span>`;
+      if(topbar) topbar.innerHTML = `${titles[id]||'Dashboard'}<span>Main Entry Point (3-Agency Demo Cohort)</span>`;
       if(id==='sp') setTimeout(initPipelineCharts,100);
       if(id==='sai') setTimeout(initSaiPortal,100);
     }
@@ -1295,6 +1245,29 @@
       const section = el.closest('.section') || document.body;
       section.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+    }
+
+    function switchSettingsTab(el, tabId) {
+      document.querySelectorAll('#settings > .tab-bar > .tab').forEach(t => t.classList.remove('active'));
+      ['st-users','st-integrations','st-activity'].forEach(id => {
+        const tc = document.getElementById(id);
+        if(tc) { tc.classList.remove('active'); }
+      });
+      if(el) el.classList.add('active');
+      const tc = document.getElementById(tabId);
+      if(tc) tc.classList.add('active');
+    }
+
+    function switchIamTab(el, tabId) {
+      const bar = el ? el.closest('.tab-bar') : null;
+      if(bar) bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      ['iam-users','iam-invite','iam-roles'].forEach(id => {
+        const tc = document.getElementById(id);
+        if(tc) { tc.classList.remove('active'); }
+      });
+      if(el) el.classList.add('active');
+      const tc = document.getElementById(tabId);
+      if(tc) tc.classList.add('active');
     }
 
     // ---- NOTIFICATIONS ----
@@ -2251,8 +2224,8 @@
       {id:'u1', name:'J. Williams', email:'j.williams@assurit.com', role:'Lead Assessor', agency:'All', status:'Active', lastActive:'Today 09:41', avatar:'JW'},
       {id:'u2', name:'S. Patel', email:'s.patel@assurit.com', role:'Lead Assessor', agency:'All', status:'Active', lastActive:'Today 08:15', avatar:'SP'},
       {id:'u3', name:'R. Okafor', email:'r.okafor@assurit.com', role:'Assessor', agency:'DPSCS', status:'Active', lastActive:'Today 09:15', avatar:'RO'},
-      {id:'u4', name:'M. Chen', email:'m.chen@assurit.com', role:'Assessor', agency:'Labor', status:'Active', lastActive:'Yesterday', avatar:'MC'},
-      {id:'u5', name:'T. Adams', email:'t.adams@assurit.com', role:'Assessor', agency:'MDH', status:'Active', lastActive:'Apr 20', avatar:'TA'},
+      {id:'u4', name:'M. Chen', email:'m.chen@assurit.com', role:'Assessor', agency:'MDOT', status:'Active', lastActive:'Yesterday', avatar:'MC'},
+      {id:'u5', name:'T. Adams', email:'t.adams@assurit.com', role:'Assessor', agency:'MSDE', status:'Active', lastActive:'Apr 20', avatar:'TA'},
       {id:'u6', name:'Lisa Harmon', email:'l.harmon@mdot.maryland.gov', role:'Agency POC', agency:'MDOT', status:'Active', lastActive:'Yesterday', avatar:'LH'},
       {id:'u7', name:'Angela Torres', email:'a.torres@dpscs.maryland.gov', role:'Agency POC', agency:'DPSCS', status:'Active', lastActive:'Today 09:38', avatar:'AT'},
       {id:'u8', name:'DoIT Reviewer', email:'reviewer@doit.maryland.gov', role:'DoIT Reviewer', agency:'All (Read-only)', status:'Active', lastActive:'Apr 20', avatar:'DR'},
@@ -2269,7 +2242,7 @@
     }
 
     function renderIamUsers(users) {
-      const tbody = document.getElementById('iam-user-tbody');
+      const tbody = document.getElementById('iam-users-table');
       if (!tbody) return;
       const roleBadge = r => {
         if(r==='Program Manager') return 'badge-red';
@@ -2334,7 +2307,7 @@
       const email = document.getElementById('inv-email')?.value || '';
       const role = document.getElementById('inv-role')?.value || '';
       const agency = document.getElementById('inv-agency')?.value || '';
-      const msg = document.getElementById('inv-message')?.value || '';
+      const msg = document.getElementById('inv-msg')?.value || '';
 
       const toEl = document.getElementById('prev-to');
       const subEl = document.getElementById('prev-subject');
@@ -2383,7 +2356,7 @@
       renderIamUsers(users);
       notify(`Invitation sent to ${name} (${email}) as ${role}`);
       // Reset form
-      ['inv-name','inv-email','inv-message'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+      ['inv-name','inv-email','inv-msg'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
       const roleEl = document.getElementById('inv-role'); if(roleEl) roleEl.value='';
       const agEl = document.getElementById('inv-agency'); if(agEl) agEl.value='';
       toggleAgencyField();
@@ -2402,7 +2375,7 @@
       const orig = window.showSection;
       window.showSection = function(id, el) {
         orig(id, el);
-        if(id === 'iam') { renderIamUsers(getIamUsers()); updateEmailPreview(); }
+        if(id === 'settings') { renderIamUsers(getIamUsers()); updateEmailPreview(); }
       };
     });
     // ── End IAM ─────────────────────────────────────────────────────────
