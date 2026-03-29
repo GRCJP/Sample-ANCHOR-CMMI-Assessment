@@ -50,6 +50,8 @@
             justify-content: center;
             min-height: 100vh;
             padding: 40px 20px;
+            margin: 0 auto;
+            max-width: 100%;
         }
         
         .login-card {
@@ -270,66 +272,27 @@
             text-align: center;
         }
         
-        .demo-accounts {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .demo-account {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+        /* AC-8 System Notice */
+        .system-notice {
+            margin-top: 25px;
+            padding: 16px;
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
             border-radius: 10px;
-            transition: all 0.2s ease;
+            text-align: left;
         }
         
-        .demo-account:hover {
-            border-color: #2563a8;
-            background: #f0f7ff;
-        }
-        
-        .demo-role {
-            font-size: 0.7rem;
-            padding: 4px 9px;
-            border-radius: 5px;
-            white-space: nowrap;
-            font-weight: 600;
-        }
-        
-        .badge-red {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .badge-blue {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .badge-orange {
-            background: #fed7aa;
-            color: #9a3412;
-        }
-        
-        .demo-info {
-            flex: 1;
-        }
-        
-        .demo-email {
-            font-weight: 600;
-            color: #1e293b;
+        .notice-title {
             font-size: 0.85rem;
-            margin-bottom: 2px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 8px;
         }
         
-        .demo-password {
-            color: #64748b;
-            font-size: 0.8rem;
-            font-family: 'Courier New', monospace;
+        .notice-text {
+            font-size: 0.75rem;
+            color: #78350f;
+            line-height: 1.5;
         }
         
         .login-footer {
@@ -384,16 +347,6 @@
         @media (max-width: 480px) {
             .login-card {
                 padding: 40px 30px;
-            }
-            
-            .demo-account {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .btn-outline {
-                width: 100%;
             }
             
             .md-logo img {
@@ -499,34 +452,22 @@
             </div>
             
             <div class="demo-section">
-                <h3>Demo Accounts</h3>
-                <div class="demo-accounts">
-                    <div class="demo-account" data-email="admin@anchor.com" data-password="Anchor123!">
-                        <div class="demo-role badge-red">Admin</div>
-                        <div class="demo-info">
-                            <div class="demo-email">admin@anchor.com</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                    </div>
-                    
-                    <div class="demo-account" data-email="assessor@anchor.com" data-password="Anchor123!">
-                        <div class="demo-role badge-blue">Assessor</div>
-                        <div class="demo-info">
-                            <div class="demo-email">assessor@anchor.com</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                    </div>
-                    
-                    <div class="demo-account" data-email="agency@anchor.com" data-password="Anchor123!">
-                        <div class="demo-role badge-orange">Agency</div>
-                        <div class="demo-info">
-                            <div class="demo-email">agency@anchor.com</div>
-                            <div class="demo-password">Anchor123!</div>
-                        </div>
-                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                    </div>
+                <h3>Quick Access (Demo)</h3>
+                <div class="form-group">
+                    <select id="demoAccountSelect" onchange="fillDemoAccount()" style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; color: #1e293b; background: white; cursor: pointer;">
+                        <option value="">— Select Demo Account —</option>
+                        <option value="admin@anchor.com|Anchor123!">Administrator (Full Access)</option>
+                        <option value="assessor@anchor.com|Anchor123!">Lead Assessor (Assessment Management)</option>
+                        <option value="agency@anchor.com|Anchor123!">Agency Representative (Agency View)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- AC-8 System Use Notification -->
+            <div class="system-notice">
+                <div class="notice-title">⚠️ System Use Notification (AC-8)</div>
+                <div class="notice-text">
+                    You are accessing a U.S. Government information system. Use of this system constitutes consent to monitoring, interception, recording, and disclosure. Unauthorized use may result in criminal or civil penalties.
                 </div>
             </div>
             
@@ -553,5 +494,22 @@
     <!-- Scripts -->
     <script src="src/js/aws-auth.js"></script>
     <script src="src/js/login.js"></script>
+    
+    <script>
+        // Demo account dropdown functionality
+        function fillDemoAccount() {
+            const select = document.getElementById('demoAccountSelect');
+            const value = select.value;
+            
+            if (value) {
+                const [email, password] = value.split('|');
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = password;
+                
+                // Reset dropdown
+                select.value = '';
+            }
+        }
+    </script>
 </body>
 </html>
