@@ -21,48 +21,25 @@
             padding: 0;
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+            background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 50%, #3b82f6 100%);
             position: relative;
             overflow-x: hidden;
         }
         
-        /* Baltimore cityscape illustration */
-        .cityscape {
+        /* Baltimore cityscape background */
+        .cityscape-bg {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 300px;
-            opacity: 0.15;
+            height: 250px;
+            opacity: 0.12;
             z-index: 0;
         }
         
-        .cityscape svg {
+        .cityscape-bg svg {
             width: 100%;
             height: 100%;
-        }
-        
-        /* Maryland flag pattern overlay */
-        .md-flag-pattern {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 500px;
-            height: 500px;
-            opacity: 0.05;
-            background: 
-                linear-gradient(45deg, 
-                    #ffc107 0%, #ffc107 25%, 
-                    transparent 25%, transparent 50%, 
-                    #000 50%, #000 75%, 
-                    transparent 75%, transparent 100%),
-                linear-gradient(-45deg, 
-                    #dc2626 0%, #dc2626 25%, 
-                    #fff 25%, #fff 50%, 
-                    #dc2626 50%, #dc2626 75%, 
-                    #fff 75%, #fff 100%);
-            background-size: 80px 80px;
-            border-radius: 0 0 0 100%;
         }
         
         .login-container {
@@ -75,185 +52,55 @@
             padding: 40px 20px;
         }
         
-        .login-wrapper {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            max-width: 1300px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* Left panel - Maryland branding */
-        .brand-panel {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2563a8 100%);
-            padding: 70px 60px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .brand-panel::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            animation: pulse 12s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-        
-        /* Maryland State Flag */
-        .md-flag {
-            width: 160px;
-            height: 120px;
-            margin: 0 auto 35px;
-            position: relative;
-            z-index: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .md-flag svg {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .brand-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 18px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            letter-spacing: -0.5px;
-        }
-        
-        .brand-subtitle {
-            font-size: 1.15rem;
-            margin-bottom: 12px;
-            text-align: center;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-        }
-        
-        .brand-tagline {
-            font-size: 0.95rem;
-            text-align: center;
-            opacity: 0.85;
-            margin-bottom: 50px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .brand-features {
-            position: relative;
-            z-index: 1;
-            margin-top: 20px;
-        }
-        
-        .brand-feature {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 22px;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease;
-        }
-        
-        .brand-feature:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(5px);
-        }
-        
-        .brand-feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        
-        .brand-feature-text {
-            flex: 1;
-        }
-        
-        .brand-feature-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-        
-        .brand-feature-desc {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            line-height: 1.4;
-        }
-        
-        .md-footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            position: relative;
-            z-index: 1;
-            line-height: 1.6;
-        }
-        
-        /* Right panel - Login form */
-        .login-panel {
-            padding: 70px 60px;
+        .login-card {
             background: white;
-            position: relative;
+            border-radius: 24px;
+            max-width: 480px;
+            width: 100%;
+            padding: 50px 45px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+            text-align: center;
         }
         
-        .login-header {
-            margin-bottom: 45px;
+        /* Maryland Logo */
+        .md-logo {
+            margin: 0 auto 35px;
+            display: flex;
+            justify-content: center;
         }
         
-        .login-header .brand {
+        .md-logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .login-title {
             font-size: 2rem;
             font-weight: 900;
             color: #1e3a5f;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        .login-subtitle {
+            font-size: 1.05rem;
+            color: #64748b;
             margin-bottom: 10px;
         }
         
-        .login-header .sub {
-            font-size: 1.05rem;
-            color: #64748b;
-            margin-bottom: 18px;
+        .login-tagline {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 40px;
         }
         
         .badge {
             display: inline-block;
             padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
+            margin-bottom: 35px;
         }
         
         .badge-green {
@@ -262,24 +109,25 @@
         }
         
         .login-form {
-            margin-bottom: 35px;
+            text-align: left;
+            margin-bottom: 30px;
         }
         
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #1e293b;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
         .form-group input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px 16px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             font-size: 1rem;
@@ -294,37 +142,37 @@
         }
         
         .form-help {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #64748b;
-            margin-top: 6px;
+            margin-top: 5px;
         }
         
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
         }
         
         .checkbox-label {
             display: flex;
             align-items: center;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #475569;
         }
         
         .checkbox-label input[type="checkbox"] {
-            margin-right: 8px;
-            width: 18px;
-            height: 18px;
+            margin-right: 7px;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
         }
         
         .forgot-password {
             color: #2563a8;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
         }
         
@@ -344,15 +192,15 @@
         .btn-primary {
             background: linear-gradient(135deg, #2563a8 0%, #1e3a5f 100%);
             color: white;
-            padding: 16px 24px;
-            font-size: 1.05rem;
+            padding: 15px 24px;
+            font-size: 1rem;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(37, 99, 168, 0.3);
+            box-shadow: 0 4px 14px rgba(37, 99, 168, 0.35);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 168, 0.4);
+            box-shadow: 0 6px 20px rgba(37, 99, 168, 0.45);
         }
         
         .btn-primary:active {
@@ -363,8 +211,8 @@
             background: white;
             border: 2px solid #e2e8f0;
             color: #475569;
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 7px 14px;
+            font-size: 0.8rem;
         }
         
         .btn-outline:hover {
@@ -380,12 +228,12 @@
         }
         
         .spinner {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid rgba(255,255,255,0.3);
             border-top: 2px solid white;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
         
         @keyframes spin {
@@ -397,39 +245,42 @@
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #dc2626;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.85rem;
+            text-align: left;
         }
         
         .demo-section {
             border-top: 2px solid #f1f5f9;
-            padding-top: 30px;
-            margin-top: 35px;
+            padding-top: 28px;
+            margin-top: 30px;
+            text-align: left;
         }
         
         .demo-section h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             color: #1e293b;
+            text-align: center;
         }
         
         .demo-accounts {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
         
         .demo-account {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 14px;
+            gap: 12px;
+            padding: 12px;
             background: #f8fafc;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
@@ -442,9 +293,9 @@
         }
         
         .demo-role {
-            font-size: 0.75rem;
-            padding: 5px 10px;
-            border-radius: 6px;
+            font-size: 0.7rem;
+            padding: 4px 9px;
+            border-radius: 5px;
             white-space: nowrap;
             font-weight: 600;
         }
@@ -471,291 +322,230 @@
         .demo-email {
             font-weight: 600;
             color: #1e293b;
-            font-size: 0.9rem;
-            margin-bottom: 3px;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
         }
         
         .demo-password {
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-family: 'Courier New', monospace;
         }
         
         .login-footer {
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #64748b;
-            margin-top: 30px;
+            margin-top: 28px;
         }
         
         .security-notice {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
         
         .platform-info {
-            font-size: 0.8rem;
-            opacity: 0.8;
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-bottom: 20px;
         }
         
-        @media (max-width: 1024px) {
-            .login-wrapper {
-                grid-template-columns: 1fr;
-                max-width: 550px;
-            }
-            
-            .brand-panel {
-                padding: 50px 40px;
-            }
-            
-            .brand-features {
-                display: none;
-            }
-            
-            .login-panel {
-                padding: 50px 40px;
-            }
-            
-            .cityscape {
-                height: 200px;
-            }
+        /* Assurit branding */
+        .assurit-branding {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .assurit-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+        
+        .assurit-logo {
+            display: inline-block;
+        }
+        
+        .assurit-logo img {
+            height: 28px;
+            width: auto;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
+        .assurit-logo img:hover {
+            opacity: 1;
         }
         
         @media (max-width: 480px) {
-            .login-panel {
-                padding: 40px 30px;
-            }
-            
-            .brand-panel {
+            .login-card {
                 padding: 40px 30px;
             }
             
             .demo-account {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 8px;
             }
             
             .btn-outline {
                 width: 100%;
             }
+            
+            .md-logo img {
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="md-flag-pattern"></div>
-    
-    <!-- Baltimore Cityscape -->
-    <div class="cityscape">
-        <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <!-- Simplified Baltimore skyline silhouette -->
-            <rect x="0" y="180" width="80" height="120" fill="rgba(255,255,255,0.3)"/>
-            <rect x="90" y="140" width="60" height="160" fill="rgba(255,255,255,0.25)"/>
-            <rect x="160" y="160" width="70" height="140" fill="rgba(255,255,255,0.3)"/>
-            <rect x="240" y="120" width="90" height="180" fill="rgba(255,255,255,0.35)"/>
-            <rect x="340" y="100" width="80" height="200" fill="rgba(255,255,255,0.3)"/>
-            <rect x="430" y="130" width="70" height="170" fill="rgba(255,255,255,0.25)"/>
-            <rect x="510" y="90" width="100" height="210" fill="rgba(255,255,255,0.4)"/>
-            <rect x="620" y="110" width="85" height="190" fill="rgba(255,255,255,0.3)"/>
-            <rect x="715" y="140" width="75" height="160" fill="rgba(255,255,255,0.25)"/>
-            <rect x="800" y="120" width="90" height="180" fill="rgba(255,255,255,0.35)"/>
-            <rect x="900" y="150" width="70" height="150" fill="rgba(255,255,255,0.3)"/>
-            <rect x="980" y="130" width="80" height="170" fill="rgba(255,255,255,0.25)"/>
-            <rect x="1070" y="160" width="65" height="140" fill="rgba(255,255,255,0.3)"/>
-            <rect x="1145" y="170" width="55" height="130" fill="rgba(255,255,255,0.25)"/>
+    <!-- Baltimore Cityscape Background -->
+    <div class="cityscape-bg">
+        <svg viewBox="0 0 1200 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <!-- Simplified Baltimore skyline -->
+            <rect x="0" y="150" width="70" height="100" fill="rgba(255,255,255,0.4)"/>
+            <rect x="80" y="120" width="55" height="130" fill="rgba(255,255,255,0.35)"/>
+            <rect x="145" y="140" width="65" height="110" fill="rgba(255,255,255,0.4)"/>
+            <rect x="220" y="100" width="80" height="150" fill="rgba(255,255,255,0.45)"/>
+            <rect x="310" y="80" width="70" height="170" fill="rgba(255,255,255,0.4)"/>
+            <rect x="390" y="110" width="60" height="140" fill="rgba(255,255,255,0.35)"/>
+            <rect x="460" y="70" width="90" height="180" fill="rgba(255,255,255,0.5)"/>
+            <rect x="560" y="90" width="75" height="160" fill="rgba(255,255,255,0.4)"/>
+            <rect x="645" y="120" width="65" height="130" fill="rgba(255,255,255,0.35)"/>
+            <rect x="720" y="100" width="80" height="150" fill="rgba(255,255,255,0.45)"/>
+            <rect x="810" y="130" width="60" height="120" fill="rgba(255,255,255,0.4)"/>
+            <rect x="880" y="110" width="70" height="140" fill="rgba(255,255,255,0.35)"/>
+            <rect x="960" y="140" width="55" height="110" fill="rgba(255,255,255,0.4)"/>
+            <rect x="1025" y="150" width="50" height="100" fill="rgba(255,255,255,0.35)"/>
+            <rect x="1085" y="160" width="45" height="90" fill="rgba(255,255,255,0.3)"/>
             
-            <!-- Windows on buildings -->
-            <g fill="rgba(255,255,255,0.6)">
-                <rect x="250" y="135" width="8" height="10"/>
-                <rect x="262" y="135" width="8" height="10"/>
-                <rect x="274" y="135" width="8" height="10"/>
-                <rect x="250" y="150" width="8" height="10"/>
-                <rect x="262" y="150" width="8" height="10"/>
-                <rect x="274" y="150" width="8" height="10"/>
+            <!-- Building windows -->
+            <g fill="rgba(255,255,255,0.7)">
+                <rect x="230" y="115" width="7" height="9"/>
+                <rect x="242" y="115" width="7" height="9"/>
+                <rect x="254" y="115" width="7" height="9"/>
+                <rect x="230" y="130" width="7" height="9"/>
+                <rect x="242" y="130" width="7" height="9"/>
+                <rect x="254" y="130" width="7" height="9"/>
                 
-                <rect x="520" y="105" width="10" height="12"/>
-                <rect x="535" y="105" width="10" height="12"/>
-                <rect x="550" y="105" width="10" height="12"/>
-                <rect x="520" y="125" width="10" height="12"/>
-                <rect x="535" y="125" width="10" height="12"/>
-                <rect x="550" y="125" width="10" height="12"/>
+                <rect x="470" y="85" width="9" height="10"/>
+                <rect x="484" y="85" width="9" height="10"/>
+                <rect x="498" y="85" width="9" height="10"/>
+                <rect x="470" y="100" width="9" height="10"/>
+                <rect x="484" y="100" width="9" height="10"/>
+                <rect x="498" y="100" width="9" height="10"/>
             </g>
         </svg>
     </div>
     
     <div class="login-container">
-        <div class="login-wrapper">
-            <!-- Maryland Branding Panel -->
-            <div class="brand-panel">
-                <!-- Maryland State Flag -->
-                <div class="md-flag">
-                    <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Calvert (Gold and Black) - Top Left & Bottom Right -->
-                        <defs>
-                            <pattern id="calvert" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <rect width="20" height="20" fill="#000"/>
-                                <path d="M0,0 L20,20 M20,0 L0,20" stroke="#ffc107" stroke-width="3"/>
-                            </pattern>
-                            <!-- Crossland (Red and White) - Top Right & Bottom Left -->
-                            <pattern id="crossland" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <rect width="10" height="10" fill="#dc2626"/>
-                                <rect x="10" y="0" width="10" height="10" fill="#fff"/>
-                                <rect x="0" y="10" width="10" height="10" fill="#fff"/>
-                                <rect x="10" y="10" width="10" height="10" fill="#dc2626"/>
-                            </pattern>
-                        </defs>
-                        <!-- Top Left - Calvert -->
-                        <rect x="0" y="0" width="80" height="60" fill="url(#calvert)"/>
-                        <!-- Top Right - Crossland -->
-                        <rect x="80" y="0" width="80" height="60" fill="url(#crossland)"/>
-                        <!-- Bottom Left - Crossland -->
-                        <rect x="0" y="60" width="80" height="60" fill="url(#crossland)"/>
-                        <!-- Bottom Right - Calvert -->
-                        <rect x="80" y="60" width="80" height="60" fill="url(#calvert)"/>
-                    </svg>
-                </div>
-                
-                <h1 class="brand-title">Anchor Platform</h1>
-                <div class="brand-subtitle">Maryland Department of Information Technology</div>
-                <div class="brand-tagline">Cybersecurity Assessment & Risk Management System</div>
-                
-                <div class="brand-features">
-                    <div class="brand-feature">
-                        <div class="brand-feature-icon">🔒</div>
-                        <div class="brand-feature-text">
-                            <div class="brand-feature-title">NIST CSF 2.0 Aligned</div>
-                            <div class="brand-feature-desc">Comprehensive cybersecurity framework compliance assessment</div>
-                        </div>
-                    </div>
-                    
-                    <div class="brand-feature">
-                        <div class="brand-feature-icon">📊</div>
-                        <div class="brand-feature-text">
-                            <div class="brand-feature-title">CMMI Maturity Scoring</div>
-                            <div class="brand-feature-desc">Track security maturity progress across all state agencies</div>
-                        </div>
-                    </div>
-                    
-                    <div class="brand-feature">
-                        <div class="brand-feature-icon">🏛️</div>
-                        <div class="brand-feature-text">
-                            <div class="brand-feature-title">Statewide Coverage</div>
-                            <div class="brand-feature-desc">Supporting 90+ Maryland state agencies and departments</div>
-                        </div>
-                    </div>
-                    
-                    <div class="brand-feature">
-                        <div class="brand-feature-icon">☁️</div>
-                        <div class="brand-feature-text">
-                            <div class="brand-feature-title">AWS Cloud Platform</div>
-                            <div class="brand-feature-desc">Secure, scalable, and reliable cloud infrastructure</div>
-                        </div>
+        <div class="login-card">
+            <!-- Maryland Logo -->
+            <div class="md-logo">
+                <img src="https://cdn.maryland.gov/mdwds/0.43.0/img/md_wordmark_horizontal.svg" alt="State of Maryland">
+            </div>
+            
+            <h1 class="login-title">Anchor Platform</h1>
+            <div class="login-subtitle">Department of Information Technology</div>
+            <div class="login-tagline">Cybersecurity Assessment & Risk Management</div>
+            
+            <div class="badge badge-green">☁️ AWS Cloud Platform</div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="Enter your email address" 
+                           aria-describedby="email-help">
+                    <div id="email-help" class="form-help">
+                        Use your registered Maryland DoIT email
                     </div>
                 </div>
                 
-                <div class="md-footer">
-                    <strong>State of Maryland</strong><br>
-                    Department of Information Technology<br>
-                    <em>Securing Maryland's Digital Future</em>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Enter your password"
+                           aria-describedby="password-help">
+                    <div id="password-help" class="form-help">
+                        Enter your secure password
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span class="btn-text">Sign In to Platform</span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="spinner"></span>
+                        Signing in...
+                    </span>
+                </button>
+            </form>
+            
+            <div id="loginError" class="error-message" style="display: none;">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text"></span>
+            </div>
+            
+            <div class="demo-section">
+                <h3>Demo Accounts</h3>
+                <div class="demo-accounts">
+                    <div class="demo-account" data-email="admin@anchor.com" data-password="Anchor123!">
+                        <div class="demo-role badge-red">Admin</div>
+                        <div class="demo-info">
+                            <div class="demo-email">admin@anchor.com</div>
+                            <div class="demo-password">Anchor123!</div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
+                    </div>
+                    
+                    <div class="demo-account" data-email="assessor@anchor.com" data-password="Anchor123!">
+                        <div class="demo-role badge-blue">Assessor</div>
+                        <div class="demo-info">
+                            <div class="demo-email">assessor@anchor.com</div>
+                            <div class="demo-password">Anchor123!</div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
+                    </div>
+                    
+                    <div class="demo-account" data-email="agency@anchor.com" data-password="Anchor123!">
+                        <div class="demo-role badge-orange">Agency</div>
+                        <div class="demo-info">
+                            <div class="demo-email">agency@anchor.com</div>
+                            <div class="demo-password">Anchor123!</div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Login Form Panel -->
-            <div class="login-panel">
-                <div class="login-header">
-                    <div class="brand">Anchor Platform</div>
-                    <div class="sub">Secure Access Portal</div>
-                    <div class="badge badge-green">☁️ AWS Cloud Platform</div>
+            <div class="login-footer">
+                <div class="security-notice">
+                    <span>🔒</span>
+                    <span>Secure login powered by AWS Cognito</span>
+                </div>
+                <div class="platform-info">
+                    Platform v2.4.1 | Cloud Infrastructure
                 </div>
                 
-                <form id="loginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required 
-                               placeholder="Enter your email address" 
-                               aria-describedby="email-help">
-                        <div id="email-help" class="form-help">
-                            Use your registered Maryland DoIT email
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required 
-                               placeholder="Enter your password"
-                               aria-describedby="password-help">
-                        <div id="password-help" class="form-help">
-                            Enter your secure password
-                        </div>
-                    </div>
-                    
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="remember" name="remember">
-                            <span>Remember me</span>
-                        </label>
-                        <a href="#" class="forgot-password">Forgot password?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" id="loginBtn">
-                        <span class="btn-text">Sign In to Platform</span>
-                        <span class="btn-loading" style="display: none;">
-                            <span class="spinner"></span>
-                            Signing in...
-                        </span>
-                    </button>
-                </form>
-                
-                <div id="loginError" class="error-message" style="display: none;">
-                    <span class="error-icon">⚠️</span>
-                    <span class="error-text"></span>
+                <!-- Assurit Branding -->
+                <div class="assurit-branding">
+                    <div class="assurit-text">In partnership with</div>
+                    <a href="https://www.assurit.com" target="_blank" class="assurit-logo">
+                        <img src="https://www.assurit.com/wp-content/uploads/assurit_logo@2x.png" alt="Assurit Consulting Group">
+                    </a>
                 </div>
-                
-                <div class="demo-section">
-                    <h3>Demo Accounts</h3>
-                    <div class="demo-accounts">
-                        <div class="demo-account" data-email="admin@anchor.com" data-password="Anchor123!">
-                            <div class="demo-role badge-red">Administrator</div>
-                            <div class="demo-info">
-                                <div class="demo-email">admin@anchor.com</div>
-                                <div class="demo-password">Anchor123!</div>
-                            </div>
-                            <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                        </div>
-                        
-                        <div class="demo-account" data-email="assessor@anchor.com" data-password="Anchor123!">
-                            <div class="demo-role badge-blue">Assessor</div>
-                            <div class="demo-info">
-                                <div class="demo-email">assessor@anchor.com</div>
-                                <div class="demo-password">Anchor123!</div>
-                            </div>
-                            <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                        </div>
-                        
-                        <div class="demo-account" data-email="agency@anchor.com" data-password="Anchor123!">
-                            <div class="demo-role badge-orange">Agency Rep</div>
-                            <div class="demo-info">
-                                <div class="demo-email">agency@anchor.com</div>
-                                <div class="demo-password">Anchor123!</div>
-                            </div>
-                            <button type="button" class="btn btn-outline btn-fill-demo">Fill</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="login-footer">
-                    <div class="security-notice">
-                        <span>🔒</span>
-                        <span>Secure login powered by AWS Cognito</span>
-                    </div>
-                    <div class="platform-info">
-                        Platform v2.4.1 | AWS Cloud Infrastructure
-                    </div>
-                </div>
-                
             </div>
         </div>
     </div>
