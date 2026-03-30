@@ -1006,11 +1006,228 @@
     if (typeof notify === 'function') notify(labels[status] || 'Review status updated.');
   };
 
+  // ── CSF Workbook Integration (Assessor) ──────────────────────────────────
+  // Injects agency self-assessment responses into the SRTM Assessment Workbook
+  // and replaces the blank Interview Questionnaire with actual agency answers.
+  // Only runs for assessor / lead_assessor / admin roles.
+
+  function setupAssessorCsfIntegration() {
+    try {
+      const session = JSON.parse(localStorage.getItem('anchor_session') || '{}');
+      const assessorRoles = ['assessor', 'lead_assessor', 'admin'];
+      if (!session || !assessorRoles.includes(session.role)) return;
+    } catch(e) { return; }
+
+    // Rename the "Interview Questionnaire" tab label to "Agency Responses"
+    document.querySelectorAll('.tab').forEach(function (tab) {
+      const oc = tab.getAttribute('onclick') || '';
+      if (oc.indexOf('t2-interview') !== -1) {
+        tab.textContent = 'Agency Responses';
+      }
+    });
+
+    // Update the info-box inside #t2-interview to reflect new purpose
+    const iqInfoBox = document.querySelector('#t2-interview .info-box');
+    if (iqInfoBox) {
+      iqInfoBox.textContent = 'Agency self-assessment responses submitted through the agency portal. Review each control\'s written answers and uploaded artifact before applying CMMI scoring in the Assessment Workbook.';
+    }
+
+    // Watch for SRTM initialization — initSrtm() is lazy and only runs
+    // when the CSF section is first opened. MutationObserver detects it.
+    const srtmContents = document.getElementById('srtm-domain-contents');
+    if (!srtmContents) return;
+
+    var injected = false;
+    var observer = new MutationObserver(function (mutations, obs) {
+      if (srtmContents.children.length > 0 && !injected) {
+        injected = true;
+        obs.disconnect();
+        // Small delay to let SRTM finish rendering all domain content divs
+        setTimeout(function () {
+          injectSrtmResponsePanels();
+          renderAgencyResponsesIQTab();
+        }, 80);
+      }
+    });
+    observer.observe(srtmContents, { childList: true });
+  }
+
+  // Injects a "Agency Submitted" response panel at the top of each
+  // SRTM control body that has matching self-assessment answers.
+  function injectSrtmResponsePanels() {
+    const answers = loadAnswers();
+
+    CONTROLS.forEach(function (ctrl) {
+      const d = answers[ctrl.id] || {};
+      const hasAnswers = d.answers && d.answers.some(function (a) { return a && a.trim(); });
+      const hasArtifact = !!d.evidence;
+      if (!hasAnswers && !hasArtifact) return;
+
+      const safe = ctrl.id.replace(/\./g, '-');
+      const body = document.getElementById('sbody-' + safe);
+      if (!body) return;
+      if (body.querySelector('.agency-resp-panel')) return; // Don't double-inject
+
+      // Auto-populate the first "Evidence / Artifacts" input in this control
+      // with the agency-submitted artifact filename so the assessor doesn't
+      // have to retype it.
+      if (hasArtifact) {
+        const evInput = body.querySelector('input[placeholder*="Artifacts"]');
+        if (evInput && !evInput.value) evInput.value = d.evidence;
+      }
+
+      // Build answers HTML
+      var ansHtml = '';
+      if (hasAnswers) {
+        (d.answers || []).forEach(function (a, i) {
+          if (!a || !a.trim()) return;
+          const q = ctrl.questions[i] || ('Question ' + (i + 1));
+          const truncQ = q.length > 100 ? q.substring(0, 100) + '…' : q;
+          ansHtml +=
+            '<div style="margin-bottom:10px;">' +
+              '<div style="font-size:.68rem;font-weight:700;color:#64748b;margin-bottom:3px;">Q' + (i + 1) + ': ' + truncQ.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+              '<div style="font-size:.77rem;color:#1e293b;line-height:1.55;background:#fff;border:1px solid #e2e8f0;border-radius:5px;padding:7px 10px;">' + a.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
+            '</div>';
+        });
+      }
+
+      var artifactHtml = hasArtifact
+        ? '<div style="display:inline-flex;align-items:center;gap:6px;background:#d1fae5;border:1px solid #6ee7b7;border-radius:5px;padding:4px 10px;font-size:.73rem;font-weight:600;color:#065f46;">' +
+            '<span style="font-size:.7rem;">📎</span>' + d.evidence.replace(/</g,'&lt;') +
+          '</div>'
+        : '<span style="font-size:.73rem;color:#f59e0b;font-weight:600;">Artifact not yet uploaded</span>';
+
+      var panel = document.createElement('div');
+      panel.className = 'agency-resp-panel';
+      panel.style.cssText = 'background:#eff6ff;border:1.5px solid #93c5fd;border-radius:8px;padding:12px 16px;margin-bottom:16px;';
+      panel.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;">' +
+          '<div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1d4ed8;">Agency Self-Assessment Response</div>' +
+          artifactHtml +
+        '</div>' +
+        (ansHtml || '<span style="font-size:.74rem;color:#94a3b8;">No written responses submitted for this control.</span>');
+
+      body.insertBefore(panel, body.firstChild);
+    });
+  }
+
+  // Replaces the blank IQ container with the agency's actual self-assessment
+  // responses, grouped by CSF function, with stat card updates.
+  function renderAgencyResponsesIQTab() {
+    const container = document.getElementById('iq-container');
+    if (!container) return;
+
+    const answers  = loadAnswers();
+    const total    = CONTROLS.length;
+    const responded = CONTROLS.filter(function (c) {
+      const d = answers[c.id];
+      return d && d.answers && d.answers.some(function (a) { return a && a.trim(); });
+    }).length;
+    const withArtifact = CONTROLS.filter(function (c) { return answers[c.id] && answers[c.id].evidence; }).length;
+    const complete = CONTROLS.filter(function (c) { return isComplete(c, answers); }).length;
+
+    // Update stat cards
+    const el = function(id) { return document.getElementById(id); };
+    if (el('iq-total'))     { el('iq-total').textContent = total; el('iq-total').closest('.stat-card').querySelector('.stat-label').textContent = 'Total Controls'; el('iq-total').closest('.stat-card').querySelector('.stat-sub').textContent = 'NIST CSF 2.0'; }
+    if (el('iq-answered'))  { el('iq-answered').textContent = responded; el('iq-answered').closest('.stat-card').querySelector('.stat-label').textContent = 'Controls Answered'; el('iq-answered').closest('.stat-card').querySelector('.stat-sub').textContent = 'Written responses received'; }
+    if (el('iq-pending'))   { el('iq-pending').textContent = total - responded; el('iq-pending').closest('.stat-card').querySelector('.stat-label').textContent = 'No Response Yet'; el('iq-pending').closest('.stat-card').querySelector('.stat-sub').textContent = 'Awaiting agency input'; }
+    if (el('iq-personnel')) { el('iq-personnel').textContent = withArtifact; el('iq-personnel').closest('.stat-card').querySelector('.stat-label').textContent = 'Artifacts Uploaded'; el('iq-personnel').closest('.stat-card').querySelector('.stat-sub').textContent = 'Supporting documents'; }
+
+    // Hide the filter/export toolbar (interview-mode only)
+    const filterEl = document.getElementById('iq-filter');
+    if (filterEl && filterEl.parentElement) filterEl.parentElement.style.display = 'none';
+
+    // Rename the card title to reflect agency responses context
+    const card = container.closest ? container.closest('.card') : null;
+    if (card) {
+      const titleEl = card.querySelector('.card-title');
+      if (titleEl) titleEl.textContent = 'Agency Self-Assessment Responses — ' + getAgencySlug().toUpperCase();
+    }
+
+    if (responded === 0) {
+      container.innerHTML =
+        '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:32px;text-align:center;color:#94a3b8;">' +
+          '<div style="font-size:2rem;margin-bottom:12px;">📋</div>' +
+          '<div style="font-size:.88rem;font-weight:700;color:#374151;margin-bottom:6px;">No Agency Responses Yet</div>' +
+          '<div style="font-size:.78rem;">The agency representative has not yet submitted responses through the self-assessment portal. Once submitted, their answers will appear here for your review.</div>' +
+        '</div>';
+      return;
+    }
+
+    var html = '';
+    FN_ORDER.forEach(function (fn) {
+      const ctrls = CONTROLS.filter(function (c) { return c.fn === fn; });
+      const c0    = ctrls[0];
+      const fnResponded = ctrls.filter(function (c) {
+        const d = answers[c.id];
+        return d && d.answers && d.answers.some(function (a) { return a && a.trim(); });
+      }).length;
+
+      html +=
+        '<div style="background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">' +
+          '<div style="background:' + c0.fnBg + ';border-bottom:2px solid ' + c0.fnColor + '30;padding:11px 18px;display:flex;align-items:center;gap:10px;">' +
+            '<span style="background:' + c0.fnColor + ';color:#fff;font-size:.65rem;font-weight:900;padding:3px 9px;border-radius:4px;letter-spacing:.06em;">' + fn + '</span>' +
+            '<span style="font-size:.82rem;font-weight:700;color:' + c0.fnColor + ';">' + FN_LABELS[fn] + '</span>' +
+            '<span style="margin-left:auto;font-size:.71rem;font-weight:700;color:' + c0.fnColor + ';border:1.5px solid ' + c0.fnColor + '40;padding:2px 9px;border-radius:10px;">' + fnResponded + ' / ' + ctrls.length + ' responded</span>' +
+          '</div>';
+
+      ctrls.forEach(function (ctrl, idx) {
+        const d          = answers[ctrl.id] || {};
+        const hasAnswers = d.answers && d.answers.some(function (a) { return a && a.trim(); });
+        const hasArtifact = !!d.evidence;
+        const isLast     = idx === ctrls.length - 1;
+
+        if (!hasAnswers && !hasArtifact) {
+          html +=
+            '<div style="padding:14px 20px;' + (isLast ? '' : 'border-bottom:1px solid #f1f5f9;') + 'display:flex;align-items:center;gap:10px;">' +
+              '<span style="font-size:.65rem;font-weight:800;color:' + ctrl.fnColor + ';background:' + ctrl.fnColor + '12;border:1px solid ' + ctrl.fnColor + '25;padding:2px 7px;border-radius:3px;">' + ctrl.id + '</span>' +
+              '<span style="font-size:.78rem;color:#94a3b8;">' + ctrl.label + '</span>' +
+              '<span style="margin-left:auto;font-size:.69rem;color:#94a3b8;font-style:italic;">No response submitted</span>' +
+            '</div>';
+          return;
+        }
+
+        var qHtml = '';
+        (d.answers || []).forEach(function (a, qi) {
+          if (!a || !a.trim()) return;
+          const q = ctrl.questions[qi] || '';
+          qHtml +=
+            '<div style="margin-bottom:12px;">' +
+              '<div style="font-size:.72rem;font-weight:700;color:#64748b;margin-bottom:5px;line-height:1.4;">' +
+                '<span style="display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:' + ctrl.fnColor + ';color:#fff;font-size:.6rem;font-weight:800;margin-right:5px;">' + (qi + 1) + '</span>' +
+                q.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+              '</div>' +
+              '<div style="font-size:.78rem;color:#1e293b;line-height:1.6;background:#f8fafc;border-left:3px solid ' + ctrl.fnColor + ';padding:8px 12px;border-radius:0 5px 5px 0;">' +
+                a.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') +
+              '</div>' +
+            '</div>';
+        });
+
+        html +=
+          '<div style="padding:16px 20px;' + (isLast ? '' : 'border-bottom:1px solid #f1f5f9;') + '">' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">' +
+              '<span style="font-size:.65rem;font-weight:800;color:' + ctrl.fnColor + ';background:' + ctrl.fnColor + '12;border:1px solid ' + ctrl.fnColor + '25;padding:2px 7px;border-radius:3px;">' + ctrl.id + '</span>' +
+              '<span style="font-size:.84rem;font-weight:700;color:#0f172a;">' + ctrl.label + '</span>' +
+              (hasArtifact
+                ? '<span style="margin-left:auto;font-size:.69rem;font-weight:600;color:#065f46;background:#d1fae5;border:1px solid #6ee7b7;padding:2px 8px;border-radius:10px;">📎 ' + d.evidence.replace(/</g,'&lt;') + '</span>'
+                : '<span style="margin-left:auto;font-size:.69rem;color:#f59e0b;font-weight:600;">Artifact pending</span>') +
+            '</div>' +
+            (qHtml || '<span style="font-size:.74rem;color:#94a3b8;">No written responses submitted.</span>') +
+          '</div>';
+      });
+
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
   // ── Init ──────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
     renderSection();
     setupEvidenceSection();
     setupAssessorSubmissionsView();
+    setupAssessorCsfIntegration();
 
     // Agency reps land on self-assessment, not the assessor intake form
     try {
