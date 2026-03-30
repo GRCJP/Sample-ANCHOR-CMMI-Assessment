@@ -488,9 +488,9 @@
             </div>
           </div>
           <div style="background:#e5e7eb; border-radius:6px; height:8px; overflow:hidden; margin-top:12px;">
-            <div style="width:100%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:6px; transition:width .4s;"></div>
+            <div id="srtm-progress-bar" style="width:0%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:6px; transition:width .4s;"></div>
           </div>
-          <div style="font-size:.72rem; color:var(--text-muted); margin-top:6px; text-align:right;">23 of 23 controls assessed (100%)</div>
+          <div id="srtm-progress-text" style="font-size:.72rem; color:var(--text-muted); margin-top:6px; text-align:right;">0 of 23 controls assessed (0%)</div>
         </div>
 
         <div class="tab-bar">
@@ -1240,6 +1240,11 @@
       });
       const assessed = metCnt+notMetCnt+naCnt;
       const avgCmmi = scoredCmmi>0 ? (cmmiSum/scoredCmmi) : 0;
+      const assessPct = totalCtrls>0 ? Math.round(assessed/totalCtrls*100) : 0;
+      const progBar = document.getElementById('srtm-progress-bar');
+      const progTxt = document.getElementById('srtm-progress-text');
+      if(progBar) progBar.style.width = assessPct+'%';
+      if(progTxt) progTxt.textContent = assessed+' of '+totalCtrls+' controls assessed ('+assessPct+'%)';
       const setStatVal = (id,v) => { const el=document.getElementById(id); if(el) el.querySelector('.stat-value').textContent=v; };
       setStatVal('s2-stat-total', totalCtrls); setStatVal('s2-stat-met', metCnt); setStatVal('s2-stat-notmet', notMetCnt);
       setStatVal('s2-stat-cmmi', scoredCmmi>0 ? avgCmmi.toFixed(1) : '\u2014');
