@@ -122,28 +122,22 @@
       <div class="sub">Maryland DoIT Assessment Platform</div>
     </div>
 
-    <div class="nav-section">DASHBOARD</div>
-    <div class="nav-item active" role="button" tabindex="0" onclick="showSection('portfolio', this)">
-      <div>
-        Agency Dashboard
-      </div>
+    <div class="nav-item active" role="button" tabindex="0" onclick="showSection('portfolio', this)" data-visible-to="admin lead_assessor doit_reviewer">
+      <div>State Cybersecurity Dashboard</div>
     </div>
-
-    <div class="nav-section">Capabilities</div>
-    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sai', this)">
+    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sa', this)" data-visible-to="admin lead_assessor assessor">
+      <div>Agency Assessment Management</div>
+    </div>
+    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sai', this)" data-visible-to="admin lead_assessor assessor">
       <div>CSF Intake &amp; Upload</div>
     </div>
-    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sp', this)">
+    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sp', this)" data-visible-to="admin lead_assessor doit_reviewer">
       <div>2-Year Pipeline</div>
     </div>
-    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sa', this)">
-      <div>Agency Portal</div>
-    </div>
-    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sw', this)">
+    <div class="nav-item" role="button" tabindex="0" onclick="showSection('sw', this)" data-visible-to="admin lead_assessor assessor">
       <div>Workflow Templates</div>
     </div>
-    <div class="nav-section">System</div>
-    <div class="nav-item" role="button" tabindex="0" onclick="showSection('settings', this)">
+    <div class="nav-item" role="button" tabindex="0" onclick="showSection('settings', this)" data-visible-to="admin">
       <div>Settings</div>
     </div>
 
@@ -184,20 +178,11 @@
     <div class="content">
       <section class="section active" id="portfolio" aria-hidden="false">
         <div class="page-header">
-          <h1>Manage Multi-Agency Assessment Portfolio</h1>
-          <p>Select an agency to enter the full overview app. Use Create New System to launch Step 1 Pre-Assess modal and generate preliminary POD scoring when questionnaire responses are returned.</p>
-          <div style="margin-top:10px;">
-            <a href="#agency-table" class="btn btn-primary btn-sm" style="text-decoration:none;">Jump to Agency Table</a>
-          </div>
+          <h1>Maryland State Cybersecurity Assessment Dashboard</h1>
+          <p>Real-time statewide view of cybersecurity maturity across Maryland Executive Branch agencies — NIST CSF 2.0 / CMMI scored. Drill into any agency, review findings, track remediation, and export to ServiceNow GRC.</p>
         </div>
 
-        <!-- PORTFOLIO TAB BAR -->
-        <div class="tab-bar" style="margin-bottom:20px;">
-          <div class="tab active" id="pf-tab-overview" onclick="switchPortfolioTab('overview')">📊 Portfolio Overview</div>
-          <div class="tab" id="pf-tab-compliance" onclick="switchPortfolioTab('compliance')">✅ Compliance Dashboard <span style="font-size:.65rem;opacity:.7;">(RFP §2.3.1.F)</span></div>
-        </div>
-
-        <!-- TAB 1: PORTFOLIO OVERVIEW -->
+        <!-- PROGRAM OVERVIEW -->
         <div id="pf-overview">
         <!-- ---- STATEWIDE OVERVIEW METRICS ---- -->
         <div class="grid-4" style="margin-bottom:20px;" id="overview-stats">
@@ -420,66 +405,15 @@
           </div>
         </div>
 
-        <!-- ---- AGENCY TABLE ---- -->
-        <div class="card" id="agency-table">
-          <div class="card-title">Agency Selection &amp; Assessment Management</div>
-          <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
-            <strong style="font-size:.72rem; color:var(--primary); white-space:nowrap;">Filters:</strong>
-            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
-              <option>Status: All</option><option>Complete</option><option>In Progress</option><option>Scheduled</option>
-            </select>
-            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
-              <option>Size Tier: All</option><option>Large (500+)</option><option>Medium (100–499)</option><option>Small (&lt;100)</option>
-            </select>
-            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
-              <option>Wave: All</option><option>Wave 1</option><option>Wave 2</option><option>Wave 3+</option>
-            </select>
-            <input type="text" placeholder="Search agency..." style="padding:5px 9px; border-radius:6px; border:1px solid var(--border); font-size:.75rem; flex:1; min-width:120px;">
-            <button class="btn btn-primary btn-sm" onclick="notify('🔍 Filters applied')">Apply</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📥 Master tracker exported: MD_Statewide_Assessment_Tracker.xlsx')">Export</button>
-          </div>
-          <div class="btn-row" style="margin-bottom:12px;">
-            <button class="btn btn-accent" onclick="openCreateAssessmentModal()">+ Create New System Assessment</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminder batch sent to pending agencies')">Send Intake Reminders</button>
-          </div>
-          <div class="table-wrap" style="overflow-x:auto;">
-            <table style="width:100%; table-layout:fixed;">
-              <colgroup>
-                <col style="width:22%;">
-                <col style="width:10%;">
-                <col style="width:10%;">
-                <col style="width:9%;">
-                <col style="width:15%;">
-                <col style="width:8%;">
-                <col style="width:26%;">
-              </colgroup>
-              <thead>
-                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Stage</th><th>%</th><th>Actions</th></tr>
-              </thead>
-              <tbody id="portfolio-body">
-              </tbody>
-            </table>
-          </div>
-
-        </div>
         </div><!-- /pf-overview -->
 
-        <!-- TAB 2: COMPLIANCE DASHBOARD — RFP §2.3.1.F -->
-        <div id="pf-compliance" style="display:none;">
+        <!-- STATEWIDE COMPLIANCE METRICS -->
+        <div id="pf-compliance">
         <div class="anchor-banner">
           <div></div>
-          <div><strong>ANCHOR — REPORT Phase:</strong> The compliance dashboard aggregates maturity scores, constraints, and findings across all completed assessments. All five RFP §2.3.1.F metrics are displayed below and structured for direct import into the State's ServiceNow GRC platform.</div>
+          <div><strong>ANCHOR — REPORT Phase:</strong> The compliance dashboard aggregates maturity scores, constraints, and findings across all completed assessments. Metrics are structured for export to ServiceNow GRC.</div>
         </div>
 
-        <!-- RFP metric reference badges -->
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
-          <span style="font-size:.72rem; font-weight:700; color:var(--primary);">RFP §2.3.1.F Required Metrics:</span>
-          <span class="badge badge-blue" style="font-size:.68rem; padding:3px 8px;">1 · Top Controls by Maturity</span>
-          <span class="badge badge-blue" style="font-size:.68rem; padding:3px 8px;">2 · Most Common Constraints</span>
-          <span class="badge badge-blue" style="font-size:.68rem; padding:3px 8px;">3 · Top Recommended Improvements</span>
-          <span class="badge badge-blue" style="font-size:.68rem; padding:3px 8px;">4 · CMMI 0-5 by CSF Function</span>
-          <span class="badge badge-blue" style="font-size:.68rem; padding:3px 8px;">5 · Top Findings/Risks by Agency</span>
-        </div>
 
         <!-- View toggle -->
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:18px; flex-wrap:wrap;">
@@ -507,7 +441,6 @@
         <div class="grid-2" style="margin-bottom:20px;">
           <div class="card">
             <div class="card-title">
-              <span style="background:#dbeafe;color:#1d4ed8;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-right:6px;">METRIC 1</span>
               Top Control Categories by Maturity — Statewide
             </div>
             <div style="font-size:.74rem;color:var(--text-muted);margin-bottom:10px;">Highest and lowest performing NIST CSF subcategories across all completed assessments (green ≥ 3.0, amber ≥ 2.0, red &lt; 2.0)</div>
@@ -515,7 +448,6 @@
           </div>
           <div class="card">
             <div class="card-title">
-              <span style="background:#dbeafe;color:#1d4ed8;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-right:6px;">METRIC 4</span>
               CMMI Maturity (0-5) by CSF Function — Statewide
             </div>
             <div style="font-size:.74rem;color:var(--text-muted);margin-bottom:10px;">Average CMMI score per NIST CSF 2.0 function across all agencies. Dashed line = DoIT target baseline (CMMI 3.0)</div>
@@ -527,7 +459,6 @@
         <div class="grid-2" style="margin-bottom:20px;">
           <div class="card">
             <div class="card-title">
-              <span style="background:#fee2e2;color:#dc2626;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-right:6px;">METRIC 2</span>
               Most Common Constraints Across All Agencies
             </div>
             <div style="font-size:.74rem;color:var(--text-muted);margin-bottom:10px;">Constraints documented during assessments limiting agencies' ability to achieve higher CMMI scores</div>
@@ -535,7 +466,6 @@
           </div>
           <div class="card">
             <div class="card-title">
-              <span style="background:#d4f4e2;color:#065f46;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-right:6px;">METRIC 3</span>
               Top Recommended Areas of Improvement
             </div>
             <div style="font-size:.74rem;color:var(--text-muted);margin-bottom:12px;">CSF functions where the most agencies score below CMMI 3.0 target — ranked by improvement priority</div>
@@ -546,7 +476,6 @@
         <!-- Metric 5 table -->
         <div class="card" style="margin-bottom:20px;">
           <div class="card-title">
-            <span style="background:#fef3cd;color:#78350f;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-right:6px;">METRIC 5</span>
             Top Findings, Risks &amp; Issues by Agency
           </div>
           <div style="font-size:.74rem;color:var(--text-muted);margin-bottom:10px;">Critical and high-severity findings across completed assessments with risk score, agency response status, and POA&amp;M tracking</div>
@@ -638,74 +567,6 @@
           </div>
         </div>
 
-        <!-- GRC Export Readiness / ServiceNow Integration -->
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title">GRC Export Readiness — ServiceNow Integration Architecture</div>
-          <div class="success-box" style="margin-bottom:16px;">✅ All 5 RFP §2.3.1.F metrics are structured for direct import into the State's ServiceNow GRC platform. Export available in JSON (API), CSV, and ServiceNow-native XML import format.</div>
-          <div class="grid-2" style="margin-bottom:16px;">
-            <div>
-              <div style="font-size:.8rem;font-weight:700;margin-bottom:10px;color:var(--primary);">Anchor → ServiceNow GRC Field Mapping</div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Anchor Platform Field</th><th>ServiceNow GRC Field</th><th>Module</th></tr></thead>
-                  <tbody>
-                    <tr><td><code style="font-size:.7rem;">agency_id</code></td><td><code style="font-size:.7rem;">u_org_unit_id</code></td><td>Risk Framework</td></tr>
-                    <tr><td><code style="font-size:.7rem;">csf_function</code></td><td><code style="font-size:.7rem;">u_control_category</code></td><td>Control Framework</td></tr>
-                    <tr><td><code style="font-size:.7rem;">cmmi_score</code></td><td><code style="font-size:.7rem;">u_maturity_level</code></td><td>Assessment Results</td></tr>
-                    <tr><td><code style="font-size:.7rem;">finding_severity</code></td><td><code style="font-size:.7rem;">risk_rating</code></td><td>Risk Register</td></tr>
-                    <tr><td><code style="font-size:.7rem;">poam_item_id</code></td><td><code style="font-size:.7rem;">u_remediation_task_id</code></td><td>Issue Management</td></tr>
-                    <tr><td><code style="font-size:.7rem;">constraint_type</code></td><td><code style="font-size:.7rem;">u_constraint_category</code></td><td>Assessment Results</td></tr>
-                    <tr><td><code style="font-size:.7rem;">recommendation</code></td><td><code style="font-size:.7rem;">u_improvement_action</code></td><td>Issue Management</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div>
-              <div style="font-size:.8rem;font-weight:700;margin-bottom:10px;color:var(--primary);">Sample GRC Export Payload (JSON)</div>
-              <div style="background:#1e293b;border-radius:8px;padding:12px;font-family:monospace;font-size:.67rem;color:#a3e635;overflow:auto;max-height:195px;line-height:1.65;">
-<pre style="margin:0;color:#a3e635;">{
-  "agency_id": "MDOT",
-  "assessment_id": "ACG-2026-MDOT-W1",
-  "csf_function": "DETECT",
-  "control_id": "DE.CM-01",
-  "cmmi_score": 1,
-  "cmmi_label": "Performed",
-  "finding_id": "F-MDOT-001",
-  "finding_severity": "CRITICAL",
-  "risk_score": 9.2,
-  "constraint_type": "Budget",
-  "recommendation": "Deploy SIEM (Splunk/MS Sentinel)",
-  "poam_due": "2026-09-30",
-  "grc_sync_ts": "2026-04-01T09:42:00Z"
-}</pre>
-              </div>
-            </div>
-          </div>
-          <div class="grid-2">
-            <div>
-              <div style="font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--primary);">State-Side Requirements (Oral Eval Q10a)</div>
-              <div class="info-box" style="margin:0;font-size:.78rem;">
-                <strong>What Maryland needs to provide:</strong><br>
-                • ServiceNow GRC instance URL + API credentials (OAuth 2.0)<br>
-                • Confirm u_org_unit and Risk Framework modules are active<br>
-                • Designate a ServiceNow admin for initial field mapping validation<br>
-                • Whitelist Anchor Platform IP for API access
-              </div>
-            </div>
-            <div>
-              <div style="font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--primary);">Custom Code Required (Oral Eval Q10b)</div>
-              <div class="info-box" style="margin:0;font-size:.78rem;">
-                <strong>Assurit provides:</strong> Anchor export API, field mapping documentation, ServiceNow import scripts (Python/REST)<br>
-                <strong>State custom code:</strong> None required — standard ServiceNow REST API import set. Optional: custom dashboard widget using delivered data.
-              </div>
-            </div>
-          </div>
-          <div class="btn-row" style="margin-top:14px;">
-            <button class="btn btn-primary btn-sm" onclick="runGRCExport()">Run Full GRC Export Now</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('📋 GRC field mapping documentation downloaded')">Download Field Mapping Doc</button>
-            <button class="btn btn-outline btn-sm" onclick="notify('🔗 Test sync: 847 records validated, 0 errors — ServiceNow confirmed receipt')">Test GRC Connection</button>
-          </div>
-        </div>
         </div><!-- /pf-compliance -->
       </section>
 
@@ -906,108 +767,57 @@
         </div>
       </section>
 
-      <!-- ============================================================ AGENCY PORTAL -->
+      <!-- ============================================================ AGENCY MANAGEMENT -->
       <section class="section" id="sa" aria-hidden="true">
         <div class="page-header">
-          <h1>Agency Portal — MDOT View</h1>
-          <p>Agency representatives can upload evidence, respond to findings, and track their assessment status in real time.</p>
+          <h1>Agency Selection &amp; Assessment Management</h1>
+          <p>View, filter, and manage all agency assessments. Open any agency workspace to access intake, evidence, CSF scoring, risk analysis, POA&amp;M, and SAR delivery.</p>
         </div>
-        <div class="info-box"><strong>Logged in as:</strong> Lisa Harmon, CISO — Maryland Department of Transportation (MDOT) | Role: Agency Representative | Assessment: MD-MDOT-2026-041</div>
-        <div class="tab-bar">
-          <div class="tab active" onclick="switchTab(this,'ta-status')">My Assessment Status</div>
-          <div class="tab" onclick="switchTab(this,'ta-upload')">Upload Evidence</div>
-          <div class="tab" onclick="switchTab(this,'ta-findings')">Respond to Findings</div>
-          <div class="tab" onclick="switchTab(this,'ta-notif')">Notifications</div>
-        </div>
-        <div class="tab-content active" id="ta-status">
-          <div class="grid-4" style="margin-bottom:20px;">
-            <div class="stat-card green"><div class="stat-label">Evidence Submitted</div><div class="stat-value">11</div><div class="stat-sub">of 14 requested</div></div>
-            <div class="stat-card accent"><div class="stat-label">Items Pending</div><div class="stat-value">3</div><div class="stat-sub">Action required</div></div>
-            <div class="stat-card"><div class="stat-label">Findings to Review</div><div class="stat-value">6</div><div class="stat-sub">Awaiting your response</div></div>
-            <div class="stat-card"><div class="stat-label">Assessment Progress</div><div class="stat-value">68%</div><div class="stat-sub">On track</div></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Evidence Request Status</div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Requested Item</th><th>Due Date</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
-                <tbody>
-                  <tr><td>Information Security Policy</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 12 by L. Harmon</td><td><span class="badge badge-gray">Complete</span></td></tr>
-                  <tr><td>Network Diagram (current)</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 13 by M. Webb</td><td><span class="badge badge-gray">Complete</span></td></tr>
-                  <tr><td>Patch Management Logs (90 days)</td><td>Apr 14</td><td><span class="badge badge-green">Submitted</span></td><td>Apr 14 by T. Nguyen</td><td><span class="badge badge-gray">Complete</span></td></tr>
-                  <tr><td>Software Inventory</td><td>Apr 16</td><td><span class="badge badge-red">Overdue</span></td><td>—</td><td><button class="btn btn-accent btn-sm" onclick="notify('📤 Reminder sent')">Upload Now</button></td></tr>
-                  <tr><td>Security Awareness Training Records</td><td>Apr 18</td><td><span class="badge badge-orange">Pending</span></td><td>—</td><td><button class="btn btn-outline btn-sm" onclick="notify('📁 Upload panel opened')">Upload</button></td></tr>
-                  <tr><td>Third-Party Vendor Contracts</td><td>Apr 18</td><td><span class="badge badge-orange">Pending</span></td><td>—</td><td><button class="btn btn-outline btn-sm" onclick="notify('📁 Upload panel opened')">Upload</button></td></tr>
-                </tbody>
-              </table>
+        <div class="card" id="agency-table">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div class="card-title" style="margin-bottom:0;">All Agencies — Assessment Tracker</div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-accent btn-sm" onclick="openCreateAssessmentModal()">+ New Assessment</button>
+              <button class="btn btn-outline btn-sm" onclick="notify('📨 Reminders sent to pending agencies')">Send Reminders</button>
+              <button class="btn btn-outline btn-sm" onclick="notify('📥 Exported: MD_Statewide_Assessment_Tracker.xlsx')">Export</button>
             </div>
           </div>
-        </div>
-        <div class="tab-content" id="ta-upload">
-          <div class="card">
-            <div class="card-title">Upload Evidence — MDOT</div>
-            <div class="form-grid" style="margin-bottom:16px;">
-              <div class="form-group"><label>Evidence Category</label><select><option>Software Inventory</option><option>Security Training Records</option><option>Third-Party Vendor Contracts</option></select></div>
-              <div class="form-group"><label>NIST CSF Function</label><select><option>IDENTIFY — Asset Management</option><option>PROTECT — Training</option><option>GOVERN — Risk Management</option></select></div>
-              <div class="form-group" style="grid-column:1/-1;"><label>Description / Notes</label><textarea rows="2" placeholder="Describe what this document covers..."></textarea></div>
-            </div>
-            <div class="upload-zone" onclick="simulateUpload()">
-              <div class="upload-icon"></div>
-              <div class="upload-label">Click to browse or drag &amp; drop files here</div>
-              <div class="upload-sub">Supported: PDF, DOCX, XLSX, PNG, JPG | Max 50MB per file</div>
-            </div>
-            <div id="upload-list" style="margin-top:16px;"></div>
-            <div class="btn-row">
-              <button class="btn btn-primary" onclick="simulateUpload()">Submit Evidence</button>
-              <button class="btn btn-outline" onclick="notify('💾 Draft saved.')">Save Draft</button>
-            </div>
+          <div style="display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
+            <strong style="font-size:.72rem; color:var(--primary); white-space:nowrap;">Filter:</strong>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>Status: All</option><option>Complete</option><option>In Progress</option><option>Scheduled</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>Exec. Branch: All</option><option>Yes — Executive Branch</option><option>No — Independent</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>DoIT Enterprise: All</option><option>Yes — DoIT Enterprise</option><option>No — Agency-Managed</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>Size Tier: All</option><option>Large (500+)</option><option>Medium (100–499)</option><option>Small (&lt;100)</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>IT Complexity: All</option><option>High (Hybrid / OT/ICS)</option><option>Moderate (Standard)</option><option>Low (Simple)</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>Maturity Group: All</option><option>Group A (0.0–1.4)</option><option>Group B (1.5–2.4)</option><option>Group C (2.5–3.4)</option><option>Group D (3.5–5.0)</option>
+            </select>
+            <select style="padding:5px 9px; border-radius:6px; border:1.5px solid var(--primary-light); font-size:.75rem; background:#dbeafe20;">
+              <option>Wave: All</option><option>Wave 1</option><option>Wave 2</option><option>Wave 3+</option>
+            </select>
+            <input type="text" placeholder="Search agency..." style="padding:5px 9px; border-radius:6px; border:1px solid var(--border); font-size:.75rem; flex:1; min-width:120px;">
+            <button class="btn btn-primary btn-sm" onclick="notify('🔍 Filters applied')">Apply</button>
           </div>
-          <div class="card">
-            <div class="card-title">Previously Submitted Files</div>
-            <div>
-              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_InfoSec_Policy_2025.pdf</div><div class="fi-size">1.2 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Network_Diagram_v3.2.vsdx</div><div class="fi-size">4.7 MB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Patch_Logs_Q1_2026.xlsx</div><div class="fi-size">892 KB</div><span class="badge badge-green fi-status">Accepted</span></div>
-              <div class="upload-item"><div class="fi-icon"></div><div class="fi-name">MDOT_Access_Control_Policy.pdf</div><div class="fi-size">540 KB</div><span class="badge badge-orange fi-status">Under Review</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-content" id="ta-findings">
-          <div class="warn-box">You have <strong>6 draft findings</strong> from Assurit's assessment team awaiting your formal response. Please respond by <strong>May 12, 2026</strong>.</div>
-          <div class="finding-card critical">
-            <div class="fc-header"><div class="fc-title">F-001 | No SIEM / Continuous Monitoring</div><span class="badge badge-red">CRITICAL</span></div>
-            <div class="fc-body">No centralized SIEM or log aggregation platform is deployed. Detection capability is severely limited.</div>
-            <textarea class="fc-response" rows="2" placeholder="Agency response...">MDOT concurs. Procurement initiated for Splunk Enterprise Security. Target Q3 2026.</textarea>
-            <div class="btn-row" style="margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="notify('✅ Response saved for F-001')">Save Response</button><select style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;"><option>Agency Concurs</option><option>Agency Disputes</option><option>Risk Accepted</option></select></div>
-          </div>
-          <div class="finding-card critical">
-            <div class="fc-header"><div class="fc-title">F-002 | MFA Not Enforced for Privileged Accounts</div><span class="badge badge-red">CRITICAL</span></div>
-            <div class="fc-body">Multi-factor authentication is not enforced for administrative and privileged accounts.</div>
-            <textarea class="fc-response" rows="2" placeholder="Agency response...">MDOT concurs. MFA rollout 70% complete. Full enforcement expected April 30, 2026.</textarea>
-            <div class="btn-row" style="margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="notify('✅ Response saved for F-002')">Save Response</button><select style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;"><option>Agency Concurs</option><option>Agency Disputes</option><option>Risk Accepted</option></select></div>
-          </div>
-          <div class="finding-card high">
-            <div class="fc-header"><div class="fc-title">F-005 | Patch Cycle Exceeds 90 Days</div><span class="badge badge-orange">HIGH</span></div>
-            <div class="fc-body">Average remediation time for critical CVEs is 97 days, well above the 30-day target.</div>
-            <textarea class="fc-response" rows="2" placeholder="Agency response..."></textarea>
-            <div class="btn-row" style="margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="notify('✅ Response saved for F-005')">Save Response</button><select style="padding:5px 10px; border-radius:6px; border:1px solid var(--border); font-size:.78rem;"><option>Agency Concurs</option><option>Agency Disputes</option><option>Risk Accepted</option></select></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="notify('✅ All responses submitted to Assurit')">Submit All Responses</button>
-            <button class="btn btn-outline" onclick="notify('💾 Draft responses saved')">Save Drafts</button>
-          </div>
-        </div>
-        <div class="tab-content" id="ta-notif">
-          <div class="card">
-            <div class="card-title">Notifications — MDOT</div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#fef3cd; border:1px solid #f6cc6a;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">Evidence Overdue: Software Inventory</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Due Apr 16 — now 8 days overdue.</div></div></div>
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#dbeafe; border:1px solid #93c5fd;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">6 Draft Findings Ready for Review</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Respond by May 12, 2026.</div></div></div>
-              <div style="display:flex; gap:14px; padding:12px; border-radius:8px; background:#d4f4e2; border:1px solid #6fcf97;"><div style="font-size:1.2rem;"></div><div><div style="font-size:.85rem; font-weight:700;">Evidence Accepted: MDOT_InfoSec_Policy_2025.pdf</div><div style="font-size:.78rem; color:var(--text-muted); margin-top:2px;">Reviewed and accepted by assessor S. Patel.</div></div></div>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-outline btn-sm" onclick="notify('✅ All notifications marked as read')">Mark All Read</button>
-            </div>
+          <div class="table-wrap" style="overflow-x:auto;">
+            <table style="width:100%; table-layout:fixed;">
+              <colgroup>
+                <col style="width:22%;"><col style="width:10%;"><col style="width:10%;"><col style="width:9%;"><col style="width:15%;"><col style="width:8%;"><col style="width:26%;">
+              </colgroup>
+              <thead>
+                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Stage</th><th>%</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="portfolio-body"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -1120,6 +930,7 @@
             </div>
           </div>
         </div>
+      </section>
 
       <!-- ============================================================ SETTINGS -->
       <section class="section" id="settings" aria-hidden="true">
@@ -1358,6 +1169,75 @@
           </div>
         </div>
 
+        <!-- GRC Export Readiness / ServiceNow Integration Architecture -->
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title">GRC Export Readiness — ServiceNow Integration Architecture</div>
+          <div class="success-box" style="margin-bottom:16px;">✅ Assessment findings and maturity scores are structured for direct export to ServiceNow GRC. Export available in JSON (API), CSV, and ServiceNow-native XML import format.</div>
+          <div class="grid-2" style="margin-bottom:16px;">
+            <div>
+              <div style="font-size:.8rem;font-weight:700;margin-bottom:10px;color:var(--primary);">Anchor → ServiceNow GRC Field Mapping</div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Anchor Platform Field</th><th>ServiceNow GRC Field</th><th>Module</th></tr></thead>
+                  <tbody>
+                    <tr><td><code style="font-size:.7rem;">agency_id</code></td><td><code style="font-size:.7rem;">u_org_unit_id</code></td><td>Risk Framework</td></tr>
+                    <tr><td><code style="font-size:.7rem;">csf_function</code></td><td><code style="font-size:.7rem;">u_control_category</code></td><td>Control Framework</td></tr>
+                    <tr><td><code style="font-size:.7rem;">cmmi_score</code></td><td><code style="font-size:.7rem;">u_maturity_level</code></td><td>Assessment Results</td></tr>
+                    <tr><td><code style="font-size:.7rem;">finding_severity</code></td><td><code style="font-size:.7rem;">risk_rating</code></td><td>Risk Register</td></tr>
+                    <tr><td><code style="font-size:.7rem;">poam_item_id</code></td><td><code style="font-size:.7rem;">u_remediation_task_id</code></td><td>Issue Management</td></tr>
+                    <tr><td><code style="font-size:.7rem;">constraint_type</code></td><td><code style="font-size:.7rem;">u_constraint_category</code></td><td>Assessment Results</td></tr>
+                    <tr><td><code style="font-size:.7rem;">recommendation</code></td><td><code style="font-size:.7rem;">u_improvement_action</code></td><td>Issue Management</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:.8rem;font-weight:700;margin-bottom:10px;color:var(--primary);">Sample GRC Export Payload (JSON)</div>
+              <div style="background:#1e293b;border-radius:8px;padding:12px;font-family:monospace;font-size:.67rem;color:#a3e635;overflow:auto;max-height:195px;line-height:1.65;">
+<pre style="margin:0;color:#a3e635;">{
+  "agency_id": "MDOT",
+  "assessment_id": "ACG-2026-MDOT-W1",
+  "csf_function": "DETECT",
+  "control_id": "DE.CM-01",
+  "cmmi_score": 1,
+  "cmmi_label": "Performed",
+  "finding_id": "F-MDOT-001",
+  "finding_severity": "CRITICAL",
+  "risk_score": 9.2,
+  "constraint_type": "Budget",
+  "recommendation": "Deploy SIEM (Splunk/MS Sentinel)",
+  "poam_due": "2026-09-30",
+  "grc_sync_ts": "2026-04-01T09:42:00Z"
+}</pre>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div>
+              <div style="font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--primary);">State-Side Requirements</div>
+              <div class="info-box" style="margin:0;font-size:.78rem;">
+                <strong>What Maryland needs to provide:</strong><br>
+                • ServiceNow GRC instance URL + API credentials (OAuth 2.0)<br>
+                • Confirm u_org_unit and Risk Framework modules are active<br>
+                • Designate a ServiceNow admin for initial field mapping validation<br>
+                • Whitelist Anchor Platform IP for API access
+              </div>
+            </div>
+            <div>
+              <div style="font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--primary);">Custom Code Required</div>
+              <div class="info-box" style="margin:0;font-size:.78rem;">
+                <strong>Assurit provides:</strong> Anchor export API, field mapping documentation, ServiceNow import scripts (Python/REST)<br>
+                <strong>State custom code:</strong> None required — standard ServiceNow REST API import set. Optional: custom dashboard widget using delivered data.
+              </div>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn btn-primary btn-sm" onclick="runGRCExport()">Run Full GRC Export Now</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('📋 GRC field mapping documentation downloaded')">Download Field Mapping Doc</button>
+            <button class="btn btn-outline btn-sm" onclick="notify('🔗 Test sync: 847 records validated, 0 errors — ServiceNow confirmed receipt')">Test GRC Connection</button>
+          </div>
+        </div>
+
         <!-- ===== ACTIVITY LOG TAB ===== -->
         <div class="tab-content" id="st-activity">
           <div class="card">
@@ -1479,38 +1359,14 @@
       if(sec) { sec.classList.add('active'); sec.setAttribute('aria-hidden','false'); }
       if(el) el.classList.add('active');
       const titles = {
-        portfolio:'Agency Dashboard', settings:'Settings',
+        portfolio:'Maryland State Cybersecurity Assessment Dashboard', settings:'Settings',
         sai:'Agency CSF Intake & Evidence Upload', sp:'2-Year Assessment Pipeline',
-        sa:'Agency Portal (MDOT View)', sw:'Workflow Templates & Configuration',
+        sa:'Agency Selection & Assessment Management', sw:'Workflow Templates & Configuration',
       };
       const topbar = document.querySelector('.topbar-title');
-      if(topbar) topbar.innerHTML = `${titles[id]||'Dashboard'}<span>Main Entry Point (3-Agency Demo Cohort)</span>`;
+      if(topbar) topbar.innerHTML = `${titles[id]||'Dashboard'}<span>DoIT OSM · 3-Agency Demo Cohort</span>`;
       if(id==='sp') setTimeout(initPipelineCharts,100);
       if(id==='sai') setTimeout(initSaiPortal,100);
-    }
-
-    // ---- PORTFOLIO TAB SWITCHING ----
-    let scChartsInitialized = false;
-    function switchPortfolioTab(tab) {
-      const overview    = document.getElementById('pf-overview');
-      const compliance  = document.getElementById('pf-compliance');
-      const tabOverview = document.getElementById('pf-tab-overview');
-      const tabCompli   = document.getElementById('pf-tab-compliance');
-      if (tab === 'overview') {
-        if (overview)   overview.style.display   = '';
-        if (compliance) compliance.style.display = 'none';
-        if (tabOverview) { tabOverview.classList.add('active'); }
-        if (tabCompli)   { tabCompli.classList.remove('active'); }
-      } else {
-        if (overview)   overview.style.display   = 'none';
-        if (compliance) compliance.style.display = '';
-        if (tabOverview) { tabOverview.classList.remove('active'); }
-        if (tabCompli)   { tabCompli.classList.add('active'); }
-        if (!scChartsInitialized) {
-          setTimeout(initComplianceDashboard, 100);
-          scChartsInitialized = true;
-        }
-      }
     }
 
     // ---- TAB SWITCHING ----
@@ -2544,7 +2400,7 @@
 
     function exportSCDashboard() {
       notify('🔗 Compliance dashboard exported to ServiceNow GRC — 312 POA&M + 47 findings queued for sync');
-      logActivity('GRC Dashboard Export', 'All Agencies', 'RFP §2.3.1.F Compliance Dashboard export triggered');
+      logActivity('GRC Dashboard Export', 'All Agencies', 'Compliance Dashboard export triggered');
     }
 
     function runGRCExport() {
@@ -2556,6 +2412,24 @@
     renderPortfolio();
     updateOverviewStats();
     setTimeout(initPortfolioCharts, 150);
+    setTimeout(initComplianceDashboard, 350); // compliance metrics now always visible on page load
+
+    // ---- ROLE-BASED DEFAULT SECTION ----
+    // doit_reviewer lands on portfolio (read-only); admin + lead_assessor stay on portfolio default
+    // agency_rep is redirected to their agency page by auth-guard before reaching here
+    // assessor does NOT see State Dashboard or 2-Year Pipeline — land on Agency Assessment Management
+    (function() {
+      try {
+        const session = localStorage.getItem('anchor_session');
+        if (session) {
+          const user = JSON.parse(session);
+          if (user.role === 'assessor') {
+            const saNav = document.querySelector('[onclick*="showSection(\'sa\'"]');
+            showSection('sa', saNav);
+          }
+        }
+      } catch(e) {}
+    })();
 
     // ---- USER INFO & LOGOUT ----
     function getInitials(name) {

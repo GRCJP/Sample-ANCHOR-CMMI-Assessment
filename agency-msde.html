@@ -32,33 +32,36 @@
 
     <div class="nav-section">MSDE Assessment Workflow</div>
 
-    <div class="nav-item active" onclick="showSection('questionnaire',this)" role="button" tabindex="0">
+    <div class="nav-item active" onclick="showSection('questionnaire',this)" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor">
       <div>Intake &amp; Scoping</div>
       <div class="dot-done"></div>
+    </div>
+    <div class="nav-item active" onclick="showSection('self-assessment',this)" role="button" tabindex="0" data-visible-to="agency_rep">
+      <div>Agency Questionnaire</div>
     </div>
 
     <div class="nav-item" onclick="showSection('evidence',this)" role="button" tabindex="0">
       <div>Evidence Collection</div>
     </div>
 
-    <div class="nav-item" onclick="showSection('csf',this)" role="button" tabindex="0">
+    <div class="nav-item" onclick="showSection('csf',this)" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor">
       <div>CSF Assessment</div>
     </div>
 
-    <div class="nav-item" onclick="showSection('risk',this)" role="button" tabindex="0">
+    <div class="nav-item" onclick="showSection('risk',this)" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor">
       <div>Risk &amp; CMMI Scoring</div>
     </div>
 
-    <div class="nav-item" onclick="showSection('poam',this)" role="button" tabindex="0">
+    <div class="nav-item" onclick="showSection('poam',this)" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor">
       <div>POA&amp;M Remediation</div>
     </div>
 
-    <div class="nav-item" onclick="showSection('sar',this)" role="button" tabindex="0">
+    <div class="nav-item" onclick="showSection('sar',this)" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor">
       <div>SAR Dashboard</div>
     </div>
 
-    <div class="nav-section" style="margin-top:8px;">Navigation</div>
-    <div class="nav-item" onclick="window.location.href='main-dashboard.html'" role="button" tabindex="0">
+    <div class="nav-section" style="margin-top:8px;" data-visible-to="admin lead_assessor assessor doit_reviewer">Navigation</div>
+    <div class="nav-item" onclick="window.location.href='main-dashboard.html'" role="button" tabindex="0" data-visible-to="admin lead_assessor assessor doit_reviewer">
       <div>&#8592; Agency Dashboard</div>
     </div>
 
@@ -80,15 +83,105 @@
         <span class="badge badge-blue" aria-label="Framework">&#128274; NIST CSF 2.0</span>
         <span class="badge badge-green" aria-label="Status">&#9989; Complete</span>
         <span class="badge badge-green" aria-label="Progress">&#128200; 100% Complete</span>
-        <div class="avatar" aria-label="Lead Assessor">SP</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="text-align:right;line-height:1.2;">
+            <div id="user-name" style="font-size:.75rem;font-weight:600;color:#374151;">Loading...</div>
+            <div id="user-role" style="font-size:.65rem;color:#6b7280;"></div>
+          </div>
+          <div class="avatar" id="user-avatar" aria-label="Logged-in user">SP</div>
+          <button class="btn btn-outline btn-sm" data-action="logout" style="font-size:.72rem;padding:4px 10px;">🚪 Logout</button>
+        </div>
       </div>
     </header>
+
+    <!-- ASSESSMENT WORKFLOW PROGRESS TRACKER — assessors/admin only -->
+    <div data-visible-to="admin lead_assessor assessor doit_reviewer" style="background:#fff; border-bottom:1px solid var(--border); padding:10px 24px; display:flex; align-items:center; gap:0; overflow-x:auto;">
+      <div style="font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); white-space:nowrap; margin-right:16px;">Assessment Pipeline:</div>
+      <div style="display:flex; align-items:center; gap:0; flex:1; min-width:0;">
+
+        <div onclick="showSection('questionnaire',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="Intake — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">Intake</span>
+        </div>
+        <div style="width:24px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <div onclick="showSection('evidence',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="Evidence — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">Evidence</span>
+        </div>
+        <div style="width:24px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <div onclick="showSection('csf',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="CSF Assessment — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">CSF Scoring</span>
+        </div>
+        <div style="width:24px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <div onclick="showSection('risk',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="Risk &amp; CMMI — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">Risk / CMMI</span>
+        </div>
+        <div style="width:24px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <div onclick="showSection('poam',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="POA&amp;M — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">POA&amp;M</span>
+        </div>
+        <div style="width:24px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <div onclick="showSection('sar',this)" style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;cursor:pointer;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;" title="SAR Delivered — Complete">
+          <span style="width:16px;height:16px;border-radius:50%;background:#10b981;color:#fff;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;">✓</span>
+          <span style="font-size:.72rem;font-weight:700;color:#065f46;">SAR</span>
+          <span style="font-size:.62rem;background:#10b981;color:#fff;padding:1px 5px;border-radius:10px;">Delivered</span>
+        </div>
+
+      </div>
+      <div style="font-size:.7rem;color:#065f46;font-weight:700;white-space:nowrap;margin-left:16px;">✅ Complete</div>
+    </div>
+
+    <!-- AGENCY TIMELINE — agency_rep only -->
+    <div data-visible-to="agency_rep" style="background:#f0fdf4; border-bottom:1px solid #86efac; padding:10px 24px; display:flex; align-items:center; gap:0; flex-wrap:wrap;">
+      <div style="font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#166534; white-space:nowrap; margin-right:20px;">Your Assessment:</div>
+      <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap;">
+
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
+          <span style="font-size:1rem;">📅</span>
+          <div>
+            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">Assessment Start</div>
+            <div style="font-size:.8rem;font-weight:800;color:#065f46;">Jan 6, 2026</div>
+          </div>
+        </div>
+
+        <div style="width:32px;height:2px;background:#10b981;"></div>
+
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
+          <span style="font-size:1rem;">📋</span>
+          <div>
+            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">Evidence Submitted</div>
+            <div style="font-size:.8rem;font-weight:800;color:#065f46;">Jan 27, 2026</div>
+            <div style="font-size:.6rem;background:#10b981;color:#fff;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;">✓ Complete</div>
+          </div>
+        </div>
+
+        <div style="width:32px;height:2px;background:#10b981;"></div>
+
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
+          <span style="font-size:1rem;">🏁</span>
+          <div>
+            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">SAR Delivered</div>
+            <div style="font-size:.8rem;font-weight:800;color:#065f46;">Mar 14, 2026</div>
+            <div style="font-size:.6rem;background:#10b981;color:#fff;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;">✅ Assessment Complete</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- CONTENT AREA -->
     <div class="content">
 
       <!-- QUESTIONNAIRE + INTAKE & SCOPING SECTION -->
-      <section class="section active" id="questionnaire" aria-hidden="false">
+      <section class="section active" id="questionnaire" aria-hidden="false" data-visible-to="admin lead_assessor assessor">
         <div class="page-header">
           <div class="step-tag">Step 1 | ANCHOR Phase 0&#8211;1</div>
           <h1>Agency Setup &amp; Intake</h1>
@@ -758,6 +851,9 @@
         </div>
       </section>
 
+      <!-- AGENCY SELF-ASSESSMENT SECTION -->
+      <section class="section" id="self-assessment" aria-hidden="true"></section>
+
     </div>
   </main>
 
@@ -768,6 +864,7 @@
   <script src="src/js/agency-assessment.js"></script>
   <script src="src/js/navigation.js"></script>
   <script src="src/js/data.js"></script>
+  <script src="src/js/agency-self-assessment.js"></script>
 
   <script>
     function showSection(id, el) {

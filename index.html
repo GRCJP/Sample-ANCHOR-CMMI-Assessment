@@ -414,16 +414,19 @@
             </div>
             
             <div class="demo-section">
-                <h3>🚀 One-Click Demo Access</h3>
-                <p style="font-size:.75rem;color:#64748b;text-align:center;margin-bottom:12px;">Click any role below to enter the demo instantly — no password required.</p>
-                <div style="display:flex;flex-direction:column;gap:7px;">
-                  <button type="button" class="btn" style="background:#1e3a5c;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('pm')">🛡️ Program Manager / Admin <span style="opacity:.6;font-size:.72rem;float:right;">Full access</span></button>
-                  <button type="button" class="btn" style="background:#2563a8;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('assessor')">🔍 Lead Assessor — J. Williams <span style="opacity:.6;font-size:.72rem;float:right;">Dashboard + SRTM</span></button>
-                  <button type="button" class="btn" style="background:#0d9488;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('mdot')">🏛️ Agency Rep — MDOT (L. Harmon) <span style="opacity:.6;font-size:.72rem;float:right;">→ agency-mdot.html</span></button>
-                  <button type="button" class="btn" style="background:#7c3aed;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('dpscs')">🏛️ Agency Rep — DPSCS (A. Torres) <span style="opacity:.6;font-size:.72rem;float:right;">→ agency-dpscs.html</span></button>
-                  <button type="button" class="btn" style="background:#0891b2;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('msde')">🏛️ Agency Rep — MSDE (P. Hall) <span style="opacity:.6;font-size:.72rem;float:right;">→ agency-msde.html</span></button>
-                  <button type="button" class="btn" style="background:#6b7280;color:#fff;padding:9px 14px;font-size:.82rem;border-radius:7px;text-align:left;border:none;cursor:pointer;" onclick="demoLogin('reviewer')">👁️ DoIT Executive Reviewer <span style="opacity:.6;font-size:.72rem;float:right;">Read-only</span></button>
-                </div>
+                <h3>🚀 Demo Access</h3>
+                <p style="font-size:.75rem;color:#64748b;text-align:center;margin-bottom:12px;">Select a role and launch instantly — no password required.</p>
+                <select id="demo-persona-select" class="demo-dropdown" style="margin-bottom:10px;">
+                  <option value="">— Select a demo account —</option>
+                  <option value="pm">🛡️  Program Manager / Admin — Full access</option>
+                  <option value="assessor">🔍  Lead Assessor — J. Williams</option>
+                  <option value="fieldassessor">📋  Assessor — R. Okafor</option>
+                  <option value="mdot">🏛️  Agency Rep — MDOT (L. Harmon)</option>
+                  <option value="dpscs">🏛️  Agency Rep — DPSCS (A. Torres)</option>
+                  <option value="msde">🏛️  Agency Rep — MSDE (P. Hall)</option>
+                  <option value="reviewer">👁️  DoIT Executive Reviewer — Read-only</option>
+                </select>
+                <button type="button" class="btn btn-primary" style="width:100%;padding:11px;font-size:.9rem;" onclick="launchDemoLogin()">Launch Demo →</button>
                 <p style="font-size:.68rem;color:#94a3b8;text-align:center;margin-top:10px;">Or sign in above with your Cognito credentials</p>
             </div>
             
@@ -488,6 +491,15 @@
             groups: ['LeadAssessors'],
             landing: 'main-dashboard.html'
           },
+          fieldassessor: {
+            email: 'r.okafor@assurit.com',
+            name: 'R. Okafor',
+            role: 'assessor',
+            display_role: 'Assessor',
+            agency: '',
+            groups: ['Assessors'],
+            landing: 'main-dashboard.html'
+          },
           mdot: {
             email: 'l.harmon@mdot.maryland.gov',
             name: 'Lisa Harmon',
@@ -542,6 +554,20 @@
           };
           localStorage.setItem('anchor_session', JSON.stringify(session));
           window.location.replace(p.landing);
+        }
+
+        function launchDemoLogin() {
+          const sel = document.getElementById('demo-persona-select');
+          const key = sel ? sel.value : '';
+          if (!key) {
+            if (sel) {
+              sel.style.borderColor = '#ef4444';
+              sel.focus();
+              setTimeout(() => { sel.style.borderColor = ''; }, 1500);
+            }
+            return;
+          }
+          demoLogin(key);
         }
     </script>
 </body>
