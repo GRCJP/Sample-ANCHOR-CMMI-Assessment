@@ -457,9 +457,9 @@
             <div style="background:#f8fafc;border:1.5px solid ${evFile ? ctrl.fnColor + '70' : '#e2e8f0'};border-radius:8px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
               <div style="flex:1;min-width:200px;">
                 <div style="font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:3px;">Required Artifact</div>
-                <div style="font-size:.8rem;font-weight:600;color:#1e293b;">📄 ${ctrl.artifact}</div>
-                <div style="margin-top:4px;font-size:.72rem;${evFile ? 'color:#059669;font-weight:600;' : 'color:#94a3b8;'}">
-                  ${evFile ? '✅ Uploaded: ' + evFile : 'No file uploaded yet — upload using the button →'}
+                <div style="font-size:.8rem;font-weight:600;color:#1e293b;">${ctrl.artifact}</div>
+                <div id="saev-${ctrl.id}" style="margin-top:4px;font-size:.72rem;${evFile ? 'color:#059669;font-weight:600;' : 'color:#94a3b8;'}">
+                  ${evFile ? 'Uploaded: ' + evFile : 'No file uploaded yet — upload using the button'}
                 </div>
               </div>
               <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:7px;border:1.5px solid ${evFile ? ctrl.fnColor : '#cbd5e1'};background:${evFile ? ctrl.fnColor + '10' : '#fff'};color:${evFile ? ctrl.fnColor : '#475569'};font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
@@ -505,24 +505,49 @@
     answers[ctrlId].evidence = file.name;
     saveAnswers(answers);
 
-    // Update artifact row without full re-render
+    // Update artifact status div by direct ID (added to rendered HTML as id="saev-{ctrlId}")
+    const statusDiv = document.getElementById('saev-' + ctrlId);
+    if (statusDiv) {
+      statusDiv.textContent = 'Uploaded: ' + file.name;
+      statusDiv.style.color      = '#059669';
+      statusDiv.style.fontWeight = '600';
+    }
+
+    // Update upload label styling
     const ctrl = CONTROLS.find(c => c.id === ctrlId);
     const row  = document.getElementById('sarow-' + ctrlId);
     if (row && ctrl) {
-      const artifactStatus = row.querySelector('[data-ev-status]');
-      if (artifactStatus) artifactStatus.innerHTML = '✅ Uploaded: ' + file.name;
       const lbl = row.querySelector('label[style*="cursor:pointer"]');
       if (lbl) {
         lbl.style.borderColor = ctrl.fnColor;
         lbl.style.background  = ctrl.fnColor + '10';
         lbl.style.color       = ctrl.fnColor;
-        const txt = lbl.childNodes[0];
-        if (txt) txt.textContent = '🔄 Replace File';
+        // Update the label text (first text node before the file input)
+        const txt = Array.from(lbl.childNodes).find(n => n.nodeType === 3);
+        if (txt) txt.textContent = ' Replace File';
+        // Update the artifact container border too
+        const artifactBox = lbl.closest('div[style*="background:#f8fafc"]');
+        if (artifactBox) artifactBox.style.borderColor = ctrl.fnColor + '70';
       }
     }
 
+    // Sync to evidence tracker if it's currently rendered
+    updateEvidenceProgress(answers);
+    const evRow = document.getElementById('evrow-' + ctrlId);
+    if (evRow) {
+      const evStatus = document.getElementById('ev-status-' + ctrlId);
+      const evFile   = document.getElementById('ev-file-'   + ctrlId);
+      if (evStatus) {
+        evStatus.textContent       = 'Submitted';
+        evStatus.style.background  = '#d1fae5';
+        evStatus.style.color       = '#065f46';
+        evStatus.style.border      = '1px solid #6ee7b7';
+      }
+      if (evFile) { evFile.textContent = file.name; evFile.style.color = '#64748b'; }
+    }
+
     updateProgress(answers);
-    if (typeof notify === 'function') notify('📎 Artifact uploaded: ' + file.name);
+    if (typeof notify === 'function') notify('Artifact uploaded: ' + file.name);
   };
 
   window.saveSelfAssessmentDraft = function () {
@@ -813,10 +838,179 @@
     if (label) label.textContent = pct + '%';
   }
 
+  // ── Assessor Submissions View ─────────────────────────────────────────────
+  // Visible to assessors only. Reads agency_rep localStorage submissions and
+  // displays them in the Evidence Collection section with review controls.
+
+  function setupAssessorSubmissionsView() {
+    try {
+      const session = JSON.parse(localStorage.getItem('anchor_session') || '{}');
+      const assessorRoles = ['assessor', 'lead_assessor', 'admin'];
+      if (!session || !assessorRoles.includes(session.role)) return;
+    } catch (e) { return; }
+
+    const section = document.getElementById('evidence');
+    if (!section) return;
+
+    const container = document.createElement('div');
+    container.id = 'assessor-submissions-card';
+
+    // Insert after page-header, before lifecycle card
+    const pageHeader = section.querySelector('.page-header');
+    if (pageHeader && pageHeader.nextSibling) {
+      section.insertBefore(container, pageHeader.nextSibling);
+    } else {
+      section.appendChild(container);
+    }
+
+    renderAssessorSubmissionsCard();
+  }
+
+  function renderAssessorSubmissionsCard() {
+    const container = document.getElementById('assessor-submissions-card');
+    if (!container) return;
+
+    const answers     = loadAnswers();
+    const reviewKey   = 'anchor_review_' + getAgencySlug();
+    let reviewState   = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+
+    const total       = CONTROLS.length;
+    const submitted   = CONTROLS.filter(function (c) {
+      const d = answers[c.id];
+      return d && (d.evidence || (d.answers && d.answers.some(function (a) { return a && a.trim(); })));
+    }).length;
+    const withArtifacts = CONTROLS.filter(function (c) { return answers[c.id] && answers[c.id].evidence; }).length;
+    const accepted      = Object.values(reviewState).filter(function (v) { return v === 'accepted'; }).length;
+
+    // Build table rows — only show controls with any submission
+    var rows = '';
+    FN_ORDER.forEach(function (fn) {
+      const ctrls = CONTROLS.filter(function (c) { return c.fn === fn; });
+      ctrls.forEach(function (ctrl) {
+        const d          = answers[ctrl.id] || {};
+        const hasAnswers = d.answers && d.answers.some(function (a) { return a && a.trim(); });
+        const hasArtifact = !!d.evidence;
+        if (!hasAnswers && !hasArtifact) return;
+
+        const review = reviewState[ctrl.id] || 'new';
+        const reviewStyles = {
+          accepted:  'background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;',
+          returned:  'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+          reviewing: 'background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;',
+          new:       'background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;'
+        };
+        const reviewLabel = { accepted: 'Accepted', returned: 'Returned', reviewing: 'Under Review', new: 'New' };
+
+        const answersSummary = (d.answers || []).map(function (a, i) {
+          if (!a || !a.trim()) return '';
+          const truncated = a.length > 220 ? a.substring(0, 220) + '…' : a;
+          return '<div style="margin-bottom:6px;"><span style="font-weight:700;font-size:.68rem;color:#94a3b8;">Q' + (i + 1) + '</span> <span style="font-size:.74rem;color:#334155;line-height:1.5;">' + truncated.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span></div>';
+        }).join('');
+
+        rows += '<tr id="asr-row-' + ctrl.id + '" style="border-bottom:1px solid #f1f5f9;">' +
+          '<td style="padding:12px 14px;vertical-align:top;white-space:nowrap;">' +
+            '<span style="font-size:.65rem;font-weight:800;color:' + ctrl.fnColor + ';background:' + ctrl.fnColor + '12;border:1px solid ' + ctrl.fnColor + '25;padding:2px 7px;border-radius:3px;">' + ctrl.id + '</span>' +
+            '<div style="font-size:.65rem;color:' + ctrl.fnColor + ';font-weight:700;margin-top:4px;">' + ctrl.fn + '</div>' +
+          '</td>' +
+          '<td style="padding:12px 14px;vertical-align:top;">' +
+            '<div style="font-size:.78rem;font-weight:600;color:#1e293b;max-width:160px;">' + ctrl.label + '</div>' +
+          '</td>' +
+          '<td style="padding:10px 14px;vertical-align:top;max-width:380px;">' +
+            (hasAnswers
+              ? '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px;">' + answersSummary + '</div>'
+              : '<span style="font-size:.72rem;color:#94a3b8;">No written responses submitted</span>') +
+          '</td>' +
+          '<td style="padding:12px 14px;vertical-align:top;white-space:nowrap;">' +
+            (hasArtifact
+              ? '<div style="font-size:.73rem;font-weight:600;color:#059669;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + d.evidence + '">' + d.evidence + '</div><div style="font-size:.65rem;color:#94a3b8;margin-top:2px;">Agency submitted</div>'
+              : '<span style="font-size:.72rem;color:#f59e0b;font-weight:600;">Not yet uploaded</span>') +
+          '</td>' +
+          '<td style="padding:12px 14px;vertical-align:top;white-space:nowrap;">' +
+            '<span style="font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:10px;' + (reviewStyles[review] || reviewStyles.new) + '">' + (reviewLabel[review] || 'New') + '</span>' +
+          '</td>' +
+          '<td style="padding:10px 14px;vertical-align:top;white-space:nowrap;">' +
+            '<div style="display:flex;flex-direction:column;gap:4px;">' +
+              '<button onclick="setSubmissionReview(\'' + ctrl.id + '\',\'accepted\')" style="font-size:.68rem;padding:3px 10px;border-radius:5px;border:1px solid #10b981;background:' + (review === 'accepted' ? '#d1fae5' : '#fff') + ';color:#065f46;cursor:pointer;font-weight:600;">Accept</button>' +
+              '<button onclick="setSubmissionReview(\'' + ctrl.id + '\',\'reviewing\')" style="font-size:.68rem;padding:3px 10px;border-radius:5px;border:1px solid #3b82f6;background:' + (review === 'reviewing' ? '#dbeafe' : '#fff') + ';color:#1d4ed8;cursor:pointer;font-weight:600;">Under Review</button>' +
+              '<button onclick="setSubmissionReview(\'' + ctrl.id + '\',\'returned\')" style="font-size:.68rem;padding:3px 10px;border-radius:5px;border:1px solid #ef4444;background:' + (review === 'returned' ? '#fee2e2' : '#fff') + ';color:#991b1b;cursor:pointer;font-weight:600;">Return</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      });
+    });
+
+    if (!rows) {
+      container.innerHTML =
+        '<div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:20px;border-left:4px solid #e2e8f0;">' +
+          '<div style="font-size:.84rem;font-weight:700;color:#1e293b;margin-bottom:6px;">Agency Self-Assessment Submissions</div>' +
+          '<p style="font-size:.78rem;color:#94a3b8;margin:0;">No agency submissions received yet. The agency representative has not submitted responses or artifacts for this assessment cycle. Submissions will appear here as the agency completes their self-assessment questionnaire.</p>' +
+        '</div>';
+      return;
+    }
+
+    container.innerHTML =
+      '<div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;border-left:4px solid #3b82f6;">' +
+
+        // Header
+        '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">' +
+          '<div>' +
+            '<div style="font-size:.84rem;font-weight:700;color:#1e293b;">Agency Self-Assessment Submissions</div>' +
+            '<div style="font-size:.74rem;color:#64748b;margin-top:2px;">Live view of responses and artifacts submitted by the agency representative — read directly from the agency submission portal</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:10px;flex-wrap:wrap;">' +
+            '<div style="text-align:center;padding:6px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:7px;">' +
+              '<div style="font-size:1.1rem;font-weight:800;color:#1e293b;">' + submitted + '<span style="font-size:.7rem;color:#94a3b8;font-weight:500;"> / ' + total + '</span></div>' +
+              '<div style="font-size:.65rem;color:#64748b;font-weight:600;white-space:nowrap;">Controls Responded</div>' +
+            '</div>' +
+            '<div style="text-align:center;padding:6px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:7px;">' +
+              '<div style="font-size:1.1rem;font-weight:800;color:#059669;">' + withArtifacts + '</div>' +
+              '<div style="font-size:.65rem;color:#64748b;font-weight:600;white-space:nowrap;">Artifacts Uploaded</div>' +
+            '</div>' +
+            '<div style="text-align:center;padding:6px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:7px;">' +
+              '<div style="font-size:1.1rem;font-weight:800;color:#3b82f6;">' + accepted + '</div>' +
+              '<div style="font-size:.65rem;color:#64748b;font-weight:600;white-space:nowrap;">Accepted</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        // Table
+        '<div style="overflow-x:auto;">' +
+          '<table style="width:100%;border-collapse:collapse;">' +
+            '<thead>' +
+              '<tr style="background:#f8fafc;border-bottom:1px solid var(--border);">' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;white-space:nowrap;">Control</th>' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;">Name</th>' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;">Agency Responses</th>' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;white-space:nowrap;">Artifact</th>' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;white-space:nowrap;">Review Status</th>' +
+                '<th style="padding:9px 14px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;white-space:nowrap;">Actions</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody style="font-size:.78rem;">' +
+              rows +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>';
+  }
+
+  window.setSubmissionReview = function (ctrlId, status) {
+    const reviewKey = 'anchor_review_' + getAgencySlug();
+    let reviewState = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+    reviewState[ctrlId] = status;
+    localStorage.setItem(reviewKey, JSON.stringify(reviewState));
+    renderAssessorSubmissionsCard();
+    const labels = { accepted: 'Submission accepted.', reviewing: 'Marked as Under Review.', returned: 'Submission returned for revision.' };
+    if (typeof notify === 'function') notify(labels[status] || 'Review status updated.');
+  };
+
   // ── Init ──────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
     renderSection();
     setupEvidenceSection();
+    setupAssessorSubmissionsView();
 
     // Agency reps land on self-assessment, not the assessor intake form
     try {
