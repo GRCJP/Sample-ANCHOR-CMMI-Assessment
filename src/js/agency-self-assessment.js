@@ -541,7 +541,7 @@
                 </div>
               </div>
               <label style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:7px;border:1.5px solid ${evFile ? ctrl.fnColor : '#cbd5e1'};background:${evFile ? ctrl.fnColor + '10' : '#fff'};color:${evFile ? ctrl.fnColor : '#475569'};font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">
-                ${evFile ? '🔄 Replace File' : '📎 Upload Artifact'}
+                ${evFile ? 'Replace File' : 'Upload Artifact'}
                 <input type="file" id="safile-${ctrl.id}" accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg"
                   onchange="handleSAFile('${ctrl.id}',this)" style="display:none;" />
               </label>
@@ -788,32 +788,34 @@
       `;
 
       ctrls.forEach(function (ctrl) {
-        const d       = answers[ctrl.id] || {};
-        const evFile  = d.evidence || '';
-        const hasFile = !!evFile;
+        const d         = answers[ctrl.id] || {};
+        const evFiles   = d.evidenceFiles || (d.evidence ? [d.evidence] : []);
+        const hasFile   = evFiles.length > 0;
+        const fileListHtml = evFiles.length
+          ? evFiles.map(function(f) {
+              return `<div style="font-size:.68rem;color:#059669;font-weight:500;display:flex;align-items:center;gap:4px;margin-top:2px;"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0;"></span><span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${f}">${f}</span></div>`;
+            }).join('')
+          : `<div id="ev-file-${ctrl.id}" style="font-size:.68rem;color:#94a3b8;margin-top:2px;">No file uploaded</div>`;
 
         tableRows += `
           <tr id="evrow-${ctrl.id}">
-            <td style="white-space:nowrap;">
+            <td style="white-space:nowrap;padding:8px 14px;">
               <span style="font-size:.65rem;font-weight:800;color:${ctrl.fnColor};background:${ctrl.fnColor}12;border:1px solid ${ctrl.fnColor}25;padding:2px 7px;border-radius:3px;">${ctrl.id}</span>
             </td>
-            <td style="font-size:.78rem;font-weight:500;color:#1e293b;">${ctrl.label}</td>
-            <td style="font-size:.74rem;color:#475569;">${ctrl.artifact}</td>
-            <td>
+            <td style="font-size:.78rem;font-weight:500;color:#1e293b;padding:8px 14px;">${ctrl.label}</td>
+            <td style="font-size:.74rem;color:#475569;padding:8px 14px;">${ctrl.artifact}</td>
+            <td style="padding:8px 14px;">
               <span id="ev-status-${ctrl.id}" style="font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap;${hasFile
                 ? 'background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;'
                 : 'background:#fef3c7;color:#92400e;border:1px solid #fcd34d;'}">
                 ${hasFile ? 'Submitted' : 'Pending'}
               </span>
-              ${hasFile ? `<div id="ev-file-${ctrl.id}" style="font-size:.68rem;color:#64748b;margin-top:3px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${evFile}">${evFile}</div>` : `<div id="ev-file-${ctrl.id}" style="font-size:.68rem;color:#94a3b8;margin-top:3px;">No file uploaded</div>`}
+              <div id="ev-filelist-${ctrl.id}" style="margin-top:2px;">${fileListHtml}</div>
             </td>
-            <td style="white-space:nowrap;">
-              <label style="display:inline-block;padding:4px 12px;font-size:.72rem;font-weight:600;border-radius:5px;cursor:pointer;
-                ${hasFile
-                  ? 'border:1px solid #94a3b8;background:#f1f5f9;color:#475569;'
-                  : 'border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;'}">
-                ${hasFile ? 'Replace' : 'Upload'}
-                <input type="file" accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg"
+            <td style="white-space:nowrap;padding:8px 14px;">
+              <label style="display:inline-block;padding:4px 12px;font-size:.72rem;font-weight:600;border-radius:5px;cursor:pointer;border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;">
+                ${hasFile ? 'Add File' : 'Upload'}
+                <input type="file" multiple accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg"
                   onchange="handleEvidenceTableFile('${ctrl.id}', this)"
                   style="display:none;" />
               </label>
@@ -932,54 +934,64 @@
         </div>
       </div>
     `;
+
+    // Browsers strip 'multiple' from <input type="file"> when injected via innerHTML.
+    // Set it programmatically after render.
+    Array.from(view.querySelectorAll('input[onchange*="handleEvidenceTableFile"]')).forEach(function(i) {
+      i.multiple = true;
+    });
   }
 
   window.handleEvidenceTableFile = function (ctrlId, input) {
     if (!input.files || !input.files.length) return;
-    const file    = input.files[0];
+    const newFiles = Array.from(input.files).map(function(f) { return f.name; });
     const answers = loadAnswers();
     if (!answers[ctrlId]) answers[ctrlId] = {};
-    answers[ctrlId].evidence = file.name;
+    // Append to existing files array (avoid duplicates)
+    var existing = answers[ctrlId].evidenceFiles || (answers[ctrlId].evidence ? [answers[ctrlId].evidence] : []);
+    newFiles.forEach(function(name) { if (existing.indexOf(name) === -1) existing.push(name); });
+    answers[ctrlId].evidenceFiles = existing;
+    answers[ctrlId].evidence = existing[0]; // keep first file for backward compat
     saveAnswers(answers);
 
-    // Update row without re-render
+    // Update status badge
     const statusEl = document.getElementById('ev-status-' + ctrlId);
-    const fileEl   = document.getElementById('ev-file-'   + ctrlId);
     if (statusEl) {
-      statusEl.textContent    = 'Submitted';
+      statusEl.textContent       = 'Submitted';
       statusEl.style.background  = '#d1fae5';
       statusEl.style.color       = '#065f46';
       statusEl.style.border      = '1px solid #6ee7b7';
     }
-    if (fileEl) {
-      fileEl.textContent = file.name;
-      fileEl.style.color = '#64748b';
+
+    // Update file list
+    const fileListEl = document.getElementById('ev-filelist-' + ctrlId);
+    if (fileListEl) {
+      fileListEl.innerHTML = existing.map(function(f) {
+        return `<div style="font-size:.68rem;color:#059669;font-weight:500;display:flex;align-items:center;gap:4px;margin-top:2px;"><span style="width:6px;height:6px;border-radius:50%;background:#059669;flex-shrink:0;"></span><span style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${f}">${f}</span></div>`;
+      }).join('');
     }
 
-    // Update upload label
+    // Update upload label to "Add File"
     const row = document.getElementById('evrow-' + ctrlId);
     if (row) {
-      const lbl = row.querySelector('label[style*="cursor:pointer"]');
-      if (lbl) {
-        lbl.style.borderColor = '#94a3b8';
-        lbl.style.background  = '#f1f5f9';
-        lbl.style.color       = '#475569';
-        lbl.childNodes[0].textContent = 'Replace';
-      }
+      const lbl = row.querySelector('label');
+      if (lbl && lbl.childNodes[0]) lbl.childNodes[0].textContent = 'Add File';
     }
 
     // Refresh summary progress
     updateEvidenceProgress(answers);
-
-    // Also sync to questionnaire progress
     updateProgress(answers);
 
-    if (typeof notify === 'function') notify('Artifact uploaded: ' + file.name);
+    const addedNames = newFiles.join(', ');
+    if (typeof notify === 'function') notify('Uploaded: ' + addedNames + (newFiles.length > 1 ? ' (' + newFiles.length + ' files)' : ''));
   };
 
   function updateEvidenceProgress(answers) {
     const total     = CONTROLS.length;
-    const submitted = CONTROLS.filter(function (c) { return answers[c.id] && answers[c.id].evidence; }).length;
+    const submitted = CONTROLS.filter(function (c) {
+      var d = answers[c.id] || {};
+      return (d.evidenceFiles && d.evidenceFiles.length > 0) || !!d.evidence;
+    }).length;
     const pct       = Math.round((submitted / total) * 100);
     const pending   = total - submitted;
 

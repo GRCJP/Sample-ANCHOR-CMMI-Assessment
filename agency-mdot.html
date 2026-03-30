@@ -82,7 +82,7 @@
       </div>
       <div class="topbar-right">
         <span class="badge badge-blue" aria-label="Framework">🔒 NIST CSF 2.0</span>
-        <span class="badge badge-orange" aria-label="Status">⚡ In Progress</span>
+        <span class="badge badge-orange" aria-label="Status">In Progress</span>
         <span class="badge badge-green" aria-label="Progress">📈 65% Complete</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="text-align:right;line-height:1.2;">
@@ -90,7 +90,7 @@
             <div id="user-role" style="font-size:.65rem;color:#6b7280;"></div>
           </div>
           <div class="avatar" id="user-avatar" aria-label="Logged-in user">JW</div>
-          <button class="btn btn-outline btn-sm" data-action="logout" style="font-size:.72rem;padding:4px 10px;">🚪 Logout</button>
+          <button class="btn btn-outline btn-sm" data-action="logout" style="font-size:.72rem;padding:4px 10px;">Logout</button>
         </div>
       </div>
     </header>
@@ -140,38 +140,47 @@
       <div style="font-size:.7rem;color:var(--text-muted);white-space:nowrap;margin-left:16px;">Target: <strong>May 19</strong></div>
     </div>
 
-    <!-- AGENCY TIMELINE — agency_rep only -->
-    <div data-visible-to="agency_rep" style="background:#f8fafc; border-bottom:1px solid var(--border); padding:10px 24px; display:flex; align-items:center; gap:0; flex-wrap:wrap;">
-      <div style="font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); white-space:nowrap; margin-right:20px;">Your Assessment:</div>
-      <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap;">
+    <!-- AGENCY ASSESSMENT PROGRESS TRACKER — agency_rep only -->
+    <div data-visible-to="agency_rep" style="background:#fff; border-bottom:1px solid var(--border); padding:12px 24px;">
+      <div style="font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:10px;">Your Assessment Progress</div>
+      <div style="display:flex; align-items:center; gap:0; overflow-x:auto;">
 
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#dbeafe;border:1.5px solid #3b82f6;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">📅</span>
+        <!-- Step 1: Questionnaire — complete -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#dbeafe;border:1.5px solid #3b82f6;white-space:nowrap;cursor:pointer;" onclick="showSection('self-assessment',this)" title="Agency Questionnaire — Submitted Apr 7">
+          <span style="width:20px;height:20px;border-radius:50%;background:#3b82f6;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1d4ed8;">Assessment Start</div>
-            <div id="tl-start-date" style="font-size:.8rem;font-weight:800;color:#1e40af;">Apr 7, 2026</div>
+            <div style="font-size:.68rem;font-weight:700;color:#1d4ed8;">Questionnaire</div>
+            <div style="font-size:.6rem;color:#3b82f6;">Submitted Apr 7</div>
           </div>
         </div>
+        <div style="width:28px;height:2px;background:#3b82f6;flex-shrink:0;"></div>
 
-        <div style="width:32px;height:2px;background:#94a3b8;"></div>
-
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">📋</span>
+        <!-- Step 2: Evidence Collection — active -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#fef3c7;border:2px solid #f59e0b;white-space:nowrap;cursor:pointer;" onclick="showSection('evidence',this)" title="Evidence Collection — Due Apr 28">
+          <span style="width:20px;height:20px;border-radius:50%;background:#f59e0b;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#92400e;">Evidence Due</div>
-            <div id="tl-evidence-date" style="font-size:.8rem;font-weight:800;color:#92400e;">Apr 28, 2026</div>
-            <div id="tl-evidence-status" style="font-size:.6rem;background:#f59e0b;color:#fff;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;">⚡ Active — 29 days left</div>
+            <div style="font-size:.68rem;font-weight:700;color:#92400e;">Evidence Collection</div>
+            <div style="font-size:.6rem;color:#92400e;"><span id="tl-evidence-date">Due Apr 28</span> &nbsp;<span style="background:#f59e0b;color:#fff;padding:0 5px;border-radius:8px;">Active</span></div>
           </div>
         </div>
+        <div style="width:28px;height:2px;background:#e2e8f0;flex-shrink:0;"></div>
 
-        <div style="width:32px;height:2px;background:#94a3b8;"></div>
-
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#f1f5f9;border:1.5px solid #94a3b8;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">🏁</span>
+        <!-- Step 3: Under Assessment — pending -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#f8fafc;border:1.5px solid #cbd5e0;white-space:nowrap;opacity:.75;">
+          <span style="width:20px;height:20px;border-radius:50%;background:#94a3b8;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#475569;">Est. Completion</div>
-            <div id="tl-completion-date" style="font-size:.8rem;font-weight:800;color:#334155;">May 19, 2026</div>
-            <div style="font-size:.6rem;color:#64748b;margin-top:1px;">SAR delivery target</div>
+            <div style="font-size:.68rem;font-weight:700;color:#64748b;">Under Assessment</div>
+            <div style="font-size:.6rem;color:#94a3b8;">Assessor review</div>
+          </div>
+        </div>
+        <div style="width:28px;height:2px;background:#e2e8f0;flex-shrink:0;"></div>
+
+        <!-- Step 4: SAR Delivery — pending -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#f8fafc;border:1.5px solid #cbd5e0;white-space:nowrap;opacity:.75;">
+          <span style="width:20px;height:20px;border-radius:50%;background:#94a3b8;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</span>
+          <div>
+            <div style="font-size:.68rem;font-weight:700;color:#64748b;">SAR Delivery</div>
+            <div id="tl-completion-date" style="font-size:.6rem;color:#94a3b8;">Target May 19</div>
           </div>
         </div>
 
@@ -992,7 +1001,7 @@
   <script src="src/js/agency-assessment.js"></script>
   <script src="src/js/navigation.js"></script>
   <script src="src/js/data.js"></script>
-  <script src="src/js/agency-self-assessment.js"></script>
+  <script src="src/js/agency-self-assessment.js?v=2"></script>
   
   <!-- Navigation functionality script -->
   <script>
@@ -1847,18 +1856,21 @@
     }
 
     function agencySubmitEvidence() {
-      const category = document.getElementById('ev-category')?.value;
-      const nistFn   = document.getElementById('ev-nist-fn')?.value;
-      if (!category) { notify('Please select an Evidence Category.'); return; }
-      if (!nistFn)   { notify('Please select a NIST CSF Function.'); return; }
-      if (evUploaded.length === 0) { notify('Please select a file to upload.'); return; }
-      notify('Evidence submitted to assessor J. Williams — ' + evUploaded.join(', ') + ' | Category: ' + category);
+      const category = document.getElementById('ev-category')?.value || document.getElementById('ev-add-category')?.value;
+      const nistFn   = document.getElementById('ev-nist-fn')?.value || document.getElementById('ev-add-fn')?.value;
+      if (evUploaded.length === 0) { notify('Please select at least one file to submit.'); return; }
+      const catLabel = category || 'Uncategorized';
+      const fnLabel  = nistFn  || 'General';
+      notify('Submitted to J. Williams — ' + evUploaded.length + ' file(s) | ' + catLabel);
       evUploaded.length = 0;
       const container = document.getElementById('ev-uploaded-files');
       if (container) container.innerHTML = '';
-      document.getElementById('ev-category').value = '';
-      document.getElementById('ev-nist-fn').value = '';
-      if (document.getElementById('ev-notes')) document.getElementById('ev-notes').value = '';
+      if (document.getElementById('ev-category'))     document.getElementById('ev-category').value = '';
+      if (document.getElementById('ev-add-category')) document.getElementById('ev-add-category').value = '';
+      if (document.getElementById('ev-nist-fn'))      document.getElementById('ev-nist-fn').value = '';
+      if (document.getElementById('ev-add-fn'))       document.getElementById('ev-add-fn').value = '';
+      if (document.getElementById('ev-notes'))        document.getElementById('ev-notes').value = '';
+      if (document.getElementById('ev-add-notes'))    document.getElementById('ev-add-notes').value = '';
     }
     // ─────────────────────────────────────────────────────────────────────────
 

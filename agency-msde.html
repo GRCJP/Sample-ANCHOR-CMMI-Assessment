@@ -81,15 +81,15 @@
       </div>
       <div class="topbar-right">
         <span class="badge badge-blue" aria-label="Framework">&#128274; NIST CSF 2.0</span>
-        <span class="badge badge-green" aria-label="Status">&#9989; Complete</span>
-        <span class="badge badge-green" aria-label="Progress">&#128200; 100% Complete</span>
+        <span class="badge badge-green" aria-label="Status">Complete</span>
+        <span class="badge badge-green" aria-label="Progress">100% Complete</span>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="text-align:right;line-height:1.2;">
             <div id="user-name" style="font-size:.75rem;font-weight:600;color:#374151;">Loading...</div>
             <div id="user-role" style="font-size:.65rem;color:#6b7280;"></div>
           </div>
           <div class="avatar" id="user-avatar" aria-label="Logged-in user">SP</div>
-          <button class="btn btn-outline btn-sm" data-action="logout" style="font-size:.72rem;padding:4px 10px;">🚪 Logout</button>
+          <button class="btn btn-outline btn-sm" data-action="logout" style="font-size:.72rem;padding:4px 10px;">Logout</button>
         </div>
       </div>
     </header>
@@ -136,41 +136,50 @@
         </div>
 
       </div>
-      <div style="font-size:.7rem;color:#065f46;font-weight:700;white-space:nowrap;margin-left:16px;">✅ Complete</div>
+      <div style="font-size:.7rem;color:#065f46;font-weight:700;white-space:nowrap;margin-left:16px;">Assessment Complete</div>
     </div>
 
-    <!-- AGENCY TIMELINE — agency_rep only -->
-    <div data-visible-to="agency_rep" style="background:#f0fdf4; border-bottom:1px solid #86efac; padding:10px 24px; display:flex; align-items:center; gap:0; flex-wrap:wrap;">
-      <div style="font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#166534; white-space:nowrap; margin-right:20px;">Your Assessment:</div>
-      <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap;">
+    <!-- AGENCY ASSESSMENT PROGRESS TRACKER — agency_rep only -->
+    <div data-visible-to="agency_rep" style="background:#f0fdf4; border-bottom:1px solid #86efac; padding:12px 24px;">
+      <div style="font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#166534; margin-bottom:10px;">Your Assessment Progress</div>
+      <div style="display:flex; align-items:center; gap:0; overflow-x:auto;">
 
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">📅</span>
+        <!-- Step 1: Questionnaire — complete -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;cursor:pointer;" onclick="showSection('self-assessment',this)">
+          <span style="width:20px;height:20px;border-radius:50%;background:#10b981;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">Assessment Start</div>
-            <div id="tl-start-date" style="font-size:.8rem;font-weight:800;color:#065f46;">Jan 6, 2026</div>
+            <div style="font-size:.68rem;font-weight:700;color:#065f46;">Questionnaire</div>
+            <div style="font-size:.6rem;color:#059669;">Submitted Jan 6</div>
           </div>
         </div>
+        <div style="width:28px;height:2px;background:#10b981;flex-shrink:0;"></div>
 
-        <div style="width:32px;height:2px;background:#10b981;"></div>
-
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">📋</span>
+        <!-- Step 2: Evidence Collection — complete -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;cursor:pointer;" onclick="showSection('evidence',this)">
+          <span style="width:20px;height:20px;border-radius:50%;background:#10b981;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">Evidence Submitted</div>
-            <div id="tl-evidence-date" style="font-size:.8rem;font-weight:800;color:#065f46;">Jan 27, 2026</div>
-            <div id="tl-evidence-status" style="font-size:.6rem;background:#10b981;color:#fff;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;">✓ Complete</div>
+            <div style="font-size:.68rem;font-weight:700;color:#065f46;">Evidence Collection</div>
+            <div id="tl-evidence-date" style="font-size:.6rem;color:#059669;">Submitted Jan 27</div>
           </div>
         </div>
+        <div style="width:28px;height:2px;background:#10b981;flex-shrink:0;"></div>
 
-        <div style="width:32px;height:2px;background:#10b981;"></div>
-
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:#d1fae5;border:1.5px solid #10b981;border-radius:8px;white-space:nowrap;">
-          <span style="font-size:1rem;">🏁</span>
+        <!-- Step 3: Under Assessment — complete -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;">
+          <span style="width:20px;height:20px;border-radius:50%;background:#10b981;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</span>
           <div>
-            <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#065f46;">SAR Delivered</div>
-            <div id="tl-completion-date" style="font-size:.8rem;font-weight:800;color:#065f46;">Mar 14, 2026</div>
-            <div style="font-size:.6rem;background:#10b981;color:#fff;padding:1px 5px;border-radius:8px;display:inline-block;margin-top:2px;">✅ Assessment Complete</div>
+            <div style="font-size:.68rem;font-weight:700;color:#065f46;">Under Assessment</div>
+            <div style="font-size:.6rem;color:#059669;">Completed</div>
+          </div>
+        </div>
+        <div style="width:28px;height:2px;background:#10b981;flex-shrink:0;"></div>
+
+        <!-- Step 4: SAR Delivery — complete -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:#d1fae5;border:1.5px solid #10b981;white-space:nowrap;">
+          <span style="width:20px;height:20px;border-radius:50%;background:#10b981;color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</span>
+          <div>
+            <div style="font-size:.68rem;font-weight:700;color:#065f46;">SAR Delivered</div>
+            <div id="tl-completion-date" style="font-size:.6rem;color:#059669;">Mar 14, 2026</div>
           </div>
         </div>
 
