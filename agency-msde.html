@@ -601,10 +601,35 @@
         <div class="tab-content" id="t2-xwalk">
           <div class="card">
             <div class="card-title">Framework Crosswalk &#8212; NIST CSF 2.0 to NIST SP 800-53 Rev 5</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+              <span style="font-size:.72rem;font-weight:700;color:#475569;">Show frameworks:</span>
+              <label style="font-size:.72rem;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" checked onchange="toggleXwalkCol('col-n53',this.checked)"> NIST 800-53</label>
+              <label style="font-size:.72rem;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" checked onchange="toggleXwalkCol('col-cis',this.checked)"> CIS v8</label>
+              <label style="font-size:.72rem;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" checked onchange="toggleXwalkCol('col-hipaa',this.checked)"> HIPAA</label>
+              <label style="font-size:.72rem;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" checked onchange="toggleXwalkCol('col-irs',this.checked)"> IRS 1075</label>
+            </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>CSF Subcategory</th><th>CSF Function</th><th>NIST 800-53 Controls</th><th>CIS Controls v8</th><th>Applicability</th></tr></thead>
+                <thead><tr><th>CSF Control</th><th>Function</th><th class="col-n53">NIST SP 800-53 Rev 5</th><th class="col-cis">CIS v8</th><th class="col-hipaa">HIPAA Security Rule</th><th class="col-irs">IRS Pub 1075</th><th>Applicability</th></tr></thead>
                 <tbody id="s2-xwalk-table"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- CMS ARC-AMPE Crosswalk Card -->
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title">CMS ARC-AMPE Controls Crosswalk</div>
+            <div style="font-size:.78rem;color:#64748b;margin-bottom:12px;">Maps NIST CSF 2.0 subcategories to CMS Acceptable Risk Safeguards (ARC) and AMPE control families — applicable to agencies handling Medicaid/Medicare data under CMS oversight.</div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>CSF Control</th>
+                    <th>Function</th>
+                    <th>CMS ARC-AMPE Control Family</th>
+                    <th>CMS Control References</th>
+                  </tr>
+                </thead>
+                <tbody id="s2-cms-xwalk"></tbody>
               </table>
             </div>
           </div>
@@ -1217,11 +1242,124 @@
       const el = document.getElementById('iq-personnel'); if(el) el.textContent = personnel.size;
     }
 
+    function toggleXwalkCol(cls, show) {
+      document.querySelectorAll('.' + cls).forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    }
+
     function buildXwalk() {
       const tb = document.getElementById('s2-xwalk-table'); if(!tb) return;
+
+      const HIPAA_MAP = {
+        'GV.OC-01':'§164.308(a)(1) — Security Mgmt Process',
+        'GV.RM-01':'§164.308(a)(1)(ii)(A) — Risk Analysis',
+        'GV.PO-01':'§164.308(a)(1) — Policies & Procedures',
+        'GV.SC-01':'§164.308(a)(4) — Business Associate Contracts',
+        'GV.RR-01':'§164.308(a)(2) — Assigned Security Responsibility',
+        'ID.AM-01':'§164.310(d)(1) — Device & Media Controls',
+        'ID.AM-02':'§164.310(d)(1) — Device & Media Controls',
+        'ID.RA-01':'§164.308(a)(1)(ii)(A) — Risk Analysis',
+        'ID.RA-05':'§164.308(a)(1)(ii)(B) — Risk Management',
+        'PR.AA-01':'§164.312(a)(1) — Access Control',
+        'PR.AA-05':'§164.312(a)(2)(i) — Unique User ID',
+        'PR.DS-01':'§164.312(a)(2)(iv) — Encryption',
+        'PR.AT-01':'§164.308(a)(5) — Security Awareness',
+        'PR.PS-01':'§164.312(b) — Audit Controls',
+        'DE.AE-02':'§164.308(a)(1)(ii)(D) — Activity Review',
+        'DE.CM-01':'§164.312(b) — Audit Controls',
+        'DE.CM-03':'§164.312(b) — Audit Controls',
+        'RS.MA-01':'§164.308(a)(6) — Incident Procedures',
+        'RS.AN-01':'§164.308(a)(6)(ii) — Response & Reporting',
+        'RS.MI-01':'§164.308(a)(6)(ii) — Response & Reporting',
+        'RC.RP-01':'§164.308(a)(7) — Contingency Plan',
+        'RC.RP-03':'§164.308(a)(7)(ii)(A) — Data Backup',
+        'RC.CO-03':'§164.308(a)(7) — Contingency Plan'
+      };
+
+      const IRS_MAP = {
+        'GV.OC-01':'§4.1 — Agency Safeguard Requirements',
+        'GV.RM-01':'§4.2 — Risk Assessment',
+        'GV.PO-01':'§4.3 — Security Plan',
+        'GV.SC-01':'§5.4 — Third Party Disclosure',
+        'GV.RR-01':'§4.1 — Roles & Responsibilities',
+        'ID.AM-01':'§9.3 — Media Protection',
+        'ID.AM-02':'§9.3 — Configuration Management',
+        'ID.RA-01':'§4.2 — Vulnerability Scanning',
+        'ID.RA-05':'§4.2 — Risk Assessment',
+        'PR.AA-01':'§10.2 — Access Controls',
+        'PR.AA-05':'§10.3 — Least Privilege',
+        'PR.DS-01':'§6.1 — Data Encryption at Rest',
+        'PR.AT-01':'§4.5 — Security Awareness',
+        'PR.PS-01':'§9.1 — Configuration Baselines',
+        'DE.AE-02':'§9.5 — Audit & Accountability',
+        'DE.CM-01':'§9.5 — System Monitoring',
+        'DE.CM-03':'§9.5 — Audit Logging',
+        'RS.MA-01':'§7.1 — Incident Response',
+        'RS.AN-01':'§7.2 — Incident Analysis',
+        'RS.MI-01':'§7.3 — Containment & Eradication',
+        'RC.RP-01':'§8.1 — Contingency Planning',
+        'RC.RP-03':'§8.2 — Backup & Recovery',
+        'RC.CO-03':'§7.1 — Incident Reporting'
+      };
+
+      const CMS_MAP = [
+        { id:'GV.OC-01', fn:'GOVERN',   family:'Risk Management',                cms:'ARC-1, ARC-2' },
+        { id:'GV.RM-01', fn:'GOVERN',   family:'Risk Assessment',                cms:'RA-1, RA-3' },
+        { id:'GV.PO-01', fn:'GOVERN',   family:'Planning',                       cms:'PL-1, PL-2' },
+        { id:'GV.SC-01', fn:'GOVERN',   family:'System & Services Acquisition',  cms:'SA-9, SR-2' },
+        { id:'GV.RR-01', fn:'GOVERN',   family:'Personnel Security',             cms:'PS-2, PM-2' },
+        { id:'ID.AM-01', fn:'IDENTIFY', family:'Configuration Management',       cms:'CM-8, PM-5' },
+        { id:'ID.AM-02', fn:'IDENTIFY', family:'Configuration Management',       cms:'CM-8, CM-11' },
+        { id:'ID.RA-01', fn:'IDENTIFY', family:'Risk Assessment',                cms:'RA-3, RA-5' },
+        { id:'ID.RA-05', fn:'IDENTIFY', family:'Risk Assessment',                cms:'RA-3, RA-9' },
+        { id:'PR.AA-01', fn:'PROTECT',  family:'Access Control',                 cms:'AC-2, IA-2, IA-5' },
+        { id:'PR.AA-05', fn:'PROTECT',  family:'Access Control',                 cms:'AC-6, AC-17' },
+        { id:'PR.DS-01', fn:'PROTECT',  family:'System & Communications Prot.',  cms:'SC-28, MP-5' },
+        { id:'PR.AT-01', fn:'PROTECT',  family:'Awareness & Training',           cms:'AT-2, AT-3' },
+        { id:'PR.PS-01', fn:'PROTECT',  family:'Configuration Management',       cms:'CM-2, CM-6, CM-7' },
+        { id:'DE.AE-02', fn:'DETECT',   family:'Audit & Accountability',         cms:'AU-6, SI-4' },
+        { id:'DE.CM-01', fn:'DETECT',   family:'System & Info Integrity',        cms:'SI-4, IR-5' },
+        { id:'DE.CM-03', fn:'DETECT',   family:'Audit & Accountability',         cms:'AU-2, AU-12' },
+        { id:'RS.MA-01', fn:'RESPOND',  family:'Incident Response',              cms:'IR-4, IR-6' },
+        { id:'RS.AN-01', fn:'RESPOND',  family:'Incident Response',              cms:'IR-4, AU-6' },
+        { id:'RS.MI-01', fn:'RESPOND',  family:'Incident Response',              cms:'IR-4, SC-7' },
+        { id:'RC.RP-01', fn:'RECOVER',  family:'Contingency Planning',           cms:'CP-10, IR-4' },
+        { id:'RC.RP-03', fn:'RECOVER',  family:'Contingency Planning',           cms:'CP-9, CP-10' },
+        { id:'RC.CO-03', fn:'RECOVER',  family:'Incident Response',              cms:'IR-7, CP-2' }
+      ];
+
       const rows = [];
-      SRTM_DATA.forEach(domain => { domain.controls.forEach(ctrl => { rows.push(`<tr><td><code>${ctrl.id}</code></td><td><span class="fn-tag ${fnMap[domain.fn]}">${domain.fn}</span></td><td>${ctrl.n53||'\u2014'}</td><td>${ctrl.cis||'\u2014'}</td><td><span class="badge badge-green">Applicable</span></td></tr>`); }); });
+      SRTM_DATA.forEach(domain => {
+        domain.controls.forEach(ctrl => {
+          const hipaa = HIPAA_MAP[ctrl.id] || '—';
+          const irs   = IRS_MAP[ctrl.id]   || '—';
+          rows.push(`<tr>
+        <td><code style="font-size:.72rem;">${ctrl.id}</code><div style="font-size:.68rem;color:#64748b;margin-top:2px;">${ctrl.name||''}</div></td>
+        <td><span class="fn-tag ${fnMap[domain.fn]}">${domain.fn}</span></td>
+        <td class="col-n53" style="font-size:.72rem;">${ctrl.n53||'—'}</td>
+        <td class="col-cis" style="font-size:.72rem;">${ctrl.cis||'—'}</td>
+        <td class="col-hipaa" style="font-size:.7rem;color:#1d4ed8;">${hipaa}</td>
+        <td class="col-irs" style="font-size:.7rem;color:#92400e;">${irs}</td>
+        <td><span class="badge badge-green">Applicable</span></td>
+      </tr>`);
+        });
+      });
       tb.innerHTML = rows.join('');
+
+      // Build CMS ARC-AMPE card
+      const cmsContainer = document.getElementById('s2-cms-xwalk');
+      if (cmsContainer) {
+        const fnColors = { GOVERN:'fn-govern', IDENTIFY:'fn-identify', PROTECT:'fn-protect', DETECT:'fn-detect', RESPOND:'fn-respond', RECOVER:'fn-recover' };
+        cmsContainer.innerHTML = CMS_MAP.map(r =>
+          `<tr>
+        <td><code style="font-size:.72rem;">${r.id}</code></td>
+        <td><span class="fn-tag ${fnColors[r.fn]||''}">${r.fn}</span></td>
+        <td style="font-size:.75rem;">${r.family}</td>
+        <td style="font-size:.75rem;font-weight:600;color:#7c3aed;">${r.cms}</td>
+      </tr>`
+        ).join('');
+      }
     }
 
     function updateSummaryCharts() {
