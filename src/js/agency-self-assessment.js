@@ -629,6 +629,12 @@
   };
 
   window.saveSelfAssessmentDraft = function () {
+    // Mark current answers as a draft so they survive page reloads
+    var answers = loadAnswers();
+    if (!answers._submitted) {
+      answers._draftSavedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    }
     if (typeof notify === 'function') notify('💾 Draft saved — your responses are preserved and will be here when you return.');
   };
 
@@ -643,10 +649,80 @@
     if (remaining > 0) {
       if (typeof notify === 'function') notify('⚠️ ' + remaining + ' control' + (remaining > 1 ? 's' : '') + ' still have no responses. Submitting your current responses...');
     }
+
+    // Persist submitted flag alongside answers
+    var submittedData = answers;
+    submittedData._submitted = true;
+    submittedData._submittedAt = new Date().toISOString();
+    submittedData._submittedBy = (function () {
+      try { var s = JSON.parse(localStorage.getItem('anchor_session') || '{}'); return s.name || s.email || 'Agency Rep'; } catch(e) { return 'Agency Rep'; }
+    })();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(submittedData));
+
     setTimeout(function () {
       if (typeof notify === 'function') notify('✅ Self-assessment submitted to the Assurit assessment team. Your assessor will review your responses and may follow up with additional questions.');
+
+      // Lock the form to prevent re-submission
+      var section = document.getElementById('self-assessment');
+      if (section) {
+        // Disable all textareas and file inputs
+        section.querySelectorAll('textarea, input[type="file"]').forEach(function (el) {
+          el.disabled = true;
+          el.style.opacity = '0.65';
+          el.style.pointerEvents = 'none';
+        });
+        // Replace submit/draft buttons with locked indicator
+        section.querySelectorAll('button').forEach(function (btn) {
+          if (btn.textContent.indexOf('Submit') !== -1 || btn.textContent.indexOf('Save Draft') !== -1) {
+            btn.disabled = true;
+            btn.style.opacity = '0.45';
+            btn.title = 'Self-assessment already submitted';
+          }
+        });
+        // Insert success banner at top of section if not already present
+        if (!section.querySelector('#sa-submitted-banner')) {
+          var banner = document.createElement('div');
+          banner.id = 'sa-submitted-banner';
+          banner.style.cssText = 'background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:10px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;';
+          banner.innerHTML = '<span style="font-size:1.4rem;">✅</span><div><div style="font-size:.88rem;font-weight:700;color:#065f46;">Self-Assessment Submitted</div><div style="font-size:.76rem;color:#047857;margin-top:2px;">Your responses have been submitted to the Assurit assessment team. The form is now locked. Contact your assessor if you need to make changes.</div></div>';
+          section.insertBefore(banner, section.firstChild);
+        }
+      }
     }, remaining > 0 ? 1600 : 0);
   };
+
+  // Restore submitted state on load (locks form if already submitted)
+  function restoreSubmittedState() {
+    try {
+      var stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      if (!stored._submitted) return;
+      var section = document.getElementById('self-assessment');
+      if (!section) return;
+      // Wait briefly for renderSection to finish
+      setTimeout(function () {
+        section.querySelectorAll('textarea, input[type="file"]').forEach(function (el) {
+          el.disabled = true;
+          el.style.opacity = '0.65';
+          el.style.pointerEvents = 'none';
+        });
+        section.querySelectorAll('button').forEach(function (btn) {
+          if (btn.textContent.indexOf('Submit') !== -1 || btn.textContent.indexOf('Save Draft') !== -1) {
+            btn.disabled = true;
+            btn.style.opacity = '0.45';
+            btn.title = 'Self-assessment already submitted';
+          }
+        });
+        if (!section.querySelector('#sa-submitted-banner')) {
+          var banner = document.createElement('div');
+          banner.id = 'sa-submitted-banner';
+          banner.style.cssText = 'background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:10px;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;';
+          var ts = stored._submittedAt ? ' on ' + new Date(stored._submittedAt).toLocaleString() : '';
+          banner.innerHTML = '<span style="font-size:1.4rem;">✅</span><div><div style="font-size:.88rem;font-weight:700;color:#065f46;">Self-Assessment Submitted</div><div style="font-size:.76rem;color:#047857;margin-top:2px;">Submitted by ' + (stored._submittedBy || 'Agency Rep') + ts + '. The form is locked. Contact your assessor if you need to make changes.</div></div>';
+          section.insertBefore(banner, section.firstChild);
+        }
+      }, 100);
+    } catch (e) {}
+  }
 
   // ── Evidence Section — Agency Rep View ───────────────────────────────────
   // Replaces the assessor-side evidence section with a clean artifact
@@ -1775,6 +1851,7 @@
   // ── Init ──────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
     renderSection();
+    restoreSubmittedState();
     setupEvidenceSection();
     setupAssessorSubmissionsView();
     setupLiveEvidenceTracker();

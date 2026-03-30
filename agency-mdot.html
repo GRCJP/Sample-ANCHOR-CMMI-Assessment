@@ -1327,7 +1327,55 @@
       });
       buildIQ();
       buildXwalk();
+      restoreSrtmVisualState();
       updateSrtmScoring();
+    }
+
+    // Restore select dropdown values and visual classes from srtmState after DOM is built
+    function restoreSrtmVisualState() {
+      Object.keys(srtmState).forEach(function(ctrlId) {
+        const st = srtmState[ctrlId];
+        if (!st) return;
+        const safe = ctrlId.replace(/\./g,'-');
+        const ctrlEl = document.getElementById('srtm-' + safe);
+        const pill   = document.getElementById('spill-' + safe);
+
+        // Restore overall result select
+        if (st.result) {
+          const resultSel = ctrlEl && ctrlEl.querySelector('select[onchange*="updateCtrlResult"]');
+          if (resultSel) resultSel.value = st.result;
+          if (ctrlEl) { ctrlEl.classList.remove('met','not-met','na','unscored'); ctrlEl.classList.add(st.result==='MET'?'met':st.result==='NOT MET'?'not-met':st.result==='N/A'?'na':'unscored'); }
+          if (pill) { pill.className='srtm-pill '+(st.result==='MET'?'srtm-pill-met':st.result==='NOT MET'?'srtm-pill-notmet':st.result==='N/A'?'srtm-pill-na':'srtm-pill-unscored'); pill.textContent=st.result; }
+        }
+
+        // Restore CMMI select
+        if (st.cmmi !== '' && st.cmmi !== undefined) {
+          const cmmiSel = ctrlEl && ctrlEl.querySelector('select[onchange*="updateCtrlCmmi"]');
+          if (cmmiSel) cmmiSel.value = String(st.cmmi);
+        }
+
+        // Restore per-procedure selects and textareas
+        if (st.procs) {
+          Object.keys(st.procs).forEach(function(procId) {
+            const ps = st.procs[procId];
+            if (!ps) return;
+            // Find the proc div by its select onchange attr containing the procId
+            const procDivs = ctrlEl ? ctrlEl.querySelectorAll('.srtm-proc') : [];
+            procDivs.forEach(function(pd) {
+              const implSel = pd.querySelector('select[onchange*="\'impl\'"]');
+              if (implSel && implSel.getAttribute('onchange').indexOf("'" + procId + "'") !== -1) {
+                if (ps.impl) implSel.value = ps.impl;
+                const resSel = pd.querySelector('select[onchange*="\'result\'"]');
+                if (resSel && ps.result) resSel.value = ps.result;
+                const obsTa = pd.querySelector('textarea[onchange*="\'obs\'"]');
+                if (obsTa && ps.obs) obsTa.value = ps.obs;
+                const evIn = pd.querySelector('input[onchange*="\'evidence\'"]');
+                if (evIn && ps.evidence) evIn.value = ps.evidence;
+              }
+            });
+          });
+        }
+      });
     }
 
     function buildSrtmCtrl(ctrl, fn) {

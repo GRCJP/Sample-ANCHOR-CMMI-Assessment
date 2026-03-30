@@ -1620,6 +1620,10 @@
           allAgencies[key].stage = 'Intake & Scoping';
           allAgencies[key].progress = '0%';
         }
+        // Overlay stage and progress from intake submission if present
+        if(!baseIsComplete && stored.stage) allAgencies[key].stage = stored.stage;
+        if(!baseIsComplete && stored.progress) allAgencies[key].progress = stored.progress;
+        if(!baseIsComplete && stored.status && stored.status !== 'Created' && stored.status !== 'Updated') allAgencies[key].status = stored.status;
       });
 
       return allAgencies;
@@ -2304,23 +2308,17 @@
     }
     
     function updateOverviewStats() {
+      // Statewide stats (stat-complete, stat-total, etc.) represent the full
+      // Maryland program (90 agencies) and are set in HTML — do not overwrite them
+      // with 3-agency demo cohort numbers.
+      // Update only cohort-specific elements if they exist.
       const stats = calculateDynamicStats();
-      
-      const elComplete = document.getElementById('stat-complete');
-      const elTotal = document.getElementById('stat-total');
-      const elPct = document.getElementById('stat-pct');
-      const elProgress = document.getElementById('stat-progress');
-      const elScheduled = document.getElementById('stat-scheduled');
-      const elUnresponsive = document.getElementById('stat-unresponsive');
-      const elMaturity = document.getElementById('stat-maturity');
-      
-      if (elComplete) elComplete.textContent = stats.complete;
-      if (elTotal) elTotal.textContent = stats.total;
-      if (elPct) elPct.textContent = stats.pct;
-      if (elProgress) elProgress.textContent = stats.inProgress;
-      if (elScheduled) elScheduled.textContent = stats.scheduled;
-      if (elUnresponsive) elUnresponsive.textContent = stats.unresponsive;
-      if (elMaturity) elMaturity.textContent = stats.avgMaturity;
+      const elCohortComplete   = document.getElementById('cohort-stat-complete');
+      const elCohortInProgress = document.getElementById('cohort-stat-progress');
+      const elCohortScheduled  = document.getElementById('cohort-stat-scheduled');
+      if (elCohortComplete)   elCohortComplete.textContent   = stats.complete;
+      if (elCohortInProgress) elCohortInProgress.textContent = stats.inProgress;
+      if (elCohortScheduled)  elCohortScheduled.textContent  = stats.scheduled;
     }
 
     // ---- COMPLIANCE DASHBOARD ----
