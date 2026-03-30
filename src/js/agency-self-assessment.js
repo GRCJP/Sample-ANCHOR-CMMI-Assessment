@@ -1006,6 +1006,281 @@
     if (typeof notify === 'function') notify(labels[status] || 'Review status updated.');
   };
 
+  // ── Live Selectable Evidence Tracker (Assessor) ──────────────────────────
+  // Replaces the hardcoded static Evidence Tracker table with a live,
+  // checkbox-selectable version driven by CONTROLS + localStorage.
+  // Only runs for assessor / lead_assessor / admin roles.
+
+  // Maps control IDs to the legacy E-NNN item numbers for continuity
+  const EV_ITEM_MAP = {
+    'GV.OC-01':'E-001','GV.RM-01':'E-002','GV.RR-01':'E-003','GV.PO-01':'E-004',
+    'GV.SC-01':'E-005','ID.AM-01':'E-006','ID.AM-02':'E-007','ID.RA-01':'E-008',
+    'ID.RA-02':'E-009','PR.AA-01':'E-010','PR.AT-01':'E-011','PR.DS-01':'E-012',
+    'PR.IR-01':'E-013','PR.PS-01':'E-014','DE.CM-01':'E-015','DE.AE-01':'E-016',
+    'RS.MA-01':'E-017','RS.MA-02':'E-018','RC.RP-01':'E-019','RC.RP-02':'E-020'
+  };
+
+  function setupLiveEvidenceTracker() {
+    try {
+      const session = JSON.parse(localStorage.getItem('anchor_session') || '{}');
+      const assessorRoles = ['assessor', 'lead_assessor', 'admin'];
+      if (!session || !assessorRoles.includes(session.role)) return;
+    } catch(e) { return; }
+
+    // Find the Evidence Tracker card
+    var trackerCard = null;
+    document.querySelectorAll('.card').forEach(function(card) {
+      var t = card.querySelector('.card-title');
+      if (t && t.textContent.trim() === 'Evidence Tracker') trackerCard = card;
+    });
+    if (!trackerCard) return;
+
+    renderLiveEvidenceTracker(trackerCard);
+    updateEvidenceLifecycleStats();
+  }
+
+  function renderLiveEvidenceTracker(card) {
+    const answers     = loadAnswers();
+    const reviewKey   = 'anchor_review_' + getAgencySlug();
+    var reviewState   = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+
+    const total      = CONTROLS.length;
+    const submitted  = CONTROLS.filter(function(c) { return answers[c.id] && answers[c.id].evidence; }).length;
+    const accepted   = CONTROLS.filter(function(c) { return reviewState[c.id] === 'accepted'; }).length;
+    const reviewing  = CONTROLS.filter(function(c) { return reviewState[c.id] === 'reviewing'; }).length;
+
+    // Build table rows
+    var rows = CONTROLS.map(function(ctrl) {
+      const d         = answers[ctrl.id] || {};
+      const hasFile   = !!d.evidence;
+      const hasAnswer = d.answers && d.answers.some(function(a){ return a && a.trim(); });
+      const review    = reviewState[ctrl.id] || 'new';
+      const itemNum   = EV_ITEM_MAP[ctrl.id] || '—';
+
+      // Status badge
+      var statusHtml;
+      if (hasFile) {
+        statusHtml = '<span class="badge badge-green">Submitted</span>';
+      } else if (hasAnswer) {
+        statusHtml = '<span class="badge badge-orange">Partial</span>';
+      } else {
+        statusHtml = '<span class="badge" style="background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;">Pending</span>';
+      }
+
+      // Review state badge
+      const rStyles = {
+        accepted:  'background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;',
+        returning: 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+        reviewing: 'background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;',
+        new:       'background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0;'
+      };
+      const rLabel = { accepted:'Accepted', returned:'Returned', reviewing:'Under Review', new:'—' };
+      const rStyle = rStyles[review] || rStyles.new;
+
+      // Action dropdown
+      var actionHtml = hasFile || hasAnswer
+        ? '<select onchange="setEvidenceReview(\'' + ctrl.id + '\',this.value);this.value=\'\';" ' +
+          'style="font-size:.68rem;border:1px solid #d1d5db;border-radius:5px;padding:3px 6px;background:#fff;color:#374151;cursor:pointer;">' +
+          '<option value="">Action…</option>' +
+          '<option value="accepted">✓ Accept</option>' +
+          '<option value="reviewing">⏳ Under Review</option>' +
+          '<option value="returned">↩ Return</option>' +
+          '</select>'
+        : '<span style="font-size:.68rem;color:#d1d5db;">—</span>';
+
+      return '<tr id="evtr-' + ctrl.id.replace(/\./g,'-') + '" data-ctrl="' + ctrl.id + '">' +
+        '<td style="width:28px;padding:8px 6px 8px 14px;">' +
+          '<input type="checkbox" class="ev-row-check" data-ctrl="' + ctrl.id + '" ' +
+          'style="width:14px;height:14px;cursor:pointer;accent-color:#3b82f6;">' +
+        '</td>' +
+        '<td style="white-space:nowrap;font-size:.72rem;font-weight:700;color:#64748b;">' + itemNum + '</td>' +
+        '<td>' +
+          '<div style="display:flex;align-items:center;gap:6px;">' +
+            '<span style="font-size:.62rem;font-weight:800;color:' + ctrl.fnColor + ';background:' + ctrl.fnColor + '12;border:1px solid ' + ctrl.fnColor + '25;padding:1px 6px;border-radius:3px;white-space:nowrap;">' + ctrl.id + '</span>' +
+            '<span style="font-size:.78rem;font-weight:500;color:#1e293b;">' + ctrl.label + '</span>' +
+          '</div>' +
+        '</td>' +
+        '<td><span class="fn-tag fn-' + ctrl.fn.toLowerCase() + '">' + ctrl.fn + '</span></td>' +
+        '<td style="font-size:.72rem;color:#475569;max-width:180px;">' + ctrl.artifact.split('—')[0].trim() + '</td>' +
+        '<td>' + statusHtml + '</td>' +
+        '<td style="font-size:.72rem;color:#475569;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + (d.evidence||'') + '">' +
+          (d.evidence ? d.evidence : '<span style="color:#d1d5db;">—</span>') +
+        '</td>' +
+        '<td>' +
+          '<span style="font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;' + rStyle + '">' + (rLabel[review]||'—') + '</span>' +
+        '</td>' +
+        '<td>' + actionHtml + '</td>' +
+      '</tr>';
+    }).join('');
+
+    card.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
+        '<div class="card-title" style="margin:0;">Evidence Tracker</div>' +
+        '<div style="display:flex;gap:8px;align-items:center;">' +
+          '<span style="font-size:.72rem;color:#64748b;">' + submitted + ' / ' + total + ' submitted &nbsp;·&nbsp; ' + accepted + ' accepted &nbsp;·&nbsp; ' + reviewing + ' under review</span>' +
+          '<button onclick="batchEvidenceAction(\'accepted\')" class="btn btn-outline btn-sm" id="ev-batch-accept" disabled style="font-size:.68rem;opacity:.4;">Accept Selected</button>' +
+          '<button onclick="batchEvidenceAction(\'reviewing\')" class="btn btn-outline btn-sm" id="ev-batch-review" disabled style="font-size:.68rem;opacity:.4;">Under Review</button>' +
+          '<button onclick="batchEvidenceAction(\'returned\')" class="btn btn-outline btn-sm" id="ev-batch-return" disabled style="font-size:.68rem;opacity:.4;">Return Selected</button>' +
+        '</div>' +
+      '</div>' +
+
+      // Select-all banner (hidden until rows checked)
+      '<div id="ev-selection-bar" style="display:none;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:8px 14px;margin-bottom:10px;font-size:.78rem;color:#1d4ed8;display:flex;align-items:center;gap:10px;">' +
+        '<span id="ev-sel-count">0 items selected</span>' +
+        '<button onclick="selectAllEvidence(true)" style="font-size:.72rem;color:#3b82f6;background:none;border:none;cursor:pointer;text-decoration:underline;">Select all ' + total + '</button>' +
+        '<button onclick="selectAllEvidence(false)" style="font-size:.72rem;color:#64748b;background:none;border:none;cursor:pointer;text-decoration:underline;">Clear</button>' +
+      '</div>' +
+
+      '<div class="table-wrap">' +
+        '<table>' +
+          '<thead><tr>' +
+            '<th style="width:28px;padding:8px 6px 8px 14px;"><input type="checkbox" id="ev-select-all" onchange="selectAllEvidence(this.checked)" style="width:14px;height:14px;cursor:pointer;accent-color:#3b82f6;"></th>' +
+            '<th style="white-space:nowrap;">#</th>' +
+            '<th>Evidence Item</th>' +
+            '<th>NIST Function</th>' +
+            '<th>Required Artifact</th>' +
+            '<th>Status</th>' +
+            '<th>Filename</th>' +
+            '<th>Review</th>' +
+            '<th>Action</th>' +
+          '</tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+      '</div>' +
+
+      '<div class="btn-row" style="margin-top:12px;">' +
+        '<button class="btn btn-outline btn-sm" onclick="notify(\'Evidence tracker exported: ' + getAgencySlug().toUpperCase() + '_Evidence_Log.xlsx\')">Export Tracker</button>' +
+        '<button class="btn btn-outline btn-sm" onclick="refreshEvidenceTracker()">↻ Refresh</button>' +
+      '</div>';
+
+    // Wire up row checkboxes
+    card.querySelectorAll('.ev-row-check').forEach(function(cb) {
+      cb.addEventListener('change', onEvidenceRowCheck);
+    });
+  }
+
+  function onEvidenceRowCheck() {
+    const checked = document.querySelectorAll('.ev-row-check:checked');
+    const count   = checked.length;
+    const bar     = document.getElementById('ev-selection-bar');
+    const countEl = document.getElementById('ev-sel-count');
+    const btnA    = document.getElementById('ev-batch-accept');
+    const btnR    = document.getElementById('ev-batch-review');
+    const btnRet  = document.getElementById('ev-batch-return');
+
+    if (bar) bar.style.display = count > 0 ? 'flex' : 'none';
+    if (countEl) countEl.textContent = count + ' item' + (count !== 1 ? 's' : '') + ' selected';
+    [btnA, btnR, btnRet].forEach(function(btn) {
+      if (!btn) return;
+      btn.disabled = count === 0;
+      btn.style.opacity = count > 0 ? '1' : '.4';
+    });
+
+    // Sync select-all checkbox state
+    const all = document.querySelectorAll('.ev-row-check');
+    const allCb = document.getElementById('ev-select-all');
+    if (allCb) {
+      allCb.checked = all.length > 0 && checked.length === all.length;
+      allCb.indeterminate = count > 0 && count < all.length;
+    }
+  }
+
+  window.selectAllEvidence = function(checked) {
+    document.querySelectorAll('.ev-row-check').forEach(function(cb) { cb.checked = checked; });
+    onEvidenceRowCheck();
+  };
+
+  window.setEvidenceReview = function(ctrlId, status) {
+    if (!status) return;
+    const reviewKey = 'anchor_review_' + getAgencySlug();
+    var reviewState = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+    reviewState[ctrlId] = status;
+    localStorage.setItem(reviewKey, JSON.stringify(reviewState));
+
+    // Refresh just the review badge + action cell for this row
+    var trackerCard = null;
+    document.querySelectorAll('.card').forEach(function(card) {
+      var t = card.querySelector('.card-title');
+      if (t && t.textContent.trim() === 'Evidence Tracker') trackerCard = card;
+    });
+    if (trackerCard) renderLiveEvidenceTracker(trackerCard);
+
+    // Also refresh the assessor submissions card
+    renderAssessorSubmissionsCard();
+
+    const labels = { accepted:'Submission accepted.', reviewing:'Marked Under Review.', returned:'Returned for revision.' };
+    if (typeof notify === 'function') notify(labels[status] || 'Review status updated.');
+  };
+
+  window.batchEvidenceAction = function(status) {
+    const checked = document.querySelectorAll('.ev-row-check:checked');
+    if (!checked.length) return;
+    const reviewKey = 'anchor_review_' + getAgencySlug();
+    var reviewState = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+    checked.forEach(function(cb) { reviewState[cb.dataset.ctrl] = status; });
+    localStorage.setItem(reviewKey, JSON.stringify(reviewState));
+
+    var trackerCard = null;
+    document.querySelectorAll('.card').forEach(function(card) {
+      var t = card.querySelector('.card-title');
+      if (t && t.textContent.trim() === 'Evidence Tracker') trackerCard = card;
+    });
+    if (trackerCard) renderLiveEvidenceTracker(trackerCard);
+    renderAssessorSubmissionsCard();
+
+    const labels = { accepted:'accepted', reviewing:'marked Under Review', returned:'returned for revision' };
+    if (typeof notify === 'function') notify(checked.length + ' item' + (checked.length !== 1 ? 's' : '') + ' ' + (labels[status] || 'updated') + '.');
+  };
+
+  window.refreshEvidenceTracker = function() {
+    var trackerCard = null;
+    document.querySelectorAll('.card').forEach(function(card) {
+      var t = card.querySelector('.card-title');
+      if (t && t.textContent.trim() === 'Evidence Tracker') trackerCard = card;
+    });
+    if (trackerCard) {
+      renderLiveEvidenceTracker(trackerCard);
+      updateEvidenceLifecycleStats();
+      if (typeof notify === 'function') notify('Evidence tracker refreshed.');
+    }
+  };
+
+  function updateEvidenceLifecycleStats() {
+    const answers    = loadAnswers();
+    const reviewKey  = 'anchor_review_' + getAgencySlug();
+    var reviewState  = {};
+    try { reviewState = JSON.parse(localStorage.getItem(reviewKey)) || {}; } catch(e) {}
+
+    const total     = CONTROLS.length;
+    const submitted = CONTROLS.filter(function(c){ return answers[c.id] && answers[c.id].evidence; }).length;
+    const accepted  = CONTROLS.filter(function(c){ return reviewState[c.id] === 'accepted'; }).length;
+    const pending   = total - submitted;
+
+    // Update the 4 stat cards in evidence section
+    var statCards = (document.getElementById('evidence') || document.body).querySelectorAll('.stat-card');
+    if (statCards.length >= 4) {
+      statCards[0].querySelector('.stat-value') && (statCards[0].querySelector('.stat-value').textContent = total);
+      statCards[1].querySelector('.stat-value') && (statCards[1].querySelector('.stat-value').textContent = submitted);
+      statCards[1].querySelector('.stat-sub')   && (statCards[1].querySelector('.stat-sub').textContent = Math.round(submitted/total*100) + '% received');
+      statCards[2].querySelector('.stat-value') && (statCards[2].querySelector('.stat-value').textContent = pending);
+      statCards[3].querySelector('.stat-value') && (statCards[3].querySelector('.stat-value').textContent = accepted);
+      statCards[3].querySelector('.stat-label') && (statCards[3].querySelector('.stat-label').textContent = 'Accepted');
+      statCards[3].querySelector('.stat-sub')   && (statCards[3].querySelector('.stat-sub').textContent = 'Assessor confirmed');
+    }
+
+    // Update lifecycle progress bar
+    var pctEl = document.querySelector('#evidence [style*="width:38%"]') ||
+                document.querySelector('#evidence .stat-value');
+    var bars = (document.getElementById('evidence') || document.body).querySelectorAll('[style*="height:10px"]');
+    if (bars.length) {
+      var pct = Math.round(submitted / total * 100);
+      bars[0].querySelector('div') && (bars[0].querySelector('div').style.width = pct + '%');
+    }
+  }
+
   // ── CSF Workbook Integration (Assessor) ──────────────────────────────────
   // Injects agency self-assessment responses into the SRTM Assessment Workbook
   // and replaces the blank Interview Questionnaire with actual agency answers.
@@ -1227,6 +1502,7 @@
     renderSection();
     setupEvidenceSection();
     setupAssessorSubmissionsView();
+    setupLiveEvidenceTracker();
     setupAssessorCsfIntegration();
 
     // Agency reps land on self-assessment, not the assessor intake form
