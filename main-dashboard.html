@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anchor Platform | ANCHOR Portfolio Dashboard</title>
   <meta name="description" content="Main portfolio dashboard for 6-agency demo cohort.">
-  <link rel="stylesheet" href="src/css/main.css?v=4">
+  <link rel="stylesheet" href="src/css/main.css?v=6">
   <link rel="stylesheet" href="src/css/components.css?v=4">
   <link rel="stylesheet" href="src/css/accessibility.css?v=4">
   <link rel="stylesheet" href="src/css/master-tracker.css?v=4">
@@ -1533,7 +1533,7 @@
 
   <script>
     const AGENCIES = {
-      mdot:{name:'Maryland Dept. of Transportation (MDOT)', status:'In Progress', stage:'Evidence Collection', progress:'65%'},
+      mdot:{name:'Maryland Dept. of Transportation (MDOT)', status:'Complete', stage:'SAR Delivered', progress:'100%'},
       dpscs:{name:'MD Dept. of Public Safety & Correctional Services', status:'In Progress', stage:'CSF Assessment', progress:'35%'},
       msde:{name:'Maryland State Dept. of Education (MSDE)', status:'Complete', stage:'SAR Delivered', progress:'100%'},
       mdh:{name:'Maryland Department of Health (MDH)', status:'In Progress', stage:'CSF Assessment', progress:'48%'},
@@ -1774,7 +1774,9 @@
 
     function getPod(agencyId) {
       const a = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
-      return a.pod ? 'POD ' + a.pod.toUpperCase() : '—';
+      if (!a.pod) return '—';
+      const pod = a.pod.toUpperCase().replace(/^POD\s+/, '');
+      return 'POD ' + pod;
     }
 
     function getAllAgencies() {
@@ -1865,7 +1867,7 @@
         const intakeBadge = intake==='Submitted' ? 'badge-green' : intake==='Draft' ? 'badge-blue' : intake==='Created' ? 'badge-green' : 'badge-gray';
         return `<tr>
           <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.name}">${a.name}</td>
-          <td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td>
+          <td>${statusBadge(a.status)}</td>
           <td><span class="badge ${intakeBadge}">${intake}</span></td>
           <td>${pod}</td>
           <td style="font-size:.78rem;">${a.stage}</td>

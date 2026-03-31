@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- CSS files -->
-  <link rel="stylesheet" href="src/css/main.css?v=4">
+  <link rel="stylesheet" href="src/css/main.css?v=6">
   <link rel="stylesheet" href="src/css/components.css?v=4">
   <link rel="stylesheet" href="src/css/accessibility.css?v=4">
 
@@ -85,8 +85,8 @@
       <button class="nav-item" onclick="showSection('self-assessment', this)" data-visible-to="agency_rep">Agency Questionnaire</button>
       <button class="nav-item" onclick="showSection('evidence', this)" data-visible-to="admin lead_assessor assessor doit_reviewer agency_rep">Evidence Collection</button>
       <button class="nav-item" onclick="showSection('csf', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">CSF Assessment</button>
-      <button class="nav-item" onclick="showSection('risk', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">Risk &amp; CMMI</button>
-      <button class="nav-item" onclick="showSection('poam', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">POA&amp;M</button>
+      <button class="nav-item" onclick="showSection('risk', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">Findings &amp; Remediation</button>
+      <button class="nav-item" onclick="showSection('poam', this)" data-visible-to="admin lead_assessor assessor doit_reviewer" style="display:none;">POA&amp;M</button>
       <button class="nav-item" onclick="showSection('sar', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">SAR</button>
     </div>
   </nav>
@@ -738,6 +738,11 @@
 
       <!-- RISK & CMMI SCORING SECTION -->
       <section class="section" id="risk" aria-hidden="true">
+        <!-- Findings & Remediation Module Sub-Navigation -->
+        <div style="display:flex;align-items:center;gap:0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:4px;margin-bottom:24px;width:fit-content;">
+          <button onclick="showSection('risk',this)" style="padding:7px 20px;border:none;background:#2563eb;color:#fff;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:700;letter-spacing:.01em;">Risk &amp; CMMI</button>
+          <button onclick="showSection('poam',this)" style="padding:7px 20px;border:none;background:none;color:#475569;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:600;">POA&amp;M</button>
+        </div>
         <div class="page-header">
           <h1>Risk Register &amp; CMMI Scoring &#8212; MDH</h1>
           <p>Identify, analyze, and prioritize risks. Apply CMMI maturity scores across NIST CSF functions and map risks to business impact.</p>
@@ -785,6 +790,11 @@
 
       <!-- POA&M REMEDIATION SECTION -->
       <section class="section" id="poam" aria-hidden="true">
+        <!-- Findings & Remediation Module Sub-Navigation -->
+        <div style="display:flex;align-items:center;gap:0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:4px;margin-bottom:24px;width:fit-content;">
+          <button onclick="showSection('risk',this)" style="padding:7px 20px;border:none;background:none;color:#475569;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:600;">Risk &amp; CMMI</button>
+          <button onclick="showSection('poam',this)" style="padding:7px 20px;border:none;background:#2563eb;color:#fff;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:700;letter-spacing:.01em;">POA&amp;M</button>
+        </div>
         <div class="page-header">
           <h1>Plan of Action &amp; Milestones (POA&amp;M) &#8212; MDH</h1>
           <p>Prioritized remediation plan with assigned owners, timelines, and completion tracking. All items map back to NIST CSF findings.</p>
@@ -1771,6 +1781,95 @@
   </div>
 
   <script>
+    // ── Live SRTM → Risk Section Update ────────────────────────────────────────
+    function updateRiskFromSRTM() {
+      var key = window.AGENCY_KEY || 'msde';
+      var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
+      var entries = Object.entries(srtm);
+      if (entries.length === 0) return; // no data yet
+
+      // Function mapping for CSF 2.0 IDs
+      function csf2fn(id) {
+        if (id.startsWith('GV')) return 'GOVERN';
+        if (id.startsWith('ID')) return 'IDENTIFY';
+        if (id.startsWith('PR')) return 'PROTECT';
+        if (id.startsWith('DE')) return 'DETECT';
+        if (id.startsWith('RS')) return 'RESPOND';
+        if (id.startsWith('RC')) return 'RECOVER';
+        return null;
+      }
+
+      var byFn = {GOVERN:{sum:0,n:0,notMet:0},IDENTIFY:{sum:0,n:0,notMet:0},
+                  PROTECT:{sum:0,n:0,notMet:0},DETECT:{sum:0,n:0,notMet:0},
+                  RESPOND:{sum:0,n:0,notMet:0},RECOVER:{sum:0,n:0,notMet:0}};
+      var totalCmmi = 0, totalN = 0, totalNotMet = 0, totalAssessed = entries.length;
+
+      entries.forEach(function(e) {
+        var id = e[0], v = e[1];
+        var fn = csf2fn(id);
+        var cmmiVal = (v.cmmi !== undefined) ? Number(v.cmmi) : 0;
+        var isNotMet = (v.result === 'NOT MET');
+        totalCmmi += cmmiVal; totalN++;
+        if (isNotMet) totalNotMet++;
+        if (fn && byFn[fn]) {
+          byFn[fn].sum += cmmiVal; byFn[fn].n++;
+          if (isNotMet) byFn[fn].notMet++;
+        }
+      });
+
+      var overallCmmi = totalN > 0 ? (totalCmmi / totalN).toFixed(1) : '—';
+      var criticalRisks = totalNotMet; // NOT MET = critical gap
+      var highRisks = Math.round(totalNotMet * 0.6); // subset flagged high severity
+
+      // Update KPI stat cards in #risk section
+      var riskSec = document.getElementById('risk');
+      if (!riskSec) return;
+      var cards = riskSec.querySelectorAll('.stat-card');
+      if (cards[0]) { var sv = cards[0].querySelector('.stat-value'); if(sv) sv.textContent = overallCmmi; }
+      if (cards[1]) { var sv = cards[1].querySelector('.stat-value'); if(sv) sv.textContent = criticalRisks; }
+      if (cards[2]) { var sv = cards[2].querySelector('.stat-value'); if(sv) sv.textContent = highRisks; }
+      if (cards[3]) { var sv = cards[3].querySelector('.stat-value'); if(sv) sv.textContent = totalAssessed; }
+
+      // Update CMMI table rows by matching function label text
+      var fnOrder = ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER'];
+      var rows = riskSec.querySelectorAll('table tbody tr');
+      rows.forEach(function(row) {
+        var fnCell = row.cells[0];
+        var scoreCell = row.cells[2];
+        var gapCell = row.cells[5];
+        if (!fnCell || !scoreCell) return;
+        var fnText = fnCell.innerText.trim().toUpperCase();
+        var fnData = byFn[fnText];
+        if (!fnData || fnData.n === 0) return;
+        var avgScore = (fnData.sum / fnData.n).toFixed(1);
+        scoreCell.textContent = avgScore;
+        // Update gap cell (target 3.0)
+        if (gapCell) {
+          var gap = (Number(avgScore) - 3.0).toFixed(1);
+          gapCell.textContent = gap >= 0 ? '+' + gap : gap;
+          gapCell.style.color = gap >= 0 ? '#16a34a' : '#dc2626';
+        }
+      });
+
+      // Update Overall CMMI display in any additional spans
+      var overallSpans = riskSec.querySelectorAll('.cmmi-overall, #cmmi-overall-val');
+      overallSpans.forEach(function(s) { s.textContent = overallCmmi; });
+    }
+
+    // Hook into showSection to update risk when tab is activated
+    var _origShowSection = window.showSection;
+    window.showSection = function(id, btn) {
+      if (_origShowSection) _origShowSection(id, btn);
+      if (id === 'risk') { setTimeout(updateRiskFromSRTM, 50); }
+    };
+    // Also run on page load if risk is initially active
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('risk') && 
+          document.getElementById('risk').classList.contains('active')) {
+        updateRiskFromSRTM();
+      }
+    });
+
     function generateSarReport() {
       document.getElementById('sar-modal-mdh').style.display = 'block';
       document.body.style.overflow = 'hidden';

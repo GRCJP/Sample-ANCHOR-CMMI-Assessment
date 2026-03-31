@@ -200,8 +200,13 @@ body.has-agency-bar #main-content { margin-top: 142px; min-height: calc(100vh - 
   display: none; 
 }
 
-.section.active { 
-  display: block; 
+.section.active {
+  display: block;
+}
+
+/* All agency sections live outside .content — apply consistent padding */
+#main-content > section.active {
+  padding: 28px;
 }
 
 .page-header { 
