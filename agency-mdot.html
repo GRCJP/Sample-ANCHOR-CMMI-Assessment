@@ -507,12 +507,12 @@
           <div id="srtm-progress-text" style="font-size:.72rem; color:var(--text-muted); margin-top:6px; text-align:right;">0 of 23 controls assessed (0%)</div>
         </div>
 
-        <!-- Out-of-Framework Risk Capture (inline during assessment) -->
+        <!-- Additional Findings (inline during assessment) -->
         <div class="card" data-visible-to="admin lead_assessor assessor" style="border-left:4px solid #f59e0b;margin-bottom:14px;padding:12px 16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
-              <div style="font-size:.78rem;font-weight:700;color:#92400e;margin-bottom:2px;">&#9888; Out-of-Framework Risk Capture</div>
-              <div style="font-size:.74rem;color:#78350f;">Identified a risk that doesn&#39;t map to a CSF subcategory? Log it here — it will appear automatically in Findings &amp; Remediation.</div>
+              <div style="font-size:.78rem;font-weight:700;color:#92400e;margin-bottom:2px;">&#9888; Additional Findings</div>
+              <div style="font-size:.74rem;color:#78350f;">Capture any additional findings identified during assessment — they will appear automatically in Findings &amp; Remediation.</div>
             </div>
             <button onclick="toggleCSFCapture()" style="flex-shrink:0;margin-left:16px;padding:6px 14px;border:1.5px solid #f59e0b;border-radius:6px;background:#fff;color:#92400e;font-size:.76rem;font-weight:700;cursor:pointer;" id="csf-capture-toggle">+ Log Finding</button>
           </div>
@@ -520,7 +520,7 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
               <div style="grid-column:1/-1;">
                 <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">Finding Description *</label>
-                <textarea id="csf-af-desc" rows="2" placeholder="Describe the risk or exposure observed during assessment..." style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;resize:vertical;box-sizing:border-box;background:#fffbeb;"></textarea>
+                <textarea id="csf-af-desc" rows="2" placeholder="Describe the finding or risk identified during assessment..." style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;resize:vertical;box-sizing:border-box;background:#fffbeb;"></textarea>
               </div>
               <div>
                 <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">CSF Function *</label>
@@ -1023,7 +1023,7 @@
           <button onclick="showSection('additional-findings',this)" style="padding:7px 20px;border:none;background:#2563eb;color:#fff;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:700;letter-spacing:.01em;">Additional Findings</button>
         </div>
         <div class="page-header">
-          <h1>Additional &amp; Out-of-Framework Findings &#8212; MDOT</h1>
+          <h1>Additional &amp; Additional Findings &#8212; MDOT</h1>
           <p>Risks identified during assessment that fall outside standard NIST CSF subcategory mappings. Each finding is anchored to a CSF Function, assigned severity and CMMI context &#8212; documented and delivered, not scored.</p>
         </div>
         <div class="anchor-banner" style="margin-bottom:20px;">
@@ -1037,15 +1037,15 @@
         </div>
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <div class="card-title" style="margin:0;">Out-of-Framework Risk Register</div>
+            <div class="card-title" style="margin:0;">Additional Findings Register</div>
             <button class="btn btn-primary btn-sm" data-visible-to="admin lead_assessor assessor" onclick="showAddFindingForm()">+ Add Finding</button>
           </div>
           <div id="af-add-form" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:16px;">
-            <div style="font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:12px;">New Out-of-Framework Finding</div>
+            <div style="font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:12px;">New Additional Finding</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
               <div style="grid-column:1/-1;">
                 <label style="font-size:.75rem;font-weight:700;display:block;margin-bottom:4px;">Finding Description *</label>
-                <textarea id="af-desc" rows="2" placeholder="Describe the risk or exposure identified..." style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:8px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+                <textarea id="af-desc" rows="2" placeholder="Describe the finding or risk identified during assessment..." style="width:100%;border:1px solid #e2e8f0;border-radius:6px;padding:8px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
               </div>
               <div>
                 <label style="font-size:.75rem;font-weight:700;display:block;margin-bottom:4px;">CSF Function *</label>
@@ -2866,7 +2866,7 @@
     // \u2500\u2500 End POA&M Detail Modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500────────────────────────
 
   
-    // Additional Findings — Out-of-Framework Risk Register
+    // Additional Findings — Additional Findings Register
     (function() {
       var STORE = 'anchor_additional_risks_mdot';
       var SEED  = [{"id": "AF-001", "desc": "OT/ICS systems managing transportation infrastructure lack network segmentation from enterprise IT environment", "fn": "PROTECT", "type": "Legacy System", "severity": "Critical", "cmmi": "1", "rec": "Implement OT/IT network segmentation with monitored DMZ; engage ICS-specific security specialist", "status": "Open"}, {"id": "AF-002", "desc": "Third-party traffic management vendors have no formal cybersecurity SLA or security assessment requirements", "fn": "GOVERN", "type": "Vendor Dependency", "severity": "High", "cmmi": "2", "rec": "Establish vendor security assessment program; require cybersecurity SLA in all traffic management contracts", "status": "Open"}, {"id": "AF-003", "desc": "Field operations staff using personal mobile devices to access enterprise systems without MDM enforcement", "fn": "PROTECT", "type": "Shadow IT", "severity": "High", "cmmi": "1", "rec": "Enforce Mobile Device Management (MDM) policy; restrict enterprise access to managed devices only", "status": "Open"}];
@@ -2883,7 +2883,7 @@
         el=document.getElementById("af-critical"); if(el) el.textContent=crit;
         el=document.getElementById("af-high"); if(el) el.textContent=high;
         el=document.getElementById("af-functions"); if(el) el.textContent=fns;
-        if(!findings.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:24px;font-size:.82rem;">No additional findings logged. Use &ldquo;+ Add Finding&rdquo; to document out-of-framework risks.</td></tr>';return;}
+        if(!findings.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:24px;font-size:.82rem;">No additional findings logged. Use &ldquo;+ Add Finding&rdquo; to document additional findings.</td></tr>';return;}
         tbody.innerHTML=findings.map(function(f){
           var cmmiLbl=f.cmmi!=="" ? "CMMI "+f.cmmi+' <span style="font-size:.68rem;color:#94a3b8;">(contextual)</span>' : "&#8212;";
           var sCls=f.status==="Open"?"badge-orange":f.status==="In Remediation"?"badge-blue":"badge-green";
