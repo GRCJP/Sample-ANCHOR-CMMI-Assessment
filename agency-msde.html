@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style id="pre-auth-gate">html{visibility:hidden}</style>
+  <script>document.documentElement.style.visibility="hidden"</script>
   <title>MSDE Assessment | ANCHOR Platform</title>
   <meta name="description" content="Maryland State Department of Education Cybersecurity Assessment">
   <meta name="author" content="ANCHOR Platform">
@@ -11,7 +11,7 @@
   <!-- External dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.0/dist/amazon-cognito-identity.min.js"></script>
   <script src="src/js/aws-auth.js?v=3"></script>
-  <script src="src/js/auth-guard.js?v=4"></script>
+  <script src="src/js/auth-guard.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- CSS files -->
@@ -109,16 +109,17 @@
           <div><strong>ANCHOR Framework &#8212; PRE-ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
         </div>
 
-        <!-- PRE-ASSESS PROGRESS BANNER -->
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px 20px 12px; margin-bottom:14px;">
-          <div style="font-size:.62rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Pre-Assessment Stage Progress</div>
-          <div class="h-stepper" style="margin:0;" id="intake-stepper">
-            <div class="h-step active" id="intake-step-profile"><div class="h-step-circle">1</div><div class="h-step-label">Agency Profile</div></div>
-            <div class="h-step" id="intake-step-environment"><div class="h-step-circle">2</div><div class="h-step-label">IT Environment</div></div>
-            <div class="h-step" id="intake-step-posture"><div class="h-step-circle">3</div><div class="h-step-label">Security Posture</div></div>
-            <div class="h-step" id="intake-step-timeline"><div class="h-step-circle">4</div><div class="h-step-label">Assessment Timeline</div></div>
-          </div>
-        </div>
+        <style>
+        .intake-group { margin-bottom: 20px; }
+        .intake-group-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; margin-bottom: 2px; }
+        .intake-group-header > span { font-size: .7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; }
+        .intake-edit-btn { font-size: .7rem; color: #2563eb; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+        .intake-edit-btn:hover { background: #eff6ff; }
+        .record-row { display: flex; align-items: baseline; padding: 7px 0; border-bottom: 1px solid #f1f5f9; gap: 12px; }
+        .record-row:last-child { border-bottom: none; }
+        .record-label { font-size: .74rem; color: var(--text-muted); min-width: 145px; flex-shrink: 0; }
+        .record-value { font-size: .82rem; color: var(--text); font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        </style>
 
         <div style="display:grid; grid-template-columns:1fr 380px; gap:16px; align-items:start;">
 
@@ -127,153 +128,47 @@
 
             <!-- Agency Profile -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #2563eb; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Agency Profile</div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="grid-column:1/-1;">
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Name</label>
-                  <input type="text" id="sq-agency-name" value="Maryland State Department of Education (MSDE)" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>Agency Profile</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('profile')">&#9998; Edit</button>
                 </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact &#8212; Name &amp; Title</label>
-                  <input type="text" id="sq-contact-name" value="Patricia Hall, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Email</label>
-                  <input type="email" id="sq-primary-email" value="p.hall@msde.maryland.gov" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Phone</label>
-                  <input type="tel" id="sq-contact-phone" value="(410) 767-0100" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Assessment ID</label>
-                  <input type="text" id="sq-agency-id" value="MD-MSDE-2026-006" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('profile', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Profile</button>
-                <span style="font-size:.7rem; color:var(--text-muted);">Auto-saved on change</span>
+                <div class="record-row"><span class="record-label">Agency Name</span><span class="record-value">Maryland State Department of Education (MSDE)</span></div>
+                <div class="record-row"><span class="record-label">Primary Contact</span><span class="record-value">Patricia Hall, CISO</span></div>
+                <div class="record-row"><span class="record-label">Email</span><span class="record-value">p.hall@msde.maryland.gov</span></div>
+                <div class="record-row"><span class="record-label">Phone</span><span class="record-value">(410) 767-0100</span></div>
+                <div class="record-row"><span class="record-label">Assessment ID</span><span class="record-value">MD-MSDE-2026-006</span></div>
               </div>
             </div>
 
             <!-- IT Environment -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #0891b2; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#0891b2; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">IT Environment</div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Agency FTE Count</label>
-                <div class="radio-group" id="rg-fte">
-                  <div class="radio-opt" onclick="scopeSelect(this,'fte',1)">1&#8211;250 FTEs</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'fte',2)">&#9989; 251&#8211;1,000 FTEs</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'fte',3)">1,001&#8211;5,000 FTEs</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'fte',4)">5,000+ FTEs</div>
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>IT Environment</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('environment')">&#9998; Edit</button>
                 </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">IT Complexity Tier</label>
-                <div class="radio-group" id="rg-itc">
-                  <div class="radio-opt" onclick="scopeSelect(this,'itc',-1)">DoIT Managed</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'itc',1)">Low</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'itc',2)">&#9989; Moderate</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'itc',3)">High</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Data Sensitivity / FIPS 199</label>
-                <div class="radio-group" id="rg-data">
-                  <div class="radio-opt" onclick="scopeSelect(this,'data',1)">Standard</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'data',2)">&#9989; Elevated &#8212; PII/PHI</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'data',3)">High &#8212; FTI/CJIS/HIPAA</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Cloud Environments (select all that apply)</label>
-                <div class="radio-group">
-                  <div class="radio-opt" onclick="selectOpt(this)">AWS GovCloud</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; Azure Government</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; Google Cloud</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">None</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">OT/ICS Systems</label>
-                <div class="radio-group">
-                  <div class="radio-opt" onclick="selectOpt(this)">Yes &#8212; limited interfaces</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">Yes &#8212; full OT environment</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; No</div>
-                </div>
-              </div>
-
-              <div>
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Sensitive Data Types</label>
-                <div class="radio-group">
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; PII</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; Financial</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">PHI/HIPAA</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">CJIS</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">FTI</div>
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('environment', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save IT Environment</button>
+                <div class="record-row"><span class="record-label">FTE Tier</span><span class="record-value">251&#8211;1,000 FTEs <span class="badge badge-blue">2 pts</span></span></div>
+                <div class="record-row"><span class="record-label">IT Complexity</span><span class="record-value">Moderate <span class="badge badge-blue">2 pts</span></span></div>
+                <div class="record-row"><span class="record-label">Data Sensitivity</span><span class="record-value">Elevated &#8212; PII/PHI <span class="badge badge-orange">2 pts</span></span></div>
+                <div class="record-row"><span class="record-label">Cloud Environments</span><span class="record-value"><span class="badge badge-blue">Azure Government</span> <span class="badge badge-blue">Google Cloud</span></span></div>
+                <div class="record-row"><span class="record-label">OT/ICS</span><span class="record-value">No OT/ICS</span></div>
+                <div class="record-row"><span class="record-label">Data Types</span><span class="record-value"><span class="badge badge-gray">PII</span> <span class="badge badge-gray">Financial</span></span></div>
               </div>
             </div>
 
             <!-- Security Posture -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #7c3aed; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Security Posture</div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Previous Assessment</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>Never assessed</option>
-                    <option selected>1-2 years ago</option>
-                    <option>Within the past year</option>
-                  </select>
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>Security Posture</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('posture')">&#9998; Edit</button>
                 </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">MFA Coverage</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>Not deployed</option>
-                    <option selected>Partial &#8212; some users</option>
-                    <option>All users</option>
-                    <option>All users + phishing-resistant</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">SIEM Deployment</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option selected>No SIEM deployed</option>
-                    <option>Partial deployment</option>
-                    <option>Fully deployed</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">IR Plan Status</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>No plan</option>
-                    <option selected>Plan exists, not recently tested</option>
-                    <option>Plan tested within 12 months</option>
-                  </select>
-                </div>
-                <div style="grid-column:1/-1;">
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Self-Assessed CMMI Level</label>
-                  <div class="radio-group">
-                    <div class="radio-opt" onclick="selectOpt(this)">0 &#8212; Nonexistent</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">1 &#8212; Performed</div>
-                    <div class="radio-opt selected" onclick="selectOpt(this)">2 &#8212; Managed</div>
-                    <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; 3 &#8212; Defined</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">4 &#8212; Measured</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">5 &#8212; Optimized</div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('posture', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Security Posture</button>
+                <div class="record-row"><span class="record-label">Previous Assessment</span><span class="record-value">1&#8211;2 years ago</span></div>
+                <div class="record-row"><span class="record-label">MFA Coverage</span><span class="record-value">Partial &#8212; some users</span></div>
+                <div class="record-row"><span class="record-label">SIEM Deployment</span><span class="record-value">No SIEM deployed <span class="badge badge-red">Not deployed</span></span></div>
+                <div class="record-row"><span class="record-label">IR Plan</span><span class="record-value">Exists, not recently tested</span></div>
+                <div class="record-row"><span class="record-label">Self-Assessed Maturity</span><span class="record-value">Level 3 &#8212; Defined</span></div>
               </div>
             </div>
 
@@ -313,30 +208,26 @@
             </div>
 
             <!-- Assessment Assignment -->
-            <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
-              <div style="font-size:.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Assessment Timeline</div>
-              <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Assessment Wave</td><td style="padding:5px 4px;"><select id="sq-wave" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Wave 1 &#8212; Q1 2026</option><option>Wave 2 &#8212; Q2 2026</option><option>Wave 3 &#8212; Q1&#8211;Q2 2027</option><option>Wave 4 &#8212; Q3&#8211;Q4 2027</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Pod Assignment</td><td style="padding:5px 4px;"><select id="sq-pod" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>POD XL</option><option>POD LARGE</option><option selected>POD MEDIUM</option><option>POD SMALL</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Lead Assessor</td><td style="padding:5px 4px;"><select id="sq-assessor" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>J. Williams</option><option selected>S. Patel</option><option>R. Okafor</option><option>T. Adams</option><option>M. Chen</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Team Size</td><td style="padding:5px 4px;"><select id="sq-teamsize" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Large (6&#8211;8 assessors)</option><option selected>Medium (3&#8211;4 assessors)</option><option>Small (2&#8211;3 assessors)</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Confirmed Start</td><td style="padding:5px 4px;"><input id="sq-start" type="date" value="2026-02-17" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Confirmed End</td><td style="padding:5px 4px;"><input id="sq-end" type="date" value="2026-03-31" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Executive Branch</td><td style="padding:5px 4px;"><select id="sq-execbranch" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
-                  <tr><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Maturity Group</td><td style="padding:5px 4px;"><select id="sq-matgroup" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0&#8211;1.4)</option><option>Group B (1.5&#8211;2.5)</option><option selected>Group C (2.6&#8211;3.4)</option><option>Group D (3.5&#8211;4.4)</option><option>Group E (4.5&#8211;5.0)</option></select></td></tr>
-                </tbody>
-              </table>
-              <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('timeline', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Timeline</button>
+            <div class="intake-group" style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04); margin-top:14px; margin-bottom:0;">
+              <div class="intake-group-header">
+                <span>Assessment Assignment</span>
+                <button class="intake-edit-btn" onclick="openEditModal('timeline')">&#9998; Edit</button>
               </div>
+              <div class="record-row"><span class="record-label">Wave</span><span class="record-value">Wave 1 &#8212; Q1 2026</span></div>
+              <div class="record-row"><span class="record-label">Pod</span><span class="record-value">POD MEDIUM</span></div>
+              <div class="record-row"><span class="record-label">Lead Assessor</span><span class="record-value">S. Patel</span></div>
+              <div class="record-row"><span class="record-label">Team Size</span><span class="record-value">Medium (3&#8211;4 assessors)</span></div>
+              <div class="record-row"><span class="record-label">Start Date</span><span class="record-value">Feb 17, 2026</span></div>
+              <div class="record-row"><span class="record-label">End Date</span><span class="record-value">Mar 31, 2026</span></div>
+              <div class="record-row"><span class="record-label">Maturity Group</span><span class="record-value">Group C (2.6&#8211;3.4)</span></div>
             </div>
 
-            <!-- Send Kick-Off -->
-            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-left:4px solid #2563eb; border-radius:8px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
-              <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Send Kick-Off Package</div>
-              <div style="font-size:.75rem; color:#3b82f6; margin-bottom:12px;">Reviews all data and timeline. Confirm to save and send to agency contact.</div>
-              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.82rem; font-weight:700;" onclick="showKickoffModal()">Review &amp; Send Package</button>
+            <!-- Assessment Actions -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px; margin-top:10px;">
+              <div style="font-size:.7rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Assessment Actions</div>
+              <div style="font-size:.78rem; color:#166534; margin-bottom:12px;">All intake data confirmed. Ready to initiate the assessment kick-off sequence.</div>
+              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.83rem; font-weight:700; margin-bottom:8px;" onclick="showKickoffModal()">&#128228; Send Kick-Off Package</button>
+              <button class="btn btn-outline" style="width:100%; padding:8px; font-size:.78rem;" onclick="notify('Reminder set for kick-off follow-up in 48 hours.','success')">&#128276; Set Follow-Up Reminder</button>
             </div>
 
           </div>
@@ -388,19 +279,18 @@
           });
         }
         function showKickoffModal() {
-          var g = function(id) { var e = document.getElementById(id); return e ? e.value || e.textContent || '' : '—'; };
-          var agencyName  = g('sq-agency-name');
-          var contactName = g('sq-contact-name');
-          var contactEmail = g('sq-primary-email');
-          var assessmentId = g('sq-agency-id');
-          var wave = g('sq-wave');
-          var pod  = g('sq-pod');
-          var assessor = g('sq-assessor');
-          var teamSize = g('sq-teamsize');
-          var startDate = g('sq-start');
-          var endDate   = g('sq-end');
-          var scopeCat  = (document.getElementById('ss-scope-cat') || {}).textContent || '—';
-          var scopeTotal = (document.getElementById('scope-total') || {}).textContent || '—';
+          var agencyName   = 'Maryland State Department of Education (MSDE)';
+          var contactName  = 'Patricia Hall, CISO';
+          var contactEmail = 'p.hall@msde.maryland.gov';
+          var assessmentId = 'MD-MSDE-2026-006';
+          var wave         = 'Wave 1 \u2014 Q1 2026';
+          var pod          = 'POD MEDIUM';
+          var assessor     = 'S. Patel';
+          var teamSize     = 'Medium (3\u20134 assessors)';
+          var startDate    = '2026-02-17';
+          var endDate      = '2026-03-31';
+          var scopeCat  = (document.getElementById('ss-scope-cat') || {}).textContent || 'MEDIUM';
+          var scopeTotal = (document.getElementById('scope-total') || {}).textContent || '6';
           function fmtD(iso) {
             if (!iso) return '—';
             var d = new Date(iso + 'T12:00:00');
@@ -451,11 +341,14 @@
           if (modal) modal.style.display = 'none';
         }
         function confirmAndSendKickoff() {
-          var email = (document.getElementById('sq-primary-email') || {}).value || 'agency contact';
+          var email = 'p.hall@msde.maryland.gov';
           closeKickoffModal();
           if (typeof submitIntakeForm === 'function') submitIntakeForm();
           if (window.advancePAStep) advancePAStep(4);
           if (typeof notify === 'function') notify('&#128230; Kick-off package confirmed and sent to ' + email);
+        }
+        function openEditModal(section) {
+          if (typeof notify === 'function') notify('Opening ' + section + ' editor \u2014 feature available in full deployment.', 'info');
         }
         </script>
       </section>
@@ -2349,8 +2242,15 @@
     });
 
     function generateSarReport() {
-      notify('MD-MSDE-2026-001 SAR generated and ready for download.');
+      document.getElementById('sar-modal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
     }
+    document.getElementById('sar-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
   
   
     // Additional Findings — Additional Findings Register
@@ -2443,5 +2343,142 @@
       notify(newId+' logged — visible in Findings & Remediation → Additional Findings.');
     };
 </script>
+
+  <!-- SAR Preview Modal -->
+  <div id="sar-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;overflow-y:auto;padding:32px 16px;">
+    <div style="max-width:780px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.3);overflow:hidden;">
+      <!-- Modal toolbar -->
+      <div style="background:#1e3a5f;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:.9rem;"> MSDE_SAR_Q1_2026.pdf — Preview</span>
+        <div style="display:flex;gap:8px;">
+          <button onclick="window.print()" style="background:#2563a8;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.8rem;"> Print</button>
+          <button onclick="document.getElementById('sar-modal').style.display='none';document.body.style.overflow=''" style="background:#64748b;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.8rem;">&#10005; Close</button>
+        </div>
+      </div>
+      <!-- Document body -->
+      <div style="padding:40px 48px;font-family:Georgia,serif;color:#1a1a1a;line-height:1.6;">
+        <!-- Letterhead -->
+        <div style="border-bottom:3px solid #1e3a5f;padding-bottom:16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:1.4rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;">Maryland Department of Information Technology</div>
+            <div style="font-size:.85rem;color:#64748b;margin-top:2px;">Office of Security Management — Cybersecurity Assessment Program</div>
+          </div>
+          <div style="text-align:right;font-size:.78rem;color:#64748b;">
+            <div style="font-weight:700;color:#1e3a5f;">OFFICIAL USE ONLY</div>
+            <div>ANCHOR Platform v2.0</div>
+            <div>NIST CSF 2.0 / CMMI</div>
+          </div>
+        </div>
+        <!-- Report title block -->
+        <div style="text-align:center;margin-bottom:28px;">
+          <div style="font-size:1.25rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;letter-spacing:.5px;">SECURITY ASSESSMENT REPORT</div>
+          <div style="font-size:.95rem;color:#374151;margin-top:4px;">Maryland State Department of Education (MSDE)</div>
+          <div style="font-size:.8rem;color:#64748b;margin-top:4px;">Assessment Period: February 3 – March 17, 2026 &nbsp;|&nbsp; Wave 1, Q1 2026</div>
+        </div>
+        <!-- Metadata table -->
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:28px;font-family:Arial,sans-serif;">
+          <tr style="background:#f1f5f9;">
+            <td style="padding:6px 10px;font-weight:700;width:30%;border:1px solid #e2e8f0;">Agency</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">Maryland State Department of Education (MSDE)</td>
+            <td style="padding:6px 10px;font-weight:700;width:25%;border:1px solid #e2e8f0;">Assessment ID</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">MD-MSDE-2026-001</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Agency POC</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">Patricia Hall, CISO</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Lead Assessor</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">J. Williams — Assurit</td>
+          </tr>
+          <tr style="background:#f1f5f9;">
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Framework</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">NIST CSF 2.0 / CMMI ML 0–5</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Classification</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">Official Use Only</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Report Date</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">March 17, 2026</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Status</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;"><span style="color:#16a34a;font-weight:700;">FINAL</span></td>
+          </tr>
+        </table>
+        <!-- Executive Summary -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">1. EXECUTIVE SUMMARY</div>
+          <p style="font-size:.85rem;margin:0 0 8px;">The Maryland Department of Information Technology (DoIT), Office of Security Management, conducted a formal cybersecurity maturity assessment of the Maryland State Department of Education (MSDE) pursuant to the State IT Security Policy (DOIT-ITRM-POLICY-001). This assessment utilized the ANCHOR Platform framework aligned to NIST Cybersecurity Framework (CSF) 2.0 and Capability Maturity Model Integration (CMMI) maturity level scoring.</p>
+          <p style="font-size:.85rem;margin:0 0 8px;">MSDE demonstrated a current overall cybersecurity maturity of <strong>ML 3.1 (Defined)</strong> across 23 assessed controls spanning six CSF 2.0 functions. The agency has established documented security policies and implemented key technical controls across most domains; however, gaps persist in continuous monitoring and detection capabilities, vendor access governance, and incident response testing.</p>
+          <p style="font-size:.85rem;margin:0;">MSDE is directed to remediate all Critical and High findings within the timeframes specified in the accompanying Plan of Action &amp; Milestones (POA&amp;M) and sustain a target maturity of <strong>ML 3.5 (Defined)</strong> within 12 months of this report date.</p>
+        </div>
+        <!-- Maturity Scorecard -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">2. MATURITY SCORECARD</div>
+          <table style="width:100%;border-collapse:collapse;font-size:.82rem;font-family:Arial,sans-serif;">
+            <thead>
+              <tr style="background:#1e3a5f;color:#fff;">
+                <th style="padding:7px 10px;text-align:left;border:1px solid #1e3a5f;">CSF Function</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Controls</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Met</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Not Met</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Avg CMMI</th>
+                <th style="padding:7px 10px;text-align:left;border:1px solid #1e3a5f;">ML Label</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#6d28d9;">GOVERN</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">2.9</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#0369a1;">IDENTIFY</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">3.2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Defined</td></tr>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#0f766e;">PROTECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">5</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">3.4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Defined</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#b45309;">DETECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">2.8</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#b91c1c;">RESPOND</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">3.1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Defined</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#047857;">RECOVER</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">3.2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Defined</td></tr>
+              <tr style="background:#1e3a5f;color:#fff;font-weight:700;"><td style="padding:7px 10px;border:1px solid #1e3a5f;">OVERALL</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">23</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">15</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">8</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">3.1</td><td style="padding:7px 10px;border:1px solid #1e3a5f;">Defined</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Critical Findings -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">3. KEY FINDINGS &amp; RECOMMENDATIONS</div>
+          <table style="width:100%;border-collapse:collapse;font-size:.8rem;font-family:Arial,sans-serif;">
+            <thead>
+              <tr style="background:#1e3a5f;color:#fff;">
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">ID</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Control</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Severity</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Finding</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#fef2f2;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-001</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">DE.CM-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#dc2626;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Critical</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">No SIEM or centralized log management deployed.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626;">90 days</td></tr>
+              <tr><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-002</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">ID.AM-05</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#dc2626;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Critical</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">Student PII data classification scheme incomplete; fewer than 30% of repositories labeled.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626;">60 days</td></tr>
+              <tr style="background:#fef2f2;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-003</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">RS.RP-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#dc2626;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Critical</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">IR plan lacks formal tabletop exercises — untested. Staff unable to describe escalation steps.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626;">30 days</td></tr>
+              <tr><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-004</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">GV.SC-04</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#ea580c;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">High</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">Vendor access not consistently reviewed or audited; stale credentials found post-contract.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#ea580c;">45 days</td></tr>
+              <tr style="background:#fffbeb;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-005</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">PR.IP-12</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#ea580c;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">High</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">Patch cycle averages 60 days for critical vulnerabilities; exceeds 30-day DoIT policy requirement.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#ea580c;">60 days</td></tr>
+              <tr><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-006</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">RC.RP-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#ea580c;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">High</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">Backup recovery not tested within last 12 months; no documented test results available.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#ea580c;">30 days</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Signature block -->
+        <div style="margin-top:32px;border-top:2px solid #e2e8f0;padding-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:32px;font-size:.8rem;font-family:Arial,sans-serif;">
+          <div>
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:4px;">Lead Assessor</div>
+            <div style="border-bottom:1px solid #374151;margin-bottom:4px;height:28px;"></div>
+            <div>J. Williams, Assurit</div>
+            <div style="color:#64748b;">Date: _______________</div>
+          </div>
+          <div>
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:4px;">DoIT Program Manager</div>
+            <div style="border-bottom:1px solid #374151;margin-bottom:4px;height:28px;"></div>
+            <div>S. Patel, DoIT OSM</div>
+            <div style="color:#64748b;">Date: _______________</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center;font-size:.72rem;color:#94a3b8;font-family:Arial,sans-serif;">
+          OFFICIAL USE ONLY — Maryland Department of Information Technology — ANCHOR Platform Assessment Program<br>
+          This document contains sensitive security assessment information and is intended solely for authorized DoIT and agency personnel.
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

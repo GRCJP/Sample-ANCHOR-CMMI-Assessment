@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style id="pre-auth-gate">html{visibility:hidden}</style>
+  <script>document.documentElement.style.visibility="hidden"</script>
   <title>DPSCS Assessment | ANCHOR Platform</title>
   <meta name="description" content="MD Dept. of Public Safety &amp; Correctional Services Cybersecurity Assessment">
   <meta name="author" content="ANCHOR Platform">
@@ -11,7 +11,7 @@
   <!-- External dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.0/dist/amazon-cognito-identity.min.js"></script>
   <script src="src/js/aws-auth.js?v=3"></script>
-  <script src="src/js/auth-guard.js?v=4"></script>
+  <script src="src/js/auth-guard.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <!-- CSS files -->
@@ -109,16 +109,17 @@
           <div><strong>ANCHOR Framework &#8212; PRE-ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
         </div>
 
-        <!-- PRE-ASSESS PROGRESS BANNER -->
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px 20px 12px; margin-bottom:14px;">
-          <div style="font-size:.62rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px;">Pre-Assessment Stage Progress</div>
-          <div class="h-stepper" style="margin:0;" id="intake-stepper">
-            <div class="h-step active" id="intake-step-profile"><div class="h-step-circle">1</div><div class="h-step-label">Agency Profile</div></div>
-            <div class="h-step" id="intake-step-environment"><div class="h-step-circle">2</div><div class="h-step-label">IT Environment</div></div>
-            <div class="h-step" id="intake-step-posture"><div class="h-step-circle">3</div><div class="h-step-label">Security Posture</div></div>
-            <div class="h-step" id="intake-step-timeline"><div class="h-step-circle">4</div><div class="h-step-label">Assessment Timeline</div></div>
-          </div>
-        </div>
+        <style>
+        .intake-group { margin-bottom: 20px; }
+        .intake-group-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; margin-bottom: 2px; }
+        .intake-group-header > span { font-size: .7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; }
+        .intake-edit-btn { font-size: .7rem; color: #2563eb; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+        .intake-edit-btn:hover { background: #eff6ff; }
+        .record-row { display: flex; align-items: baseline; padding: 7px 0; border-bottom: 1px solid #f1f5f9; gap: 12px; }
+        .record-row:last-child { border-bottom: none; }
+        .record-label { font-size: .74rem; color: var(--text-muted); min-width: 145px; flex-shrink: 0; }
+        .record-value { font-size: .82rem; color: var(--text); font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        </style>
 
         <div style="display:grid; grid-template-columns:1fr 380px; gap:16px; align-items:start;">
 
@@ -127,153 +128,47 @@
 
             <!-- Agency Profile -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #2563eb; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Agency Profile</div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="grid-column:1/-1;">
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Agency Name</label>
-                  <input type="text" id="sq-agency-name" value="MD Dept. of Public Safety &amp; Correctional Services (DPSCS)" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>Agency Profile</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('profile')">&#9998; Edit</button>
                 </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact &#8212; Name &amp; Title</label>
-                  <input type="text" id="sq-contact-name" value="Angela Torres, CISO" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Email</label>
-                  <input type="email" id="sq-primary-email" value="a.torres@dpscs.maryland.gov" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Primary Contact Phone</label>
-                  <input type="tel" id="sq-contact-phone" value="(410) 585-3300" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Assessment ID</label>
-                  <input type="text" id="sq-agency-id" value="MD-DPSCS-2026-003" style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('profile', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Profile</button>
-                <span style="font-size:.7rem; color:var(--text-muted);">Auto-saved on change</span>
+                <div class="record-row"><span class="record-label">Agency Name</span><span class="record-value">MD Dept. of Public Safety &amp; Correctional Services (DPSCS)</span></div>
+                <div class="record-row"><span class="record-label">Primary Contact</span><span class="record-value">Angela Torres, CISO</span></div>
+                <div class="record-row"><span class="record-label">Email</span><span class="record-value">a.torres@dpscs.maryland.gov</span></div>
+                <div class="record-row"><span class="record-label">Phone</span><span class="record-value">(410) 585-3300</span></div>
+                <div class="record-row"><span class="record-label">Assessment ID</span><span class="record-value">MD-DPSCS-2026-003</span></div>
               </div>
             </div>
 
             <!-- IT Environment -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #0891b2; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#0891b2; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">IT Environment</div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Agency FTE Count</label>
-                <div class="radio-group" id="rg-fte">
-                  <div class="radio-opt" onclick="scopeSelect(this,'fte',1)">1&#8211;250 FTEs</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'fte',2)">251&#8211;1,000 FTEs</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'fte',3)">&#9989; 1,001&#8211;5,000 FTEs</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'fte',4)">5,000+ FTEs</div>
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>IT Environment</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('environment')">&#9998; Edit</button>
                 </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">IT Complexity Tier</label>
-                <div class="radio-group" id="rg-itc">
-                  <div class="radio-opt" onclick="scopeSelect(this,'itc',-1)">DoIT Managed</div>
-                  <div class="radio-opt" onclick="scopeSelect(this,'itc',1)">Low</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'itc',2)">Moderate</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'itc',3)">&#9989; High</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Data Sensitivity / FIPS 199</label>
-                <div class="radio-group" id="rg-data">
-                  <div class="radio-opt" onclick="scopeSelect(this,'data',1)">Standard</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'data',2)">Elevated &#8212; PII/PHI</div>
-                  <div class="radio-opt selected" onclick="scopeSelect(this,'data',3)">&#9989; High &#8212; FTI/CJIS/HIPAA</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Cloud Environments (select all that apply)</label>
-                <div class="radio-group">
-                  <div class="radio-opt" onclick="selectOpt(this)">AWS GovCloud</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; Azure Government</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">Google Cloud</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">None</div>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px;">
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">OT/ICS Systems</label>
-                <div class="radio-group">
-                  <div class="radio-opt" onclick="selectOpt(this)">Yes &#8212; limited interfaces</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">Yes &#8212; full OT environment</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">No</div>
-                </div>
-              </div>
-
-              <div>
-                <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:4px;">Sensitive Data Types</label>
-                <div class="radio-group">
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; PII</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; Financial</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">PHI/HIPAA</div>
-                  <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; CJIS</div>
-                  <div class="radio-opt" onclick="selectOpt(this)">FTI</div>
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('environment', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save IT Environment</button>
+                <div class="record-row"><span class="record-label">FTE Tier</span><span class="record-value">1,001&#8211;5,000 FTEs <span class="badge badge-blue">3 pts</span></span></div>
+                <div class="record-row"><span class="record-label">IT Complexity</span><span class="record-value">High <span class="badge badge-orange">3 pts</span></span></div>
+                <div class="record-row"><span class="record-label">Data Sensitivity</span><span class="record-value">High &#8212; FTI/CJIS/HIPAA <span class="badge badge-red">3 pts</span></span></div>
+                <div class="record-row"><span class="record-label">Cloud Environments</span><span class="record-value"><span class="badge badge-blue">Azure Government</span></span></div>
+                <div class="record-row"><span class="record-label">OT/ICS</span><span class="record-value">No OT/ICS</span></div>
+                <div class="record-row"><span class="record-label">Data Types</span><span class="record-value"><span class="badge badge-gray">PII</span> <span class="badge badge-gray">Financial</span> <span class="badge badge-gray">CJIS</span></span></div>
               </div>
             </div>
 
             <!-- Security Posture -->
             <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #7c3aed; border-radius:8px; padding:14px 16px;">
-              <div style="font-size:.78rem; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Security Posture</div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Previous Assessment</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>Never assessed</option>
-                    <option selected>1-2 years ago</option>
-                    <option>Within the past year</option>
-                  </select>
+              <div class="intake-group" style="margin-bottom:0;">
+                <div class="intake-group-header">
+                  <span>Security Posture</span>
+                  <button class="intake-edit-btn" onclick="openEditModal('posture')">&#9998; Edit</button>
                 </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">MFA Coverage</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>Not deployed</option>
-                    <option selected>Partial &#8212; some users</option>
-                    <option>All users</option>
-                    <option>All users + phishing-resistant</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">SIEM Deployment</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option selected>No SIEM deployed</option>
-                    <option>Partial deployment</option>
-                    <option>Fully deployed</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">IR Plan Status</label>
-                  <select style="width:100%; border:1px solid var(--border); border-radius:5px; padding:6px 9px; font-size:.82rem; font-family:inherit;">
-                    <option>No plan</option>
-                    <option selected>Plan exists, not recently tested</option>
-                    <option>Plan tested within 12 months</option>
-                  </select>
-                </div>
-                <div style="grid-column:1/-1;">
-                  <label style="font-size:.78rem; font-weight:600; display:block; margin-bottom:3px;">Self-Assessed CMMI Level</label>
-                  <div class="radio-group">
-                    <div class="radio-opt" onclick="selectOpt(this)">0 &#8212; Nonexistent</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">1 &#8212; Performed</div>
-                    <div class="radio-opt selected" onclick="selectOpt(this)">&#9989; 2 &#8212; Managed</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">3 &#8212; Defined</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">4 &#8212; Measured</div>
-                    <div class="radio-opt" onclick="selectOpt(this)">5 &#8212; Optimized</div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('posture', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Security Posture</button>
+                <div class="record-row"><span class="record-label">Previous Assessment</span><span class="record-value">1&#8211;2 years ago</span></div>
+                <div class="record-row"><span class="record-label">MFA Coverage</span><span class="record-value">Partial &#8212; some users</span></div>
+                <div class="record-row"><span class="record-label">SIEM Deployment</span><span class="record-value">No SIEM deployed <span class="badge badge-red">Not deployed</span></span></div>
+                <div class="record-row"><span class="record-label">IR Plan</span><span class="record-value">Exists, not recently tested</span></div>
+                <div class="record-row"><span class="record-label">Self-Assessed Maturity</span><span class="record-value">Level 2 &#8212; Managed</span></div>
               </div>
             </div>
 
@@ -312,30 +207,26 @@
             </div>
 
             <!-- Assessment Assignment -->
-            <div style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
-              <div style="font-size:.78rem; font-weight:800; color:#d97706; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Assessment Timeline</div>
-              <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Assessment Wave</td><td style="padding:5px 4px;"><select id="sq-wave" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Wave 1 &#8212; Q1&#8211;Q2 2026</option><option>Wave 2 &#8212; Q2 2026</option><option>Wave 3 &#8212; Q1&#8211;Q2 2027</option><option>Wave 4 &#8212; Q3&#8211;Q4 2027</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Pod Assignment</td><td style="padding:5px 4px;"><select id="sq-pod" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>POD XL</option><option selected>POD LARGE</option><option>POD MEDIUM</option><option>POD SMALL</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Lead Assessor</td><td style="padding:5px 4px;"><select id="sq-assessor" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>J. Williams</option><option>S. Patel</option><option selected>R. Okafor</option><option>T. Adams</option><option>M. Chen</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Team Size</td><td style="padding:5px 4px;"><select id="sq-teamsize" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Large (6&#8211;8 assessors)</option><option>Medium (3&#8211;4 assessors)</option><option>Small (2&#8211;3 assessors)</option></select></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Confirmed Start</td><td style="padding:5px 4px;"><input id="sq-start" type="date" value="2026-04-14" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Confirmed End</td><td style="padding:5px 4px;"><input id="sq-end" type="date" value="2026-05-26" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"></td></tr>
-                  <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Executive Branch</td><td style="padding:5px 4px;"><select id="sq-execbranch" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option selected>Yes</option><option>No</option></select></td></tr>
-                  <tr><td style="padding:5px 4px; color:var(--text-muted); font-size:.74rem; max-width:110px; word-break:break-word;">Maturity Group</td><td style="padding:5px 4px;"><select id="sq-matgroup" style="border:1px solid var(--border); border-radius:5px; padding:3px 7px; font-size:.78rem; width:100%;"><option>Group A (0.0&#8211;1.4)</option><option selected>Group B (1.5&#8211;2.5)</option><option>Group C (2.6&#8211;3.4)</option><option>Group D (3.5&#8211;4.4)</option><option>Group E (4.5&#8211;5.0)</option></select></td></tr>
-                </tbody>
-              </table>
-              <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
-                <button class="btn btn-outline btn-sm" onclick="saveIntakeSection('timeline', this)" style="font-size:.75rem; padding:5px 14px;" data-write-only="true">Save Timeline</button>
+            <div class="intake-group" style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04); margin-top:14px; margin-bottom:0;">
+              <div class="intake-group-header">
+                <span>Assessment Assignment</span>
+                <button class="intake-edit-btn" onclick="openEditModal('timeline')">&#9998; Edit</button>
               </div>
+              <div class="record-row"><span class="record-label">Wave</span><span class="record-value">Wave 1 &#8212; Q1&#8211;Q2 2026</span></div>
+              <div class="record-row"><span class="record-label">Pod</span><span class="record-value">POD LARGE</span></div>
+              <div class="record-row"><span class="record-label">Lead Assessor</span><span class="record-value">R. Okafor</span></div>
+              <div class="record-row"><span class="record-label">Team Size</span><span class="record-value">Large (6&#8211;8 assessors)</span></div>
+              <div class="record-row"><span class="record-label">Start Date</span><span class="record-value">Apr 14, 2026</span></div>
+              <div class="record-row"><span class="record-label">End Date</span><span class="record-value">May 26, 2026</span></div>
+              <div class="record-row"><span class="record-label">Maturity Group</span><span class="record-value">Group B (1.5&#8211;2.5)</span></div>
             </div>
 
-            <!-- Send Kick-Off -->
-            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-left:4px solid #2563eb; border-radius:8px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.04);">
-              <div style="font-size:.78rem; font-weight:800; color:#2563eb; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Send Kick-Off Package</div>
-              <div style="font-size:.75rem; color:#3b82f6; margin-bottom:12px;">Reviews all data and timeline. Confirm to save and send to agency contact.</div>
-              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.82rem; font-weight:700;" onclick="showKickoffModal()">Review &amp; Send Package</button>
+            <!-- Assessment Actions -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px; margin-top:10px;">
+              <div style="font-size:.7rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Assessment Actions</div>
+              <div style="font-size:.78rem; color:#166534; margin-bottom:12px;">All intake data confirmed. Ready to initiate the assessment kick-off sequence.</div>
+              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.83rem; font-weight:700; margin-bottom:8px;" onclick="showKickoffModal()">&#128228; Send Kick-Off Package</button>
+              <button class="btn btn-outline" style="width:100%; padding:8px; font-size:.78rem;" onclick="notify('Reminder set for kick-off follow-up in 48 hours.','success')">&#128276; Set Follow-Up Reminder</button>
             </div>
 
           </div>
@@ -387,19 +278,18 @@
           });
         }
         function showKickoffModal() {
-          var g = function(id) { var e = document.getElementById(id); return e ? e.value || e.textContent || '' : '—'; };
-          var agencyName  = g('sq-agency-name');
-          var contactName = g('sq-contact-name');
-          var contactEmail = g('sq-primary-email');
-          var assessmentId = g('sq-agency-id');
-          var wave = g('sq-wave');
-          var pod  = g('sq-pod');
-          var assessor = g('sq-assessor');
-          var teamSize = g('sq-teamsize');
-          var startDate = g('sq-start');
-          var endDate   = g('sq-end');
-          var scopeCat  = (document.getElementById('ss-scope-cat') || {}).textContent || '—';
-          var scopeTotal = (document.getElementById('scope-total') || {}).textContent || '—';
+          var agencyName   = 'MD Dept. of Public Safety & Correctional Services (DPSCS)';
+          var contactName  = 'Angela Torres, CISO';
+          var contactEmail = 'a.torres@dpscs.maryland.gov';
+          var assessmentId = 'MD-DPSCS-2026-003';
+          var wave         = 'Wave 1 \u2014 Q1\u2013Q2 2026';
+          var pod          = 'POD LARGE';
+          var assessor     = 'R. Okafor';
+          var teamSize     = 'Large (6\u20138 assessors)';
+          var startDate    = '2026-04-14';
+          var endDate      = '2026-05-26';
+          var scopeCat  = (document.getElementById('ss-scope-cat') || {}).textContent || 'LARGE';
+          var scopeTotal = (document.getElementById('scope-total') || {}).textContent || '9';
           function fmtD(iso) {
             if (!iso) return '—';
             var d = new Date(iso + 'T12:00:00');
@@ -450,11 +340,14 @@
           if (modal) modal.style.display = 'none';
         }
         function confirmAndSendKickoff() {
-          var email = (document.getElementById('sq-primary-email') || {}).value || 'agency contact';
+          var email = 'a.torres@dpscs.maryland.gov';
           closeKickoffModal();
           if (typeof submitIntakeForm === 'function') submitIntakeForm();
           if (window.advancePAStep) advancePAStep(4);
           if (typeof notify === 'function') notify('&#128230; Kick-off package confirmed and sent to ' + email);
+        }
+        function openEditModal(section) {
+          if (typeof notify === 'function') notify('Opening ' + section + ' editor \u2014 feature available in full deployment.', 'info');
         }
         </script>
       </section>
@@ -2096,7 +1989,7 @@
   <script>
     // ── Pipeline Tracker: Auto-detect and Restore Stage ──────────────────────
     (function() {
-      var key = window.AGENCY_KEY || 'msde';
+      var key = window.AGENCY_KEY || 'dpscs';
       // Determine current stage from stored data
       function detectStage() {
         var intake = JSON.parse(localStorage.getItem('anchor_intake_' + key) || '{}');
@@ -2146,7 +2039,7 @@
 
     // ── Live SRTM → Risk Section Update ────────────────────────────────────────
     function updateRiskFromSRTM() {
-      var key = window.AGENCY_KEY || 'msde';
+      var key = window.AGENCY_KEY || 'dpscs';
       var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
       var entries = Object.entries(srtm);
       if (entries.length === 0) return; // no data yet
@@ -2425,7 +2318,7 @@
       var rec  = (document.getElementById('csf-af-rec')||{}).value||'';
       desc=desc.trim(); rec=rec.trim();
       if(!desc||!fn||!type||!sev){notify('Please complete all required fields: Description, CSF Function, Risk Type, and Severity.');return;}
-      var key   = window.AGENCY_KEY || 'msde';
+      var key   = window.AGENCY_KEY || 'dpscs';
       var store = 'anchor_additional_risks_' + key;
       var findings = JSON.parse(localStorage.getItem(store)||'[]');
       var newId = 'AF-'+String(findings.length+1).padStart(3,'0');

@@ -1,7 +1,7 @@
-// Anchor Platform — Auth Guard
+// Anchor Platform — Auth Guard v5
 // Loaded in <head> after aws-auth.js.
 // Uses DOMContentLoaded for body attribute reads.
-// Body is hidden via inline style until auth check passes (prevents flash).
+// html element is hidden via inline script before any CDN loads (prevents flash).
 
 (function () {
   const auth = window.anchorAuth;
@@ -13,10 +13,9 @@
 
   function _revealBody() {
     _hideStyle.remove();
-    const gate = document.getElementById('pre-auth-gate');
-    if (gate) gate.remove();
-    if (document.body) document.body.style.visibility = '';
+    // Clear the inline html visibility set by the pre-auth inline script in <head>
     document.documentElement.style.visibility = '';
+    if (document.body) document.body.style.visibility = '';
   }
 
   // Fast unauthenticated check — no DOM needed, runs immediately
@@ -34,7 +33,7 @@
     const requireAgency = body.getAttribute('data-require-agency');
     const requireAdmin  = body.getAttribute('data-require-admin')  === 'true';
 
-    if (!requireAuth) return;
+    if (!requireAuth) { _revealBody(); return; }
 
     const role   = auth.getRole();
     const agency = auth.getAgency();
@@ -85,7 +84,6 @@
     });
 
     // If the currently active nav item is now hidden, activate the first visible button
-    // (exclude <a> links like ← Dashboard which have no onclick handler)
     const activeNav = document.querySelector('.nav-item.active');
     if (activeNav && activeNav.style.display === 'none') {
       const firstVisible = document.querySelector('.topnav button.nav-item:not([style*="display: none"]):not([style*="display:none"])');
