@@ -65,13 +65,13 @@
   <nav class="topnav" role="navigation" aria-label="Main navigation">
     <div class="topnav-inner">
       <a class="nav-item" href="main-dashboard.html" style="color:#64748b;border-right:1px solid #e2e8f0;margin-right:8px;padding-right:20px;">← Dashboard</a>
-      <button class="nav-item active" onclick="showSection('questionnaire', this)">Intake &amp; Scoping</button>
-      <button class="nav-item" onclick="showSection('evidence', this)">Evidence Collection</button>
-      <button class="nav-item" onclick="showSection('csf', this)">CSF Assessment</button>
-      <button class="nav-item" onclick="showSection('mapping', this)">CSF Mapping</button>
-      <button class="nav-item" onclick="showSection('risk', this)">Risk &amp; CMMI</button>
-      <button class="nav-item" onclick="showSection('poam', this)">POA&amp;M</button>
-      <button class="nav-item" onclick="showSection('sar', this)">SAR</button>
+      <button class="nav-item active" onclick="showSection('questionnaire', this)" data-visible-to="admin lead_assessor assessor">Intake &amp; Scoping</button>
+      <button class="nav-item" onclick="showSection('evidence', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">Evidence Collection</button>
+      <button class="nav-item" onclick="showSection('csf', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">CSF Assessment</button>
+      <button class="nav-item" onclick="showSection('mapping', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">CSF Mapping</button>
+      <button class="nav-item" onclick="showSection('risk', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">Risk &amp; CMMI</button>
+      <button class="nav-item" onclick="showSection('poam', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">POA&amp;M</button>
+      <button class="nav-item" onclick="showSection('sar', this)" data-visible-to="admin lead_assessor assessor doit_reviewer">SAR</button>
     </div>
   </nav>
 

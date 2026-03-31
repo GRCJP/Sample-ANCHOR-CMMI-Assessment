@@ -73,6 +73,17 @@
       if (!allowed.includes(role)) el.style.display = 'none';
     });
 
+    // If the currently active nav item is now hidden, activate the first visible one
+    const activeNav = document.querySelector('.nav-item.active');
+    if (activeNav && activeNav.style.display === 'none') {
+      const firstVisible = document.querySelector('.topnav .nav-item:not([style*="display: none"]):not([style*="display:none"])');
+      if (firstVisible && firstVisible.onclick) {
+        firstVisible.classList.add('active');
+        activeNav.classList.remove('active');
+        firstVisible.click();
+      }
+    }
+
     // data-write-only → disabled for agency_rep / doit_reviewer
     if (role === 'doit_reviewer' || role === 'agency_rep') {
       document.querySelectorAll('[data-write-only]').forEach(el => {
