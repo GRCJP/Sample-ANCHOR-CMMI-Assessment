@@ -61,7 +61,12 @@
     </div>
     <div style="font-size:.8rem;color:rgba(255,255,255,.75);font-weight:600;">Maryland Dept. of Health (MDH) Assessment</div>
     <div class="app-header-right">
-      <div class="avatar" aria-label="Lead Assessor" style="background:rgba(255,255,255,.15);color:#fff;">JW</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;margin-right:12px;">
+        <span id="user-name" style="font-size:.8rem;font-weight:700;color:#fff;">—</span>
+        <span id="user-role" style="font-size:.68rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;">—</span>
+      </div>
+      <div id="user-avatar" class="avatar" style="background:rgba(255,255,255,.15);color:#fff;cursor:pointer;">—</div>
+      <button class="btn btn-sm" data-action="logout" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);margin-left:12px;">Sign Out</button>
     </div>
   </header>
 
@@ -564,6 +569,58 @@
             <button class="btn btn-outline btn-sm" onclick="notify('Evidence tracker exported: MDH_Evidence_Log.xlsx')">Export</button>
           </div>
         </div>
+
+        <!-- Agency Rep Quick Upload -->
+        <div class="card" style="border-left:4px solid var(--primary);">
+          <div class="card-title">Submit Documents to Assessor</div>
+          <p style="font-size:.82rem; color:var(--text-muted); margin-bottom:16px;">Upload evidence artifacts directly to your assessment package. Each submission is tagged to the applicable NIST CSF control and routed to your lead assessor for review.</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label style="font-size:.78rem; font-weight:700; display:block; margin-bottom:6px;">Evidence Category</label>
+              <select id="ev-category" style="width:100%; border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:.82rem; font-family:inherit;">
+                <option value="">— Select —</option>
+                <option>Information Security Policy</option>
+                <option>System Security Plan (SSP)</option>
+                <option>Asset Inventory</option>
+                <option>Network Diagram</option>
+                <option>Access Control Policy</option>
+                <option>Incident Response Plan</option>
+                <option>Business Continuity / DRP</option>
+                <option>Vulnerability Scan Report</option>
+                <option>Training Records</option>
+                <option>Audit Logs</option>
+                <option>Third-Party Contracts</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:.78rem; font-weight:700; display:block; margin-bottom:6px;">NIST CSF Function</label>
+              <select id="ev-nist-fn" style="width:100%; border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:.82rem; font-family:inherit;">
+                <option value="">— Select —</option>
+                <option>GOVERN — Policy &amp; Risk Management</option>
+                <option>IDENTIFY — Asset &amp; Risk Management</option>
+                <option>PROTECT — Access Control &amp; Training</option>
+                <option>DETECT — Monitoring &amp; Detection</option>
+                <option>RESPOND — Incident Response</option>
+                <option>RECOVER — Recovery Planning</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:.78rem; font-weight:700; display:block; margin-bottom:6px;">Description / Notes</label>
+            <textarea id="ev-notes" rows="2" placeholder="Describe what this document covers and the time period it applies to..." style="width:100%; border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:.82rem; font-family:inherit; resize:vertical;"></textarea>
+          </div>
+          <div onclick="agencyUploadClick()" style="border:2px dashed var(--border); border-radius:8px; padding:28px; text-align:center; cursor:pointer; background:#fafbfd; transition:all .2s;" onmouseover="this.style.borderColor='var(--primary-light)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:1.8rem; margin-bottom:8px;">📎</div>
+            <div style="font-size:.88rem; font-weight:600; color:var(--primary);">Click to browse or drag &amp; drop files here</div>
+            <div style="font-size:.75rem; color:var(--text-muted); margin-top:4px;">Supported: PDF, DOCX, XLSX, PNG, JPG | Max 50MB per file</div>
+          </div>
+          <div id="ev-uploaded-files" style="margin-top:10px;"></div>
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn btn-primary" onclick="agencySubmitEvidence()">Submit to Assessor</button>
+            <button class="btn btn-outline" onclick="notify('Draft saved. You can return to complete this submission later.')">Save Draft</button>
+          </div>
+        </div>
       </section>
 
       <!-- RISK & CMMI SCORING SECTION -->
@@ -665,7 +722,7 @@
               </table>
             </div>
             <div class="btn-row">
-              <button class="btn btn-outline" onclick="notify('SAR generation pending assessment completion')">Generate SAR Report</button>
+              <button class="btn btn-outline" onclick="generateSarReport()">Generate SAR Report</button>
             </div>
           </div>
         </div>
@@ -681,6 +738,7 @@
   <script src="src/js/agency-assessment.js"></script>
   <script src="src/js/navigation.js"></script>
   <script src="src/js/data.js"></script>
+  <script src="src/js/intake-workflow.js"></script>
   <script src="src/js/agency-self-assessment.js"></script>
 
   <script>
@@ -698,6 +756,7 @@
         targetSection.classList.add('active');
         targetSection.setAttribute('aria-hidden', 'false');
         if(id==='csf') initSrtm();
+        if(id==='risk' || id==='sar') setTimeout(initAgencyCharts, 50);
       }
       if (el) {
         el.classList.add('active');
@@ -1022,7 +1081,82 @@
       tb.innerHTML = rows.join('');
     }
 
-    function updateSummaryCharts() {}
+    function updateSummaryCharts() {
+      if (typeof Chart === 'undefined') return;
+      const fnStats = {};
+      SRTM_DATA.forEach(domain => {
+        const s = { fn: domain.fn, total: domain.controls.length, met: 0, notmet: 0, na: 0, unscored: 0, cmmiSum: 0, cmmiCnt: 0, notMetCtrls: [] };
+        domain.controls.forEach(ctrl => {
+          const st = srtmState[ctrl.id];
+          if (!st || !st.result) { s.unscored++; }
+          else if (st.result === 'MET')     { s.met++; }
+          else if (st.result === 'NOT MET') { s.notmet++; s.notMetCtrls.push({ id: ctrl.id, name: ctrl.name || ctrl.id, cmmi: st.cmmi || '—', obs: st.obs || '' }); }
+          else if (st.result === 'N/A')     { s.na++; }
+          if (st && st.cmmi !== '' && st.cmmi !== undefined) { s.cmmiSum += Number(st.cmmi); s.cmmiCnt++; }
+        });
+        fnStats[domain.fn] = s;
+      });
+      const summaryTb = document.getElementById('s2-summary-table');
+      if (summaryTb) {
+        const cmmiColors = ['#6b7280','#dc2626','#ea580c','#d97706','#16a34a','#0d9488'];
+        summaryTb.innerHTML = Object.values(fnStats).map(s => {
+          const avg = s.cmmiCnt > 0 ? (s.cmmiSum / s.cmmiCnt).toFixed(1) : '—';
+          const ml  = s.cmmiCnt > 0 ? Math.min(5, Math.floor(s.cmmiSum / s.cmmiCnt)) : 0;
+          const pct = s.total > 0 ? Math.round((s.met + s.notmet + s.na) / s.total * 100) : 0;
+          const status = pct >= 100 ? '<span class="badge badge-green">Complete</span>' : pct > 0 ? '<span class="badge badge-blue">In Progress</span>' : '<span class="badge badge-gray">Not Started</span>';
+          return `<tr><td><span class="fn-tag ${fnMap[s.fn]}">${s.fn}</span></td><td>${s.total}</td><td style="color:#16a34a;font-weight:700;">${s.met}</td><td style="color:#dc2626;font-weight:700;">${s.notmet}</td><td>${s.na}</td><td>${s.unscored}</td><td><strong style="color:${s.cmmiCnt > 0 ? cmmiColors[ml] : '#6b7280'}">${avg}</strong></td><td>${status}</td></tr>`;
+        }).join('');
+      }
+      const findingsTb = document.getElementById('s2-findings-table');
+      if (findingsTb) {
+        const allFindings = Object.values(fnStats).flatMap(s => s.notMetCtrls.map(c => ({ ...c, fn: s.fn })));
+        findingsTb.innerHTML = allFindings.length === 0
+          ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">No controls marked NOT MET yet.</td></tr>'
+          : allFindings.map(f => `<tr><td><code>${f.id}</code></td><td>${f.name}</td><td><span class="fn-tag ${fnMap[f.fn]}">${f.fn}</span></td><td><strong>${f.cmmi}</strong></td><td style="font-size:.78rem;color:var(--text-muted);">${f.obs || '—'}</td><td><span class="badge badge-orange">High</span></td></tr>`).join('');
+      }
+      const radarEl = document.getElementById('s2SummaryRadar');
+      if (radarEl) {
+        const existing = Chart.getChart(radarEl); if (existing) existing.destroy();
+        const vals = Object.values(fnStats).map(s => s.cmmiCnt > 0 ? parseFloat((s.cmmiSum / s.cmmiCnt).toFixed(1)) : 0);
+        new Chart(radarEl, { type:'radar', data:{ labels:Object.keys(fnStats), datasets:[{label:'Current CMMI',data:vals,backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},{label:'Target (3.0)',data:Object.keys(fnStats).map(()=>3),backgroundColor:'rgba(39,174,96,.08)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
+      }
+      const barEl = document.getElementById('s2SummaryBar');
+      if (barEl) {
+        const existing = Chart.getChart(barEl); if (existing) existing.destroy();
+        const fns = Object.values(fnStats);
+        new Chart(barEl, { type:'bar', data:{ labels:fns.map(s=>s.fn), datasets:[{label:'MET',data:fns.map(s=>s.met),backgroundColor:'#16a34a',borderRadius:4},{label:'NOT MET',data:fns.map(s=>s.notmet),backgroundColor:'#dc2626',borderRadius:4},{label:'N/A',data:fns.map(s=>s.na),backgroundColor:'#6b7280',borderRadius:4},{label:'Unscored',data:fns.map(s=>s.unscored),backgroundColor:'#e5e7eb',borderRadius:4}] }, options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}},plugins:{legend:{position:'bottom'}}} });
+      }
+    }
+
+    // ── Agency Rep Evidence Submission ────────────────────────────────────────
+    const evUploaded = [];
+    function agencyUploadClick() {
+      const fakeFiles = ['MDH_Policy_v2.pdf', 'MDH_AssetInventory_Apr2026.xlsx', 'MDH_NetworkDiagram.vsdx', 'MDH_IRPlan_2026.pdf', 'MDH_ScanReport_Q1.pdf'];
+      const file = fakeFiles[Math.floor(Math.random() * fakeFiles.length)];
+      evUploaded.push(file);
+      const container = document.getElementById('ev-uploaded-files');
+      if (container) {
+        container.innerHTML = evUploaded.map(f =>
+          `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #d1fae5;border-radius:6px;background:#f0fdf4;margin-bottom:6px;"><span style="font-size:1rem;">📄</span><span style="flex:1;font-size:.82rem;font-weight:600;">${f}</span><span style="font-size:.72rem;color:#16a34a;font-weight:700;">Ready to submit</span></div>`
+        ).join('');
+      }
+      notify('File selected: ' + file);
+    }
+    function agencySubmitEvidence() {
+      const category = document.getElementById('ev-category')?.value;
+      const nistFn   = document.getElementById('ev-nist-fn')?.value;
+      if (!category) { notify('Please select an Evidence Category.'); return; }
+      if (!nistFn)   { notify('Please select a NIST CSF Function.'); return; }
+      if (evUploaded.length === 0) { notify('Please select a file to upload.'); return; }
+      notify('Evidence submitted to assessor — ' + evUploaded.join(', ') + ' | Category: ' + category);
+      evUploaded.length = 0;
+      const container = document.getElementById('ev-uploaded-files');
+      if (container) container.innerHTML = '';
+      if (document.getElementById('ev-category')) document.getElementById('ev-category').value = '';
+      if (document.getElementById('ev-nist-fn'))  document.getElementById('ev-nist-fn').value = '';
+      if (document.getElementById('ev-notes'))    document.getElementById('ev-notes').value = '';
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     function exportSrtm() { notify('SRTM exported: MDH_NIST_CSF_SRTM_Assessment.xlsx \u2014 All controls, procedures, observations, and evidence included.'); }
 
@@ -1042,6 +1176,156 @@
         new Chart(sarRadarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Current',data:[2.6,2.8,3.2,2.4,2.6,2.2],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},{label:'Target',data:[4,3,4,4,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
       }
     }
+  </script>
+
+  <!-- SAR Preview Modal -->
+  <div id="sar-modal-mdh" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;overflow-y:auto;padding:32px 16px;">
+    <div style="max-width:780px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.3);overflow:hidden;">
+      <!-- Modal toolbar -->
+      <div style="background:#1e3a5f;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="color:#fff;font-weight:700;font-size:.9rem;">📄 MDH_SAR_Q1-Q2_2026.pdf — Preview</span>
+        <div style="display:flex;gap:8px;">
+          <button onclick="window.print()" style="background:#2563a8;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.8rem;">🖨 Print</button>
+          <button onclick="document.getElementById('sar-modal-mdh').style.display='none';document.body.style.overflow=''" style="background:#64748b;color:#fff;border:none;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:.8rem;">✕ Close</button>
+        </div>
+      </div>
+      <!-- Document body -->
+      <div style="padding:40px 48px;font-family:Georgia,serif;color:#1a1a1a;line-height:1.6;">
+        <!-- Letterhead -->
+        <div style="border-bottom:3px solid #1e3a5f;padding-bottom:16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:1.4rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;">Maryland Department of Information Technology</div>
+            <div style="font-size:.85rem;color:#64748b;margin-top:2px;">Office of Security Management — Cybersecurity Assessment Program</div>
+          </div>
+          <div style="text-align:right;font-size:.78rem;color:#64748b;">
+            <div style="font-weight:700;color:#1e3a5f;">OFFICIAL USE ONLY</div>
+            <div>ANCHOR Platform v2.0</div>
+            <div>NIST CSF 2.0 / CMMI</div>
+          </div>
+        </div>
+        <!-- Report title block -->
+        <div style="text-align:center;margin-bottom:28px;">
+          <div style="font-size:1.25rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;letter-spacing:.5px;">SYSTEM ASSESSMENT REPORT</div>
+          <div style="font-size:.95rem;color:#374151;margin-top:4px;">Maryland Department of Health (MDH)</div>
+          <div style="font-size:.8rem;color:#64748b;margin-top:4px;">Assessment Period: February 3 – May 8, 2026 &nbsp;|&nbsp; Wave 1, Q1–Q2 2026</div>
+        </div>
+        <!-- Metadata table -->
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:28px;font-family:Arial,sans-serif;">
+          <tr style="background:#f1f5f9;">
+            <td style="padding:6px 10px;font-weight:700;width:30%;border:1px solid #e2e8f0;">Agency</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">Maryland Department of Health (MDH)</td>
+            <td style="padding:6px 10px;font-weight:700;width:25%;border:1px solid #e2e8f0;">Assessment ID</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">MD-MDH-2026-001</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Agency POC</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">S. Nguyen, CISO</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Lead Assessor</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">J. Williams — Assurit LLC</td>
+          </tr>
+          <tr style="background:#f1f5f9;">
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Framework</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">NIST CSF 2.0 / CMMI ML 0–5</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Classification</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">Official Use Only</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Report Date</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;">May 8, 2026</td>
+            <td style="padding:6px 10px;font-weight:700;border:1px solid #e2e8f0;">Status</td>
+            <td style="padding:6px 10px;border:1px solid #e2e8f0;"><span style="color:#d97706;font-weight:700;">DRAFT — Pending Final Review</span></td>
+          </tr>
+        </table>
+        <!-- Executive Summary -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">1. EXECUTIVE SUMMARY</div>
+          <p style="font-size:.85rem;margin:0 0 8px;">The Maryland Department of Information Technology (DoIT), Office of Security Management, conducted a formal cybersecurity maturity assessment of the Maryland Department of Health (MDH) pursuant to the State IT Security Policy (DOIT-ITRM-POLICY-001). This assessment utilized the ANCHOR Platform framework aligned to NIST Cybersecurity Framework (CSF) 2.0 and Capability Maturity Model Integration (CMMI) maturity level scoring.</p>
+          <p style="font-size:.85rem;margin:0 0 8px;">MDH demonstrated a current overall cybersecurity maturity of <strong>ML 2.1 (Managed)</strong> across 20 assessed controls spanning six CSF 2.0 functions. The agency processes sensitive healthcare data subject to HIPAA requirements and has established foundational security policies; however, significant gaps exist in HIPAA-aligned data protection, PHI access controls, continuous monitoring, and third-party healthcare vendor risk governance.</p>
+          <p style="font-size:.85rem;margin:0;">MDH is directed to remediate all Critical and High findings within the timeframes specified in the accompanying Plan of Action &amp; Milestones (POA&amp;M) and achieve a target maturity of <strong>ML 3.0 (Defined)</strong> within 12 months of this report date.</p>
+        </div>
+        <!-- Maturity Scorecard -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">2. MATURITY SCORECARD</div>
+          <table style="width:100%;border-collapse:collapse;font-size:.82rem;font-family:Arial,sans-serif;">
+            <thead>
+              <tr style="background:#1e3a5f;color:#fff;">
+                <th style="padding:7px 10px;text-align:left;border:1px solid #1e3a5f;">CSF Function</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Controls</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Met</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Not Met</th>
+                <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Avg CMMI</th>
+                <th style="padding:7px 10px;text-align:left;border:1px solid #1e3a5f;">ML Label</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#6d28d9;">GOVERN</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">5</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.8</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#0369a1;">IDENTIFY</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">4</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">2.0</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#0f766e;">PROTECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">5</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">2.2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#b45309;">DETECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.5</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Performed</td></tr>
+              <tr style="background:#f8fafc;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#b91c1c;">RESPOND</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.8</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Managed</td></tr>
+              <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;color:#047857;">RECOVER</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;">3</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">2</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.6</td><td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b;">Performed</td></tr>
+              <tr style="background:#1e3a5f;color:#fff;font-weight:700;"><td style="padding:7px 10px;border:1px solid #1e3a5f;">OVERALL</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">23</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">10</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">13</td><td style="padding:7px 10px;border:1px solid #1e3a5f;text-align:center;">2.1</td><td style="padding:7px 10px;border:1px solid #1e3a5f;">Managed</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Critical Findings -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:1rem;font-weight:800;color:#1e3a5f;font-family:Arial,sans-serif;border-bottom:2px solid #1e3a5f;padding-bottom:4px;margin-bottom:10px;">3. KEY FINDINGS &amp; RECOMMENDATIONS</div>
+          <table style="width:100%;border-collapse:collapse;font-size:.8rem;font-family:Arial,sans-serif;">
+            <thead>
+              <tr style="background:#1e3a5f;color:#fff;">
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">ID</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Control</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Severity</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Finding</th>
+                <th style="padding:6px 10px;text-align:left;border:1px solid #1e3a5f;">Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#fef2f2;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-001</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">PR.DS-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#dc2626;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Critical</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">PHI data-at-rest encryption not uniformly enforced across all clinical systems; multiple databases store unencrypted protected health information in violation of HIPAA Security Rule §164.312(a)(2)(iv).</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626;">30 days</td></tr>
+              <tr><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-002</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">PR.AA-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#dc2626;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Critical</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">MFA not enforced for systems accessing electronic Protected Health Information (ePHI); remote access sessions for clinical staff lack multi-factor authentication controls.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626;">30 days</td></tr>
+              <tr style="background:#fffbeb;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-003</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">DE.CM-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#d97706;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">High</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">No continuous monitoring solution deployed for clinical network segments; SIEM coverage gaps leave ePHI access activity undetected across three major health information systems.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#d97706;">60 days</td></tr>
+              <tr><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-004</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">GV.SC-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#d97706;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">High</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">No formal HIPAA Business Associate Agreement (BAA) review program; 14 active healthcare vendor contracts lack current BAAs or security assessments, creating significant HIPAA compliance exposure.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#d97706;">60 days</td></tr>
+              <tr style="background:#fffbeb;"><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;">F-005</td><td style="padding:5px 10px;border:1px solid #e2e8f0;">RS.MA-01</td><td style="padding:5px 10px;border:1px solid #e2e8f0;"><span style="background:#ca8a04;color:#fff;padding:1px 7px;border-radius:10px;font-size:.75rem;">Medium</span></td><td style="padding:5px 10px;border:1px solid #e2e8f0;">HIPAA Breach Notification incident response procedures not tested in over 18 months; no tabletop exercise incorporating HIPAA breach notification timelines (60-day HHS reporting requirement) has been conducted.</td><td style="padding:5px 10px;border:1px solid #e2e8f0;font-weight:700;color:#ca8a04;">90 days</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Signature block -->
+        <div style="margin-top:32px;border-top:2px solid #e2e8f0;padding-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:32px;font-size:.8rem;font-family:Arial,sans-serif;">
+          <div>
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:4px;">Lead Assessor</div>
+            <div style="border-bottom:1px solid #374151;margin-bottom:4px;height:28px;"></div>
+            <div>J. Williams, Assurit LLC</div>
+            <div style="color:#64748b;">Date: _______________</div>
+          </div>
+          <div>
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:4px;">DoIT Program Manager</div>
+            <div style="border-bottom:1px solid #374151;margin-bottom:4px;height:28px;"></div>
+            <div>James Wilson, DoIT OSM</div>
+            <div style="color:#64748b;">Date: _______________</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center;font-size:.72rem;color:#94a3b8;font-family:Arial,sans-serif;">
+          OFFICIAL USE ONLY — Maryland Department of Information Technology — ANCHOR Platform Assessment Program<br>
+          This document contains sensitive security assessment information and is intended solely for authorized DoIT and agency personnel.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateSarReport() {
+      document.getElementById('sar-modal-mdh').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('sar-modal-mdh').addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    });
   </script>
 </body>
 </html>
