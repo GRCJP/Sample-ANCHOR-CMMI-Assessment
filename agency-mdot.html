@@ -507,6 +507,65 @@
           <div id="srtm-progress-text" style="font-size:.72rem; color:var(--text-muted); margin-top:6px; text-align:right;">0 of 23 controls assessed (0%)</div>
         </div>
 
+        <!-- Out-of-Framework Risk Capture (inline during assessment) -->
+        <div class="card" data-visible-to="admin lead_assessor assessor" style="border-left:4px solid #f59e0b;margin-bottom:14px;padding:12px 16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:.78rem;font-weight:700;color:#92400e;margin-bottom:2px;">&#9888; Out-of-Framework Risk Capture</div>
+              <div style="font-size:.74rem;color:#78350f;">Identified a risk that doesn&#39;t map to a CSF subcategory? Log it here — it will appear automatically in Findings &amp; Remediation.</div>
+            </div>
+            <button onclick="toggleCSFCapture()" style="flex-shrink:0;margin-left:16px;padding:6px 14px;border:1.5px solid #f59e0b;border-radius:6px;background:#fff;color:#92400e;font-size:.76rem;font-weight:700;cursor:pointer;" id="csf-capture-toggle">+ Log Finding</button>
+          </div>
+          <div id="csf-capture-form" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid #fde68a;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+              <div style="grid-column:1/-1;">
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">Finding Description *</label>
+                <textarea id="csf-af-desc" rows="2" placeholder="Describe the risk or exposure observed during assessment..." style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;resize:vertical;box-sizing:border-box;background:#fffbeb;"></textarea>
+              </div>
+              <div>
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">CSF Function *</label>
+                <select id="csf-af-function" style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;background:#fffbeb;">
+                  <option value="">&#8212; Select &#8212;</option>
+                  <option>GOVERN</option><option>IDENTIFY</option><option>PROTECT</option>
+                  <option>DETECT</option><option>RESPOND</option><option>RECOVER</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">Risk Type *</label>
+                <select id="csf-af-type" style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;background:#fffbeb;">
+                  <option value="">&#8212; Select &#8212;</option>
+                  <option>Shadow IT</option><option>Vendor Dependency</option><option>Legacy System</option>
+                  <option>Organizational Gap</option><option>Operational Risk</option><option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">Severity *</label>
+                <select id="csf-af-severity" style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;background:#fffbeb;">
+                  <option value="">&#8212; Select &#8212;</option>
+                  <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">CMMI Context Level</label>
+                <select id="csf-af-cmmi" style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;background:#fffbeb;">
+                  <option value="">&#8212; Not specified &#8212;</option>
+                  <option value="0">0 &#8212; Nonexistent</option><option value="1">1 &#8212; Performed</option>
+                  <option value="2">2 &#8212; Managed</option><option value="3">3 &#8212; Defined</option>
+                  <option value="4">4 &#8212; Measured</option><option value="5">5 &#8212; Optimized</option>
+                </select>
+              </div>
+              <div style="grid-column:1/-1;">
+                <label style="font-size:.74rem;font-weight:700;display:block;margin-bottom:4px;">Recommendation</label>
+                <textarea id="csf-af-rec" rows="2" placeholder="Recommended action..." style="width:100%;border:1px solid #fde68a;border-radius:6px;padding:8px;font-size:.81rem;font-family:inherit;resize:vertical;box-sizing:border-box;background:#fffbeb;"></textarea>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-sm" onclick="saveCSFCapture()" style="background:#f59e0b;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:.78rem;font-weight:700;cursor:pointer;">Save to Additional Findings</button>
+              <button class="btn btn-outline btn-sm" onclick="toggleCSFCapture()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
         <div class="tab-bar">
           <div class="tab active" onclick="switchTab(this,'t2-assess')">Assessment Workbook</div>
           <div class="tab" onclick="switchTab(this,'t2-interview')">Interview Questionnaire</div>
@@ -2865,6 +2924,37 @@
       if(!localStorage.getItem(STORE)) saveF(SEED);
       setTimeout(renderAdditionalFindings,300);
     })();
+
+    // Out-of-Framework capture from within CSF Assessment
+    window.toggleCSFCapture = function() {
+      var form = document.getElementById('csf-capture-form');
+      var btn  = document.getElementById('csf-capture-toggle');
+      if (!form) return;
+      var open = form.style.display !== 'none';
+      form.style.display = open ? 'none' : 'block';
+      if (btn) btn.textContent = open ? '+ Log Finding' : 'Cancel';
+    };
+    window.saveCSFCapture = function() {
+      var desc = (document.getElementById('csf-af-desc')||{}).value||'';
+      var fn   = (document.getElementById('csf-af-function')||{}).value||'';
+      var type = (document.getElementById('csf-af-type')||{}).value||'';
+      var sev  = (document.getElementById('csf-af-severity')||{}).value||'';
+      var cmmi = (document.getElementById('csf-af-cmmi')||{}).value||'';
+      var rec  = (document.getElementById('csf-af-rec')||{}).value||'';
+      desc=desc.trim(); rec=rec.trim();
+      if(!desc||!fn||!type||!sev){notify('Please complete all required fields: Description, CSF Function, Risk Type, and Severity.');return;}
+      var key   = window.AGENCY_KEY || 'msde';
+      var store = 'anchor_additional_risks_' + key;
+      var findings = JSON.parse(localStorage.getItem(store)||'[]');
+      var newId = 'AF-'+String(findings.length+1).padStart(3,'0');
+      findings.push({id:newId,desc:desc,fn:fn,type:type,severity:sev,cmmi:cmmi,rec:rec,status:'Open'});
+      localStorage.setItem(store, JSON.stringify(findings));
+      ['csf-af-desc','csf-af-rec'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+      ['csf-af-function','csf-af-type','csf-af-severity','csf-af-cmmi'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+      toggleCSFCapture();
+      if(typeof renderAdditionalFindings==='function') renderAdditionalFindings();
+      notify(newId+' logged — visible in Findings & Remediation → Additional Findings.');
+    };
 </script>
 </body>
 </html>
