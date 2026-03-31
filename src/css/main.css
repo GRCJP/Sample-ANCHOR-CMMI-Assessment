@@ -192,8 +192,13 @@ body.has-agency-bar #main-content { margin-top: 142px; min-height: calc(100vh - 
 
 /* CONTENT */
 .content {
-  padding: 0;
+  padding: 28px;
   flex: 1;
+}
+
+/* Agency pages: zero out .content padding — sections handle their own spacing */
+.has-agency-bar .content {
+  padding: 0;
 }
 
 .section { 
@@ -434,12 +439,17 @@ html, body {
 }
 
 .content {
-  padding: 0;
+  padding: 28px;
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+/* Agency pages override — sections control their own padding */
+.has-agency-bar .content {
+  padding: 0;
 }
 
 /* TABLE RESPONSIVENESS */
