@@ -1,6 +1,8 @@
 class AWSAPI {
   constructor() {
-    this.apiBase = process.env.API_GATEWAY_URL || 'https://api.cyberassess.com';
+    // Use runtime config injected by the page, then env var, then fallback
+    this.apiBase = (typeof window !== 'undefined' && window.ANCHOR_API_URL)
+      || 'https://rdrg014y4j.execute-api.us-east-1.amazonaws.com/prod';
     this.auth = new AWSAuth();
   }
 
