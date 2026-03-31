@@ -31,18 +31,6 @@ class MasterTracker {
         complexity: 'High',
         stage: 'Evidence Collection'
       },
-      mdh: {
-        name: 'Maryland Dept. of Health (MDH)',
-        status: 'In Progress',
-        assessor: 'S. Patel',
-        started: '2026-04-14',
-        targetEnd: '2026-05-26',
-        maturity: 2.8,
-        critical: 2,
-        progress: 45,
-        complexity: 'High',
-        stage: 'Risk Assessment'
-      },
       msde: {
         name: 'Maryland Dept. of Education (MSDE)',
         status: 'Complete',
@@ -66,30 +54,6 @@ class MasterTracker {
         progress: 30,
         complexity: 'Very High',
         stage: 'Intake & Scoping'
-      },
-      labor: {
-        name: 'Maryland Dept. of Labor',
-        status: 'Scheduled',
-        assessor: 'T. Adams',
-        started: '2026-05-05',
-        targetEnd: '2026-06-16',
-        maturity: null,
-        critical: null,
-        progress: 0,
-        complexity: 'Medium',
-        stage: 'Scheduled'
-      },
-      comptroller: {
-        name: 'Office of the Comptroller',
-        status: 'Scheduled',
-        assessor: 'J. Williams',
-        started: '2026-05-12',
-        targetEnd: '2026-06-23',
-        maturity: null,
-        critical: null,
-        progress: 0,
-        complexity: 'Medium',
-        stage: 'Scheduled'
       }
     };
   }
