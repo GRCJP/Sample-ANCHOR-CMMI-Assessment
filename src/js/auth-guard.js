@@ -79,11 +79,12 @@
       if (!allowed.includes(role)) el.style.display = 'none';
     });
 
-    // If the currently active nav item is now hidden, activate the first visible one
+    // If the currently active nav item is now hidden, activate the first visible button
+    // (exclude <a> links like ← Dashboard which have no onclick handler)
     const activeNav = document.querySelector('.nav-item.active');
     if (activeNav && activeNav.style.display === 'none') {
-      const firstVisible = document.querySelector('.topnav .nav-item:not([style*="display: none"]):not([style*="display:none"])');
-      if (firstVisible && firstVisible.onclick) {
+      const firstVisible = document.querySelector('.topnav button.nav-item:not([style*="display: none"]):not([style*="display:none"])');
+      if (firstVisible) {
         firstVisible.classList.add('active');
         activeNav.classList.remove('active');
         firstVisible.click();
