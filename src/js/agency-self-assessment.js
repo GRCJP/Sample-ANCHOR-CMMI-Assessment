@@ -275,9 +275,12 @@
   // ── Storage ───────────────────────────────────────────────────────────────
   function getAgencySlug() {
     const p = window.location.pathname;
-    if (p.includes('mdot'))  return 'mdot';
-    if (p.includes('dpscs')) return 'dpscs';
-    if (p.includes('msde'))  return 'msde';
+    if (p.includes('mdot'))        return 'mdot';
+    if (p.includes('dpscs'))       return 'dpscs';
+    if (p.includes('msde'))        return 'msde';
+    if (p.includes('mdh'))         return 'mdh';
+    if (p.includes('labor'))       return 'labor';
+    if (p.includes('comptroller')) return 'comptroller';
     return 'unknown';
   }
 
@@ -429,7 +432,35 @@
     const byFn     = {};
     CONTROLS.forEach(c => { (byFn[c.fn] = byFn[c.fn] || []).push(c); });
 
+    // Determine role for welcome banner
+    let agencyRepRole = false;
+    try { const s = JSON.parse(localStorage.getItem('anchor_session') || '{}'); agencyRepRole = s.role === 'agency_rep'; } catch(e) {}
+
     let html = `
+      ${agencyRepRole ? `
+      <div style="background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);border-radius:12px;padding:24px 28px;margin-bottom:24px;color:#fff;">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="font-size:2rem;flex-shrink:0;">🏛️</div>
+          <div>
+            <div style="font-size:1.05rem;font-weight:800;margin-bottom:6px;">Welcome to Your Cybersecurity Self-Assessment</div>
+            <div style="font-size:.84rem;opacity:.92;line-height:1.6;margin-bottom:14px;">This portal is your agency's official submission point for the Maryland DoIT Cybersecurity Assessment Program. Your responses and evidence directly inform your agency's cybersecurity maturity rating and the resulting System Assessment Report (SAR).</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">
+              <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px 14px;">
+                <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;margin-bottom:4px;">Step 1 — Questionnaire</div>
+                <div style="font-size:.8rem;opacity:.9;">Answer each control question below in your own words. Be specific — partial implementations are expected.</div>
+              </div>
+              <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px 14px;">
+                <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;margin-bottom:4px;">Step 2 — Evidence Upload</div>
+                <div style="font-size:.8rem;opacity:.9;">Upload the requested artifact for each control. Use the Evidence Collection tab to submit documents directly to your assessor.</div>
+              </div>
+              <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px 14px;">
+                <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;margin-bottom:4px;">Step 3 — Submit</div>
+                <div style="font-size:.8rem;opacity:.9;">Use the Submit to Assessor button when complete. Your assessor will review and may follow up with questions.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>` : ''}
       <div class="page-header">
         <h1>Agency Self-Assessment — NIST CSF 2.0</h1>
         <p>Your assessor uses your responses to evaluate your agency's cybersecurity posture across all six NIST CSF 2.0 functions. Answer each question in your own words — be as specific and honest as possible. There are no wrong answers; partial or in-progress implementations are expected. Upload the requested artifact for each control. Your responses save automatically as you type.</p>

@@ -43,6 +43,12 @@
       }
     }
 
+    // Non-agency pages: redirect agency_rep to their agency page
+    if (!requireAgency && role === 'agency_rep') {
+      window.location.replace(auth.getLandingPage());
+      return;
+    }
+
     // Admin-only pages
     if (requireAdmin && role !== 'admin') {
       window.location.replace(auth.getLandingPage());
