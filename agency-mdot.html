@@ -944,8 +944,58 @@
         </div>
 
         <div class="card">
-          <div class="card-title">Risk Register</div>
-          <div style="font-size:.76rem;color:#64748b;margin-bottom:10px;">Score = Likelihood × Impact weight &nbsp;|&nbsp; <span style="color:#dc2626;font-weight:700;">P1 Critical ≥15</span> &nbsp; <span style="color:#ea580c;font-weight:700;">P2 High 9–14</span> &nbsp; <span style="color:#d97706;font-weight:700;">P3 Medium 1–8</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+            <div class="card-title" style="margin-bottom:0;">Risk Register</div>
+            <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide Methodology':'▼ Show Methodology';" style="font-size:.72rem;padding:4px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#475569;cursor:pointer;font-weight:600;">▼ Show Methodology</button>
+          </div>
+          <div style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px;font-size:.75rem;">
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:10px;">How Risk Scores Are Calculated</div>
+            <div style="color:#475569;margin-bottom:10px;line-height:1.6;">Findings are derived from controls scored <strong>NOT MET</strong> during the NIST CSF 2.0 assessment. Each finding is assigned a <strong>Likelihood</strong> (based on the CMMI maturity level of the failing control) and an <strong>Impact</strong> (based on data sensitivity and mission criticality). The risk score is then calculated as:<br><strong style="color:#1e3a5f;">Score = Likelihood Weight × Impact Weight</strong></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+              <div>
+                <div style="font-weight:700;color:#1e3a5f;margin-bottom:6px;font-size:.72rem;">CMMI Score → Likelihood</div>
+                <table style="width:100%;border-collapse:collapse;font-size:.7rem;">
+                  <thead><tr style="background:#e2e8f0;"><th style="padding:4px 6px;text-align:left;">CMMI Level</th><th style="padding:4px 6px;text-align:left;">Likelihood</th></tr></thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">0 — Not Performed</td><td style="padding:4px 6px;color:#dc2626;font-weight:700;">Critical</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">1 — Initial</td><td style="padding:4px 6px;color:#ea580c;font-weight:700;">High</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">2 — Developing</td><td style="padding:4px 6px;color:#d97706;font-weight:700;">Medium</td></tr>
+                    <tr><td style="padding:4px 6px;">3+ (partial gap)</td><td style="padding:4px 6px;color:#16a34a;font-weight:700;">Low</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div style="font-weight:700;color:#1e3a5f;margin-bottom:6px;font-size:.72rem;">Data Context → Impact</div>
+                <table style="width:100%;border-collapse:collapse;font-size:.7rem;">
+                  <thead><tr style="background:#e2e8f0;"><th style="padding:4px 6px;text-align:left;">Data / System</th><th style="padding:4px 6px;text-align:left;">Impact</th></tr></thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">PII / FTI / PHI systems</td><td style="padding:4px 6px;color:#dc2626;font-weight:700;">Critical</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">Mission-critical operations</td><td style="padding:4px 6px;color:#ea580c;font-weight:700;">High</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">Administrative systems</td><td style="padding:4px 6px;color:#d97706;font-weight:700;">Medium</td></tr>
+                    <tr><td style="padding:4px 6px;">Low-sensitivity internal</td><td style="padding:4px 6px;color:#16a34a;font-weight:700;">Low</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div style="font-weight:700;color:#1e3a5f;margin-bottom:6px;font-size:.72rem;">Weight Table &amp; Priority</div>
+                <table style="width:100%;border-collapse:collapse;font-size:.7rem;">
+                  <thead><tr style="background:#e2e8f0;"><th style="padding:4px 6px;text-align:left;">Level</th><th style="padding:4px 6px;text-align:center;">Weight</th></tr></thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">Critical</td><td style="padding:4px 6px;text-align:center;font-weight:700;">5</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">High</td><td style="padding:4px 6px;text-align:center;font-weight:700;">4</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">Medium</td><td style="padding:4px 6px;text-align:center;font-weight:700;">3</td></tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px 6px;">Low</td><td style="padding:4px 6px;text-align:center;font-weight:700;">1</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:8px;font-size:.7rem;line-height:1.7;">
+                  <span style="color:#dc2626;font-weight:700;">■ P1 Critical</span> — Score ≥ 15<br>
+                  <span style="color:#ea580c;font-weight:700;">■ P2 High</span> — Score 9–14<br>
+                  <span style="color:#d97706;font-weight:700;">■ P3 Medium</span> — Score 1–8
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0;color:#64748b;font-size:.7rem;font-style:italic;">Example: DE.CM-01 (No SIEM/continuous monitoring) scored CMMI 1 → Likelihood: High (4). Agency manages transportation infrastructure and driver PII → Impact: Critical (5). Score = 4 × 5 = <strong>20</strong> → <strong style="color:#dc2626;">P1</strong></div>
+          </div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Risk ID</th><th>Finding</th><th>NIST Function</th><th>Likelihood</th><th>Impact</th><th>Score</th><th>Priority</th></tr></thead>
