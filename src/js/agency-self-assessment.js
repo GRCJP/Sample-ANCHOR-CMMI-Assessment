@@ -272,6 +272,121 @@
 
   const FN_ORDER = ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER'];
 
+  // ── Questionnaire Templates ───────────────────────────────────────────────
+  const TEMPLATE_CONFIGS = {
+    CLOUD: {
+      label: 'Cloud & SaaS-First',
+      color: '#0369a1', bg: '#e0f2fe',
+      description: 'Tailored for agencies operating predominantly in cloud and SaaS environments. Questions emphasize cloud security, vendor management, shared responsibility, and data protection in hosted platforms.',
+      overrides: {
+        'GV.SC-01': {
+          label: 'Supply Chain & SaaS Vendor Risk',
+          questions: [
+            'Does your agency have a formal SaaS and cloud vendor intake process? Describe the security review required before a new SaaS platform is approved — for example, privacy impact assessment, SOC 2 review, or data processing agreement.',
+            'How are SaaS vendors required to handle agency or student data? Are vendor contracts updated to include data processing addendums, breach notification requirements, and data deletion terms at contract end?',
+            'How does your agency manage shadow IT — unauthorized SaaS adoption by staff without formal IT approval? Is there a process for discovering, evaluating, and either approving or removing unauthorized tools?'
+          ]
+        },
+        'ID.AM-01': {
+          label: 'Cloud & SaaS Asset Inventory',
+          questions: [
+            'How does your agency maintain an inventory of cloud services, SaaS subscriptions, and IaaS/PaaS resources? What tool or process is used, and how often is it updated to reflect new adoptions or decommissions?',
+            'Does the cloud inventory distinguish between IT-approved and unauthorized (shadow IT) services? How are cloud resources tagged or classified by data sensitivity?',
+            'Does your agency have a current architecture diagram showing how cloud services integrate with on-premises systems, what data flows between them, and where security boundaries are enforced?'
+          ]
+        },
+        'PR.DS-01': {
+          label: 'Data Protection in Cloud Environments',
+          questions: [
+            'How is sensitive agency data protected when stored in cloud platforms — for example, encryption at rest, key management, and access controls? Who manages encryption keys, and are they separate from the cloud provider?',
+            'What controls prevent unauthorized export or exfiltration of agency data from cloud platforms? Are Data Loss Prevention (DLP) policies configured and do they cover cloud storage and collaboration tools?',
+            'How does your agency enforce data residency requirements — ensuring sensitive data remains within approved geographic boundaries, including for cloud backups and replicas?'
+          ]
+        }
+      }
+    },
+    HYBRID_FTI: {
+      label: 'Hybrid + FTI Safeguards',
+      color: '#7c3aed', bg: '#ede9fe',
+      description: 'Designed for agencies handling Federal Tax Information (FTI) or Criminal Justice Information (CJI). Questions address IRS Pub 1075 safeguards, CJIS Security Policy requirements, and high-risk data protection beyond standard NIST baselines.',
+      overrides: {
+        'GV.OC-01': {
+          label: 'Information Security Policy — FTI & CJI Coverage',
+          questions: [
+            'Does your Information Security Policy explicitly address FTI safeguarding requirements per IRS Publication 1075, including data handling, access control, and incident reporting obligations? When was this coverage last reviewed?',
+            'Does the policy incorporate CJIS Security Policy requirements for criminal justice data systems? Are CJIS-specific provisions documented separately or integrated into the main security policy?',
+            'Who has policy ownership for FTI and CJI compliance — is this the CISO, a dedicated compliance officer, or a role shared with the CJIS Systems Officer? How are FTI/CJI policy obligations communicated to relevant staff?'
+          ]
+        },
+        'GV.SC-01': {
+          label: 'Supply Chain Risk — FTI & Third-Party Access',
+          questions: [
+            'Do vendor contracts involving FTI access include IRS-required safeguarding provisions, including background check requirements, audit rights, and incident reporting obligations? Provide examples of FTI-related contract language.',
+            'How does your agency control and monitor third-party access to systems that process FTI or CJI? Are third-party accounts subject to the same authentication and access logging requirements as agency staff?',
+            'Has your agency had an IRS or state audit of FTI safeguarding practices? Describe any findings from prior audits and what corrective actions were implemented.'
+          ]
+        },
+        'PR.AA-01': {
+          label: 'Access Control — CJIS & FTI Compliance',
+          questions: [
+            'Do your authentication controls for CJIS systems meet CJIS Security Policy requirements, including Advanced Authentication (AA) for remote access? Describe how compliance is enforced and verified.',
+            'How is access to FTI systems controlled, logged, and reviewed? Are FTI access logs retained for the IRS-required period, and are they reviewed for unauthorized access or anomalies?',
+            'Describe how privileged access to CJIS and FTI systems is managed. Are privileged accounts subject to more frequent access reviews, and are their actions individually logged and attributable?'
+          ]
+        }
+      }
+    },
+    OT_ICS: {
+      label: 'OT/ICS + Critical Infrastructure',
+      color: '#b45309', bg: '#fef3c7',
+      description: 'Specialized for agencies operating Operational Technology (OT) or Industrial Control Systems (ICS). Questions address IT/OT network segmentation, safety system integrity, NIST SP 800-82 alignment, and the unique risks of cyber-physical infrastructure.',
+      overrides: {
+        'ID.AM-01': {
+          label: 'OT/ICS Asset Inventory & Network Architecture',
+          questions: [
+            'Does your agency maintain a separate OT/ICS asset inventory distinct from the IT inventory? Describe what OT systems, field devices, PLCs, RTUs, and HMIs are tracked, and how the inventory is kept current as field equipment changes.',
+            'Does your agency have a current OT/ICS network architecture diagram showing how operational technology networks connect to IT networks? What security controls exist at the IT/OT boundary, and when was the diagram last validated?',
+            'How does your agency address OT assets that cannot be patched due to vendor restrictions, safety certification requirements, or operational constraints? Are compensating controls documented for these systems?'
+          ]
+        },
+        'GV.SC-01': {
+          label: 'Supply Chain Risk — OT/ICS Vendors & Integrators',
+          questions: [
+            'How does your agency evaluate the cybersecurity posture of OT/ICS vendors, system integrators, and maintenance contractors before granting them access to operational technology systems? Are vendor remote access sessions monitored and time-limited?',
+            'Do contracts with OT vendors and integrators include cybersecurity requirements — for example, prohibition on default credentials, vulnerability disclosure obligations, and notification requirements for security-relevant software updates?',
+            'How does your agency manage firmware and software updates for OT/ICS systems, particularly where vendor-required update windows conflict with operational uptime requirements or safety certification constraints?'
+          ]
+        },
+        'DE.CM-01': {
+          label: 'Continuous Monitoring — OT/ICS Environment',
+          questions: [
+            'Does your agency have monitoring capabilities specific to the OT/ICS environment — for example, passive network monitoring that detects anomalous commands or unexpected device communication? Describe the tools used and the scope of coverage.',
+            'How are security events from OT/ICS systems correlated with IT security events? Is OT telemetry integrated into the SIEM, or managed through a separate process? Who is responsible for OT alert triage?',
+            'What is the defined process for responding to a cybersecurity event affecting a safety-critical OT/ICS system? How is the decision made to isolate a compromised system when doing so has operational or safety consequences?'
+          ]
+        }
+      }
+    }
+  };
+
+  function getTemplateType() {
+    const slug = getAgencySlug();
+    try {
+      var assessments = JSON.parse(localStorage.getItem('anchor_assessments') || '[]');
+      var match = assessments.find(function(a) { return a.agency && a.agency.toLowerCase().includes(slug); });
+      if (match && match.template) {
+        var t = match.template.toLowerCase();
+        if (t.includes('cloud') || t.includes('saas')) return 'CLOUD';
+        if (t.includes('fti') || t.includes('hybrid') || t.includes('high-risk') || t.includes('critical')) return 'HYBRID_FTI';
+        if (t.includes('ot') || t.includes('ics')) return 'OT_ICS';
+      }
+    } catch(e) {}
+    if (slug === 'msde')  return 'CLOUD';
+    if (slug === 'dpscs') return 'HYBRID_FTI';
+    if (slug === 'mdot')  return 'OT_ICS';
+    return null;
+  }
+
   // ── Storage ───────────────────────────────────────────────────────────────
   function getAgencySlug() {
     const p = window.location.pathname;
@@ -373,12 +488,15 @@
 
   function isAnswered(ctrl, answers) {
     const d = answers[ctrl.id];
-    return !!(d && d.answers && d.answers.some(a => a && a.trim().length > 0));
+    if (!d) return false;
+    if (d.naStatus) return true;
+    return !!(d.answers && d.answers.some(a => a && a.trim().length > 0));
   }
 
   function isComplete(ctrl, answers) {
     const d = answers[ctrl.id];
     if (!d) return false;
+    if (d.naStatus) return !!(d.naJustification && d.naJustification.trim().length > 0);
     const allAnswered = ctrl.questions.every((_, i) => d.answers && d.answers[i] && d.answers[i].trim().length > 0);
     return allAnswered && !!d.evidence;
   }
@@ -494,6 +612,20 @@
       </div>
     `;
 
+    // Template banner
+    const tplType = getTemplateType();
+    const tpl = tplType && TEMPLATE_CONFIGS[tplType];
+    if (tpl) {
+      html += `
+      <div style="background:${tpl.bg};border:1.5px solid ${tpl.color}40;border-left:4px solid ${tpl.color};border-radius:10px;padding:14px 18px;margin-bottom:22px;display:flex;align-items:flex-start;gap:12px;">
+        <div style="flex-shrink:0;background:${tpl.color};color:#fff;font-size:.65rem;font-weight:900;padding:4px 10px;border-radius:5px;letter-spacing:.06em;margin-top:1px;">TEMPLATE</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:800;color:${tpl.color};margin-bottom:3px;">${tpl.label}</div>
+          <div style="font-size:.78rem;color:#334155;line-height:1.55;">${tpl.description}</div>
+        </div>
+      </div>`;
+    }
+
     FN_ORDER.forEach(fn => {
       const ctrls = byFn[fn];
       if (!ctrls) return;
@@ -510,12 +642,16 @@
       `;
 
       ctrls.forEach((ctrl, idx) => {
-        const d      = answers[ctrl.id] || {};
-        const ans    = d.answers || [];
-        const evFile = d.evidence || '';
-        const isLast = idx === ctrls.length - 1;
-        const done   = isComplete(ctrl, answers);
-        const inProg = !done && isAnswered(ctrl, answers);
+        const d        = answers[ctrl.id] || {};
+        const ans      = d.answers || [];
+        const evFile   = d.evidence || '';
+        const isLast   = idx === ctrls.length - 1;
+        const done     = isComplete(ctrl, answers);
+        const inProg   = !done && isAnswered(ctrl, answers);
+        const override = tpl && tpl.overrides && tpl.overrides[ctrl.id];
+        const displayLabel = override ? override.label : ctrl.label;
+        const questions    = override ? override.questions : ctrl.questions;
+        const isOverridden = !!override;
 
         html += `
           <div id="sarow-${ctrl.id}" style="padding:20px 22px;${isLast ? '' : 'border-bottom:1px solid #f1f5f9;'}">
@@ -526,7 +662,8 @@
               <div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px;">
                   <span style="font-size:.65rem;font-weight:800;background:${ctrl.fnColor}15;color:${ctrl.fnColor};padding:3px 8px;border-radius:4px;border:1px solid ${ctrl.fnColor}30;">${ctrl.id}</span>
-                  <span style="font-size:.88rem;font-weight:700;color:#0f172a;">${ctrl.label}</span>
+                  <span style="font-size:.88rem;font-weight:700;color:#0f172a;">${displayLabel}</span>
+                  ${isOverridden && tpl ? `<span style="font-size:.62rem;font-weight:700;background:${tpl.color}15;color:${tpl.color};padding:2px 7px;border-radius:4px;border:1px solid ${tpl.color}30;">${tpl.label}</span>` : ''}
                 </div>
               </div>
             </div>
@@ -537,11 +674,20 @@
               ${ctrl.context}
             </div>
 
+            <!-- N/A Toggle -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+              <input type="checkbox" id="sana-${ctrl.id}" ${d.naStatus ? 'checked' : ''} onchange="setSANotApplicable('${ctrl.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:#6d28d9;">
+              <label for="sana-${ctrl.id}" style="font-size:.8rem;font-weight:600;color:#374151;cursor:pointer;">This control does not apply to our agency</label>
+            </div>
+            <div id="sana-just-${ctrl.id}" style="display:${d.naStatus ? 'block' : 'none'};margin-bottom:14px;padding:10px 14px;background:#fef9c3;border:1.5px solid #fde047;border-radius:7px;">
+              <label style="font-size:.73rem;font-weight:700;color:#92400e;display:block;margin-bottom:6px;">N/A Justification <span style="color:#dc2626;">*</span> — Required</label>
+              <textarea id="sana-just-txt-${ctrl.id}" rows="2" placeholder="Explain why this control does not apply to your agency..." onchange="setSANaJustification('${ctrl.id}',this.value)" oninput="setSANaJustification('${ctrl.id}',this.value)" style="width:100%;padding:8px 10px;border:1px solid #fde047;border-radius:6px;font-size:.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;background:#fffbeb;">${(d.naJustification||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</textarea>
+            </div>
             <!-- Questions -->
-            <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px;">
+            <div id="sana-questions-${ctrl.id}" style="display:${d.naStatus ? 'none' : 'flex'};flex-direction:column;gap:14px;margin-bottom:18px;">
         `;
 
-        ctrl.questions.forEach((q, qi) => {
+        questions.forEach((q, qi) => {
           const val = (ans[qi] || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
           html += `
               <div>
@@ -602,6 +748,26 @@
     if (!answers[ctrlId])         answers[ctrlId] = {};
     if (!answers[ctrlId].answers) answers[ctrlId].answers = [];
     answers[ctrlId].answers[qIndex] = value;
+    saveAnswers(answers);
+    updateProgress(answers);
+  };
+
+  window.setSANotApplicable = function (ctrlId, checked) {
+    const answers = loadAnswers();
+    if (!answers[ctrlId]) answers[ctrlId] = {};
+    answers[ctrlId].naStatus = checked;
+    saveAnswers(answers);
+    const justDiv      = document.getElementById('sana-just-'      + ctrlId);
+    const questionsDiv = document.getElementById('sana-questions-' + ctrlId);
+    if (justDiv)      justDiv.style.display      = checked ? 'block' : 'none';
+    if (questionsDiv) questionsDiv.style.display  = checked ? 'none'  : 'flex';
+    updateProgress(answers);
+  };
+
+  window.setSANaJustification = function (ctrlId, value) {
+    const answers = loadAnswers();
+    if (!answers[ctrlId]) answers[ctrlId] = {};
+    answers[ctrlId].naJustification = value;
     saveAnswers(answers);
     updateProgress(answers);
   };

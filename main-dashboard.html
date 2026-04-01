@@ -932,42 +932,51 @@
         <div class="tab-content active" id="tw-templates">
           <div class="info-box">Select the appropriate assessment profile based on agency characteristics. Templates pre-configure scope, controls, evidence requirements, and scoring weights. Each can be customized before assignment.</div>
           <div class="wf-grid" style="margin-bottom:20px;">
-            <div class="wf-card selected" onclick="selectTemplate(this,'Standard Enterprise')">
+            <div class="wf-card" onclick="selectTemplate(this,'Cloud & SaaS-First')">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                <div class="wf-title" style="margin-bottom:0;">Cloud &amp; SaaS-First</div>
+                <span style="font-size:.63rem;font-weight:700;background:#e0f2fe;color:#0369a1;padding:2px 7px;border-radius:4px;border:1px solid #bae6fd;">MSDE Sample</span>
+              </div>
+              <div class="wf-desc">For agencies operating predominantly in cloud and SaaS environments. Questions emphasize cloud security, vendor management, shared responsibility, and student/agency data protection in hosted platforms.</div>
+              <div class="wf-stages"><span class="wf-stage">Cloud Scoping</span><span class="wf-stage">SaaS Inventory</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">SAR</span></div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~28 days | 45 evidence items · Medium POD</div>
+            </div>
+            <div class="wf-card selected" onclick="selectTemplate(this,'Hybrid + FTI Safeguards')">
               <span class="wf-badge badge badge-blue">Selected</span>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                <div class="wf-title" style="margin-bottom:0;">Hybrid + FTI Safeguards</div>
+                <span style="font-size:.63rem;font-weight:700;background:#ede9fe;color:#7c3aed;padding:2px 7px;border-radius:4px;border:1px solid #c4b5fd;">DPSCS Sample</span>
+              </div>
+              <div class="wf-desc">For agencies handling Federal Tax Information (FTI) or Criminal Justice Information (CJI). Questions address IRS Pub 1075 safeguards, CJIS Security Policy requirements, and high-risk data protection.</div>
+              <div class="wf-stages"><span class="wf-stage">Extended Intake</span><span class="wf-stage">Full CSF</span><span class="wf-stage">FTI/CJIS Review</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~63 days | 92 evidence items · Large POD</div>
+            </div>
+            <div class="wf-card" onclick="selectTemplate(this,'OT/ICS + Critical Infrastructure')">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                <div class="wf-title" style="margin-bottom:0;">OT/ICS + Critical Infrastructure</div>
+                <span style="font-size:.63rem;font-weight:700;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:4px;border:1px solid #fde68a;">MDOT Sample</span>
+              </div>
+              <div class="wf-desc">For agencies operating Operational Technology or Industrial Control Systems. Questions address IT/OT segmentation, safety system integrity, NIST SP 800-82 alignment, and cyber-physical infrastructure risks.</div>
+              <div class="wf-stages"><span class="wf-stage">OT Scoping</span><span class="wf-stage">CSF+800-82</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~63 days | 92 evidence items · XL POD</div>
+            </div>
+            <div class="wf-card" onclick="selectTemplate(this,'Standard Enterprise IT')">
               <div class="wf-title">Standard Enterprise IT</div>
               <div class="wf-desc">Full NIST CSF 2.0 assessment for agencies with mixed on-prem/cloud infrastructure. Covers all 6 functions, 106 subcategories.</div>
               <div class="wf-stages"><span class="wf-stage">Intake</span><span class="wf-stage">Mapping</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~42 days | 4 assessors | 68 evidence items</div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~42 days | 68 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'Small Agency')">
               <div class="wf-title">Small Agency Streamlined</div>
               <div class="wf-desc">Abbreviated assessment for agencies with &lt;100 employees and low-risk profiles.</div>
               <div class="wf-stages"><span class="wf-stage">Intake</span><span class="wf-stage">Mapping</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~21 days | 2 assessors | 32 evidence items</div>
-            </div>
-            <div class="wf-card" onclick="selectTemplate(this,'OT/ICS')">
-              <div class="wf-title">OT / ICS Systems</div>
-              <div class="wf-desc">Specialized profile for operational technology environments. Includes ICS-specific controls (NIST SP 800-82).</div>
-              <div class="wf-stages"><span class="wf-stage">OT Scoping</span><span class="wf-stage">CSF+800-82</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~56 days | 5 assessors | 84 evidence items</div>
-            </div>
-            <div class="wf-card" onclick="selectTemplate(this,'Cloud-Native')">
-              <div class="wf-title">Cloud-Native (SaaS/IaaS)</div>
-              <div class="wf-desc">Tailored for cloud-first agencies. Emphasizes cloud security controls, shared responsibility, FedRAMP alignment.</div>
-              <div class="wf-stages"><span class="wf-stage">Cloud Scoping</span><span class="wf-stage">CSF+FedRAMP</span><span class="wf-stage">Evidence</span><span class="wf-stage">Risk</span><span class="wf-stage">SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~28 days | 3 assessors | 45 evidence items</div>
-            </div>
-            <div class="wf-card" onclick="selectTemplate(this,'High-Risk')">
-              <div class="wf-title">High-Risk / Critical Agency</div>
-              <div class="wf-desc">Enhanced profile for agencies handling CJI, health records, or critical infrastructure.</div>
-              <div class="wf-stages"><span class="wf-stage">Extended Intake</span><span class="wf-stage">Full CSF</span><span class="wf-stage">Tech Testing</span><span class="wf-stage">Risk</span><span class="wf-stage">POA&amp;M</span><span class="wf-stage">SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~63 days | 6 assessors | 92 evidence items</div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~21 days | 32 evidence items</div>
             </div>
             <div class="wf-card" onclick="selectTemplate(this,'Reassessment')">
               <div class="wf-title">Reassessment / Follow-up</div>
-              <div class="wf-desc">Focused reassessment for agencies completing POA&amp;M remediation.</div>
+              <div class="wf-desc">Focused reassessment for agencies completing POA&amp;M remediation. Prior assessment data carries forward to reduce scope.</div>
               <div class="wf-stages"><span class="wf-stage">POA&amp;M Review</span><span class="wf-stage">Evidence</span><span class="wf-stage">Verification</span><span class="wf-stage">Update SAR</span></div>
-              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~14 days | 2 assessors | 18 evidence items</div>
+              <div style="margin-top:10px; font-size:.75rem; color:var(--text-muted);">~14 days | 18 evidence items</div>
             </div>
           </div>
           <div class="card">
@@ -1404,8 +1413,8 @@
           <div class="card-title">Assessment Parameters</div>
           <div class="form-grid">
             <div class="form-group"><label>Lead Assessor</label><select id="ca-assessor"><option value="J. Williams" selected>J. Williams</option><option value="S. Patel">S. Patel</option><option value="R. Okafor">R. Okafor</option><option value="T. Adams">T. Adams</option><option value="M. Chen">M. Chen</option></select></div>
-            <div class="form-group"><label>Team Size</label><select id="ca-teamsize"><option value="Large (6–8 assessors)">Large (6–8 assessors)</option><option value="Standard (4–5 assessors)">Standard (4–5 assessors)</option><option value="Small (2–3 assessors)">Small (2–3 assessors)</option></select></div>
-            <div class="form-group"><label>Assessment Template</label><select id="ca-template"><option value="Standard Enterprise IT (High-Risk)" selected>Standard Enterprise IT (High-Risk)</option><option value="Standard Enterprise IT">Standard Enterprise IT</option><option value="Cloud-Only">Cloud-Only</option><option value="OT/ICS">OT/ICS</option><option value="Small Agency Streamlined">Small Agency Streamlined</option></select></div>
+            <div class="form-group"><label>Team Size</label><select id="ca-teamsize"><option value="Large">Large</option><option value="Standard">Standard</option><option value="Small">Small</option></select></div>
+            <div class="form-group"><label>Assessment Template</label><select id="ca-template"><option value="Cloud & SaaS-First">Cloud &amp; SaaS-First</option><option value="Hybrid + FTI Safeguards" selected>Hybrid + FTI Safeguards</option><option value="OT/ICS + Critical Infrastructure">OT/ICS + Critical Infrastructure</option><option value="Standard Enterprise IT">Standard Enterprise IT</option><option value="Small Agency Streamlined">Small Agency Streamlined</option><option value="Reassessment / Follow-up">Reassessment / Follow-up</option></select></div>
             <div class="form-group"><label>Maturity Group</label><select id="ca-matgroup"><option value="Group A (0.0–1.4)">Group A (0.0–1.4)</option><option value="Group B (1.5–2.5)" selected>Group B (1.5–2.5)</option><option value="Group C (2.6–3.4)">Group C (2.6–3.4)</option><option value="Group D (3.5–4.4)">Group D (3.5–4.4)</option><option value="Group E (4.5–5.0)">Group E (4.5–5.0)</option></select></div>
             <div class="form-group"><label>Start Date</label><input id="ca-start" type="date"></div>
             <div class="form-group"><label>Target End Date</label><input id="ca-end" type="date"></div>
@@ -1425,6 +1434,115 @@
   </div>
 
   <div class="notification" id="notif" role="alert" aria-live="polite"></div>
+
+  <!-- ═══ AGENCY OVERVIEW MODAL (dynamic agencies) ═══ -->
+  <div id="agency-overview-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1350;padding:24px;overflow:auto;" onclick="if(event.target===this)closeAgencyOverviewModal()">
+    <div style="max-width:780px;margin:30px auto;background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.25);overflow:hidden;">
+      <!-- Header -->
+      <div id="aom-header" style="background:linear-gradient(135deg,#0f2d5e 0%,#1a4a8a 100%);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:1.05rem;font-weight:800;color:#fff;" id="aom-title">Agency Assessment</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.7);margin-top:3px;" id="aom-sub">—</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span id="aom-template-badge" style="font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.2);color:#fff;"></span>
+          <button onclick="closeAgencyOverviewModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1.1rem;cursor:pointer;padding:4px 10px;border-radius:7px;line-height:1;">✕</button>
+        </div>
+      </div>
+
+      <div style="padding:18px 22px;max-height:78vh;overflow-y:auto;">
+
+        <!-- Stage Progress Bar -->
+        <div style="margin-bottom:20px;">
+          <div style="font-size:.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Assessment Progress</div>
+          <div id="aom-stages" style="display:flex;gap:0;align-items:center;"></div>
+        </div>
+
+        <!-- Summary Cards Row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;" id="aom-summary-cards">
+          <div style="background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:.67rem;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:.04em;">Status</div>
+            <div style="font-size:.9rem;font-weight:700;color:#1e293b;margin-top:4px;" id="aom-status-val">—</div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:.67rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.04em;">POD</div>
+            <div style="font-size:.9rem;font-weight:700;color:#1e293b;margin-top:4px;" id="aom-pod-val">—</div>
+          </div>
+          <div style="background:#fdf4ff;border:1px solid #d8b4fe;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:.67rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.04em;">Template</div>
+            <div style="font-size:.82rem;font-weight:700;color:#1e293b;margin-top:4px;" id="aom-tpl-val">—</div>
+          </div>
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:.67rem;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.04em;">Wave</div>
+            <div style="font-size:.82rem;font-weight:700;color:#1e293b;margin-top:4px;" id="aom-wave-val">—</div>
+          </div>
+        </div>
+
+        <!-- Two-column detail -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+          <!-- Agency Info -->
+          <div style="border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;">
+            <div style="font-size:.78rem;font-weight:700;color:#0f2d5e;margin-bottom:10px;">Agency Details</div>
+            <div id="aom-agency-details" style="font-size:.8rem;line-height:1.9;color:#374151;"></div>
+          </div>
+          <!-- Point of Contact -->
+          <div style="border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;">
+            <div style="font-size:.78rem;font-weight:700;color:#0f2d5e;margin-bottom:10px;">Point of Contact</div>
+            <div id="aom-poc-details" style="font-size:.8rem;line-height:1.9;color:#374151;"></div>
+          </div>
+        </div>
+
+        <!-- System Environment -->
+        <div style="border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:18px;">
+          <div style="font-size:.78rem;font-weight:700;color:#0f2d5e;margin-bottom:10px;">System Environment</div>
+          <div id="aom-env-details" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:.78rem;color:#374151;"></div>
+        </div>
+
+        <!-- Kick-off Package Section -->
+        <div id="aom-kickoff-panel" style="border:1px solid #c7d2fe;border-radius:10px;background:#f8f9ff;padding:16px 18px;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:.85rem;font-weight:700;color:#3730a3;">Kick-off Package</div>
+            <span id="aom-kickoff-status-badge" style="display:none;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#d1fae5;color:#065f46;">Sent</span>
+          </div>
+          <div style="font-size:.78rem;color:#4338ca;margin-bottom:12px;" id="aom-kickoff-desc">Send the assessment kick-off package to the agency point of contact. This includes the scope confirmation, questionnaire link, evidence request list, and intake portal access.</div>
+
+          <!-- Confirm step (hidden by default) -->
+          <div id="aom-kickoff-confirm" style="display:none;background:#fff;border:1px solid #c7d2fe;border-radius:8px;padding:14px;margin-bottom:12px;">
+            <div style="font-size:.8rem;font-weight:700;color:#1e293b;margin-bottom:10px;">Review before sending</div>
+            <div id="aom-kickoff-review-body" style="font-size:.78rem;color:#374151;line-height:1.8;margin-bottom:12px;"></div>
+            <label style="display:flex;align-items:flex-start;gap:8px;font-size:.78rem;color:#374151;cursor:pointer;">
+              <input type="checkbox" id="aom-kickoff-confirm-check" style="margin-top:2px;flex-shrink:0;">
+              <span>I confirm the template, scope, and recipient information above are correct and authorise sending this kick-off package.</span>
+            </label>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="aom-kickoff-btn" class="btn btn-primary btn-sm" onclick="aomSendKickoff()" style="font-size:.78rem;">Send Kick-off Package</button>
+            <button id="aom-kickoff-cancel-btn" class="btn btn-outline btn-sm" onclick="aomCancelKickoff()" style="display:none;font-size:.78rem;">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Advance Stage -->
+        <div style="border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:4px;">
+          <div style="font-size:.78rem;font-weight:700;color:#0f2d5e;margin-bottom:10px;">Advance Assessment Stage</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select id="aom-next-stage" style="flex:1;min-width:200px;padding:7px 10px;border:1px solid #cbd5e0;border-radius:7px;font-size:.8rem;">
+              <option value="Intake & Scoping">Intake &amp; Scoping</option>
+              <option value="Kick-off Sent">Kick-off Sent</option>
+              <option value="Evidence Collection">Evidence Collection</option>
+              <option value="CSF Assessment">CSF Assessment</option>
+              <option value="Analysis & Scoring">Analysis &amp; Scoring</option>
+              <option value="Findings Review">Findings Review</option>
+              <option value="POA&M Development">POA&amp;M Development</option>
+              <option value="Complete">Complete</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="aomAdvanceStage()" style="font-size:.78rem;">Update Stage</button>
+          </div>
+        </div>
+
+      </div><!-- end scroll -->
+    </div>
+  </div>
 
   <!-- Edit User Modal -->
   <div id="edit-user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1400;align-items:center;justify-content:center;">
@@ -1623,8 +1741,8 @@
         if(document.getElementById('ca-execbranch')) document.getElementById('ca-execbranch').value = 'Yes';
         if(document.getElementById('ca-doit')) document.getElementById('ca-doit').value = 'Yes';
         if(document.getElementById('ca-assessor')) document.getElementById('ca-assessor').value = 'J. Williams';
-        if(document.getElementById('ca-teamsize')) document.getElementById('ca-teamsize').value = 'Large (6–8 assessors)';
-        if(document.getElementById('ca-template')) document.getElementById('ca-template').value = 'Standard Enterprise IT (High-Risk)';
+        if(document.getElementById('ca-teamsize')) document.getElementById('ca-teamsize').value = 'Large';
+        if(document.getElementById('ca-template')) document.getElementById('ca-template').value = 'Hybrid + FTI Safeguards';
         if(document.getElementById('ca-matgroup')) document.getElementById('ca-matgroup').value = 'Group B (1.5–2.5)';
       }
       if(modal) modal.style.display = 'block';
@@ -1716,9 +1834,8 @@
         if (BUILT_AGENCY_PAGES.includes(agencyKey)) {
           window.location.href = `agency-${agencyKey}.html`;
         } else {
-          // Dynamic agency — stay on dashboard, navigate to portfolio
-          showSection('sa');
-          notify(`✓ ${agencyName} added to portfolio. Find it in the Agency Management table.`);
+          // Dynamic agency — navigate to generic agency page
+          window.location.href = `agency-generic.html?agency=${agencyKey}`;
         }
       }, 1200);
     }
@@ -1751,11 +1868,20 @@
       dynList.forEach(key => {
         const stored = JSON.parse(localStorage.getItem(`assessment_${key}`) || '{}');
         if(!stored || Object.keys(stored).length === 0) return;
+        const dynStatus = stored.status === 'Complete' ? 'Complete'
+          : (stored.status === 'Updated' || stored.status === 'Created' || stored.status === 'In Progress') ? 'In Progress'
+          : 'In Progress';
+        const stageProgressMap = {
+          'Intake & Scoping': '5%', 'Kick-off Sent': '15%', 'Evidence Collection': '30%',
+          'CSF Assessment': '50%', 'Analysis & Scoring': '65%', 'Findings Review': '80%',
+          'POA&M Development': '92%', 'Complete': '100%'
+        };
+        const dynStage = stored.stage || 'Intake & Scoping';
         allAgencies[key] = {
           name: stored.agencyName || key.toUpperCase(),
-          status: stored.status === 'Updated' ? 'In Progress' : 'In Progress',
-          stage: 'Intake & Scoping',
-          progress: '0%'
+          status: dynStatus,
+          stage: dynStage,
+          progress: stored.status === 'Complete' ? '100%' : (stageProgressMap[dynStage] || '5%')
         };
       });
 
@@ -1895,6 +2021,7 @@
           email: `${agencyId}@demo.maryland.gov`,
           phone: '(410) 555-0100',
           status: 'Created',
+          stage: 'Intake & Scoping',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
@@ -1906,8 +2033,185 @@
       if (BUILT_AGENCY_PAGES.includes(agencyId)) {
         window.location.href = `agency-${agencyId}.html`;
       } else {
-        notify(`⚠️ ${current.agencyName || agencyId.toUpperCase()} — full agency view not yet provisioned. Assessment data saved to portfolio.`);
+        // Dynamic agencies get the full generic agency page
+        window.location.href = `agency-generic.html?agency=${agencyId}`;
       }
+    }
+
+    // ---- AGENCY OVERVIEW MODAL (dynamic agencies) ----
+    let _aomAgencyId = null;
+    let _aomKickoffPending = false;
+
+    const AOM_STAGES = [
+      'Intake & Scoping', 'Kick-off Sent', 'Evidence Collection',
+      'CSF Assessment', 'Analysis & Scoring', 'Findings Review',
+      'POA&M Development', 'Complete'
+    ];
+
+    function openAgencyOverviewModal(agencyId) {
+      _aomAgencyId = agencyId;
+      _aomKickoffPending = false;
+      const d = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
+      const modal = document.getElementById('agency-overview-modal');
+      if (!modal) return;
+
+      // Header
+      document.getElementById('aom-title').textContent = d.agencyName || agencyId.toUpperCase();
+      document.getElementById('aom-sub').textContent = (d.systemName || '') + (d.wave ? '  ·  ' + d.wave : '');
+      const tplBadge = document.getElementById('aom-template-badge');
+      tplBadge.textContent = d.template || 'Standard Enterprise IT';
+
+      // Summary cards
+      document.getElementById('aom-status-val').textContent = d.stage || d.status || 'Intake & Scoping';
+      document.getElementById('aom-pod-val').textContent = d.pod ? 'POD ' + d.pod : '—';
+      document.getElementById('aom-tpl-val').textContent = d.template || '—';
+      document.getElementById('aom-wave-val').textContent = (d.wave || '—').replace('Wave ', 'W');
+
+      // Stage progress bar
+      const stageEl = document.getElementById('aom-stages');
+      const currentStage = d.stage || 'Intake & Scoping';
+      const currentIdx = AOM_STAGES.indexOf(currentStage);
+      stageEl.innerHTML = AOM_STAGES.map((s, i) => {
+        const done = i < currentIdx;
+        const active = i === currentIdx;
+        const bg = done ? '#16a34a' : active ? '#1a4a8a' : '#e2e8f0';
+        const color = (done || active) ? '#fff' : '#94a3b8';
+        const border = active ? '2px solid #0f2d5e' : 'none';
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:6px;background:${done?'#16a34a':active?'#1a4a8a':'#e2e8f0'};border-radius:3px;"></div>
+          <div style="font-size:.6rem;color:${active?'#1a4a8a':done?'#16a34a':'#94a3b8'};font-weight:${active?'700':'500'};text-align:center;line-height:1.3;">${s}</div>
+        </div>`;
+      }).join('');
+
+      // Set advance stage dropdown
+      const sel = document.getElementById('aom-next-stage');
+      if (sel) sel.value = currentStage;
+
+      // Agency details
+      document.getElementById('aom-agency-details').innerHTML = [
+        `<strong>Abbreviation:</strong> ${d.abbr || '—'}`,
+        `<strong>System:</strong> ${d.systemName || '—'}`,
+        `<strong>Size:</strong> ${d.agencySize || '—'}`,
+        `<strong>Data Class:</strong> ${d.dataClassification || '—'}`,
+        `<strong>FIPS:</strong> ${d.fips || '—'}`,
+        `<strong>Lead Assessor:</strong> ${d.leadAssessor || '—'}`
+      ].map(r => `<div>${r}</div>`).join('');
+
+      // POC details
+      document.getElementById('aom-poc-details').innerHTML = [
+        `<strong>Name:</strong> ${d.recipient || '—'}`,
+        `<strong>Title:</strong> ${d.contactTitle || '—'}`,
+        `<strong>Email:</strong> ${d.email || '—'}`,
+        `<strong>Phone:</strong> ${d.phone || '—'}`,
+        `<strong>Alt Contact:</strong> ${d.altName || '—'}`,
+        `<strong>Alt Email:</strong> ${d.altEmail || '—'}`
+      ].map(r => `<div>${r}</div>`).join('');
+
+      // Environment
+      document.getElementById('aom-env-details').innerHTML = [
+        ['System Type', d.systemType],['Exec Branch', d.execBranch],['DoIT Enterprise', d.doitEnterprise],
+        ['On-Premise', d.onPremInfra],['Infra Age', d.infraAge],['Segmentation', d.networkSegmentation],
+        ['App Count', d.appCount],['Virtualization', d.virtualization]
+      ].filter(([,v]) => v).map(([k,v]) =>
+        `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px;">
+          <div style="font-size:.65rem;font-weight:700;color:#64748b;text-transform:uppercase;">${k}</div>
+          <div style="font-weight:600;color:#1e293b;margin-top:2px;">${v}</div>
+        </div>`
+      ).join('');
+
+      // Kick-off panel state
+      const kickoffSent = d.kickoffSent === true;
+      document.getElementById('aom-kickoff-status-badge').style.display = kickoffSent ? 'inline-block' : 'none';
+      document.getElementById('aom-kickoff-btn').textContent = kickoffSent ? 'Resend Kick-off Package' : 'Send Kick-off Package';
+      document.getElementById('aom-kickoff-confirm').style.display = 'none';
+      document.getElementById('aom-kickoff-cancel-btn').style.display = 'none';
+      if (document.getElementById('aom-kickoff-confirm-check')) {
+        document.getElementById('aom-kickoff-confirm-check').checked = false;
+      }
+
+      modal.style.display = 'block';
+    }
+
+    function closeAgencyOverviewModal() {
+      const modal = document.getElementById('agency-overview-modal');
+      if (modal) modal.style.display = 'none';
+      _aomAgencyId = null;
+      _aomKickoffPending = false;
+    }
+
+    function aomSendKickoff() {
+      if (!_aomAgencyId) return;
+      const d = JSON.parse(localStorage.getItem(`assessment_${_aomAgencyId}`) || '{}');
+
+      if (!_aomKickoffPending) {
+        // First click — show confirmation panel
+        _aomKickoffPending = true;
+        const template = d.template || 'Standard Enterprise IT';
+        const email = d.email || '(no email on file)';
+        const recipient = d.recipient || 'Point of Contact';
+        const scope = d.scope || 'As defined in the intake form.';
+        document.getElementById('aom-kickoff-review-body').innerHTML = [
+          `<div><strong>Recipient:</strong> ${recipient} &lt;${email}&gt;</div>`,
+          `<div><strong>Template:</strong> ${template}</div>`,
+          `<div><strong>Wave / Timeline:</strong> ${d.wave || '—'}</div>`,
+          `<div><strong>Scope:</strong> ${scope}</div>`,
+          `<div style="margin-top:8px;padding:8px;background:#eff6ff;border-radius:6px;font-size:.75rem;color:#1e40af;">
+            <strong>Package contents:</strong> Scope confirmation letter · NIST CSF 2.0 questionnaire (${template}) · Evidence request list · Agency portal access link
+          </div>`
+        ].join('');
+        document.getElementById('aom-kickoff-confirm').style.display = 'block';
+        document.getElementById('aom-kickoff-cancel-btn').style.display = 'inline-block';
+        document.getElementById('aom-kickoff-btn').textContent = 'Confirm & Send';
+        return;
+      }
+
+      // Second click — confirm & send
+      const checked = document.getElementById('aom-kickoff-confirm-check')?.checked;
+      if (!checked) {
+        notify('⚠️ Please check the confirmation box before sending.');
+        return;
+      }
+
+      // Save kickoff sent state and advance stage
+      d.kickoffSent = true;
+      d.kickoffSentAt = new Date().toISOString();
+      if (!d.stage || d.stage === 'Intake & Scoping') {
+        d.stage = 'Kick-off Sent';
+      }
+      d.updatedAt = new Date().toISOString();
+      localStorage.setItem(`assessment_${_aomAgencyId}`, JSON.stringify(d));
+
+      notify(` Kick-off package sent to ${d.recipient || d.agencyName} at ${d.email}`);
+      logActivity('Kick-off Sent', d.agencyName || _aomAgencyId.toUpperCase(), `Template: ${d.template || 'Standard'}`);
+      renderPortfolio();
+      closeAgencyOverviewModal();
+      openAgencyOverviewModal(_aomAgencyId);
+    }
+
+    function aomCancelKickoff() {
+      _aomKickoffPending = false;
+      document.getElementById('aom-kickoff-confirm').style.display = 'none';
+      document.getElementById('aom-kickoff-cancel-btn').style.display = 'none';
+      const d = JSON.parse(localStorage.getItem(`assessment_${_aomAgencyId}`) || '{}');
+      const kickoffSent = d.kickoffSent === true;
+      document.getElementById('aom-kickoff-btn').textContent = kickoffSent ? 'Resend Kick-off Package' : 'Send Kick-off Package';
+    }
+
+    function aomAdvanceStage() {
+      if (!_aomAgencyId) return;
+      const sel = document.getElementById('aom-next-stage');
+      const newStage = sel?.value;
+      if (!newStage) return;
+      const d = JSON.parse(localStorage.getItem(`assessment_${_aomAgencyId}`) || '{}');
+      d.stage = newStage;
+      if (newStage === 'Complete') d.status = 'Complete';
+      else if (newStage !== 'Intake & Scoping') d.status = 'In Progress';
+      d.updatedAt = new Date().toISOString();
+      localStorage.setItem(`assessment_${_aomAgencyId}`, JSON.stringify(d));
+      notify(` Stage updated to "${newStage}" for ${d.agencyName || _aomAgencyId.toUpperCase()}`);
+      logActivity('Stage Advanced', d.agencyName || _aomAgencyId.toUpperCase(), newStage);
+      renderPortfolio();
+      openAgencyOverviewModal(_aomAgencyId);
     }
 
     // ---- UPLOAD SIMULATION ----

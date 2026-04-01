@@ -259,7 +259,7 @@
             <div class="pod-tile" id="ss-scope-header">
               <div class="pod-label">Assessment Scope</div>
               <div class="pod-size" id="ss-scope-cat-card">LARGE</div>
-              <div class="pod-sub">6&#8211;8 Assessors &nbsp;&#183;&nbsp; 42 Days</div>
+              <div class="pod-sub">42 Days</div>
               <div class="pod-rows">
                 <div class="pod-row"><span class="pk">Wave</span><span class="pv">Wave 1 &#8212; Q1&#8211;Q2 2026</span></div>
                 <div class="pod-row"><span class="pk">Pod</span><span class="pv">POD LARGE</span></div>
@@ -367,6 +367,8 @@
             d.setDate(d.getDate() + 21);
             return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
           }
+          var _storedA = {}; try { _storedA = JSON.parse(localStorage.getItem('assessment_dpscs') || '{}'); } catch(e){}
+          var template = _storedA.template || 'Hybrid + FTI Safeguards';
           var body = document.getElementById('kickoff-summary-body');
           if (body) body.innerHTML = '<div style="display:grid;gap:14px;">' +
             '<div><div style="font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:7px;">Agency Contact</div>' +
@@ -388,6 +390,12 @@
             '<div><div style="font-size:.66rem;color:#94a3b8;">Pod</div><div style="font-weight:600;font-size:.84rem;">' + pod + '</div></div>' +
             '<div><div style="font-size:.66rem;color:#94a3b8;">Lead Assessor</div><div style="font-weight:600;font-size:.84rem;">' + assessor + '</div></div>' +
             '<div><div style="font-size:.66rem;color:#94a3b8;">Team Size</div><div style="font-weight:600;font-size:.84rem;">' + teamSize + '</div></div>' +
+            '</div></div>' +
+            '<div><div style="font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:7px;">Assessment Template</div>' +
+            '<div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;">' +
+            '<div style="background:#7c3aed;color:#fff;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:8px;white-space:nowrap;">TEMPLATE</div>' +
+            '<div><div style="font-weight:700;font-size:.88rem;color:#4c1d95;">' + template + '</div>' +
+            '<div style="font-size:.71rem;color:#6d28d9;margin-top:2px;">Questionnaire, evidence requests, and CSF controls are scoped to this template.</div></div>' +
             '</div></div>' +
             '<div><div style="font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:7px;">Scope Classification</div>' +
             '<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:14px;">' +
@@ -933,12 +941,9 @@
           <div class="table-wrap">
             <table>
               <thead><tr><th>Risk ID</th><th>Finding</th><th>NIST Function</th><th>Likelihood</th><th>Impact</th><th>Score</th><th>Priority</th></tr></thead>
-              <tbody>
-                <tr><td>R-001</td><td>No formal information security policy framework</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td>P1</td></tr>
-                <tr><td>R-002</td><td>Risk management process not documented or repeatable</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td>P1</td></tr>
-                <tr><td>R-003</td><td>Supply chain risk not formally assessed</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
-                <tr><td>R-004</td><td>Roles &amp; responsibilities for cybersecurity undefined</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Medium</td><td>High</td><td><span class="badge badge-orange">12</span></td><td>P2</td></tr>
-                <tr><td>R-005</td><td>No cybersecurity awareness training program</td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Medium</td><td>Medium</td><td><span class="badge badge-orange">9</span></td><td>P2</td></tr>
+              <tbody id="risk-register-tbody">
+                <tr><td>R-001</td><td>Supply chain risk not formally assessed <span style="font-size:.68rem;color:#94a3b8;">GV.SC-01</span></td><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Critical</td><td>Critical</td><td><span class="badge badge-red">25</span></td><td><strong>P1</strong></td></tr>
+                <tr><td>R-002</td><td>Identity and credential management controls insufficient <span style="font-size:.68rem;color:#94a3b8;">PR.AA-01</span></td><td><span class="fn-tag fn-protect">PROTECT</span></td><td>High</td><td>Critical</td><td><span class="badge badge-red">20</span></td><td><strong>P1</strong></td></tr>
               </tbody>
             </table>
           </div>
@@ -1602,6 +1607,12 @@
           if (resultSel) resultSel.value = st.result;
           if (ctrlEl) { ctrlEl.classList.remove('met','not-met','na','unscored'); ctrlEl.classList.add(st.result==='MET'?'met':st.result==='NOT MET'?'not-met':st.result==='N/A'?'na':'unscored'); }
           if (pill) { pill.className='srtm-pill '+(st.result==='MET'?'srtm-pill-met':st.result==='NOT MET'?'srtm-pill-notmet':st.result==='N/A'?'srtm-pill-na':'srtm-pill-unscored'); pill.textContent=st.result; }
+          if (st.result === 'N/A') {
+            const naJustDiv = document.getElementById('na-just-' + safe);
+            const naJustTxt = document.getElementById('na-just-txt-' + safe);
+            if (naJustDiv) naJustDiv.style.display = 'block';
+            if (naJustTxt && st.naJustification) naJustTxt.value = st.naJustification;
+          }
         }
         if (st.cmmi !== '' && st.cmmi !== undefined) {
           const cmmiSel = ctrlEl && ctrlEl.querySelector('select[onchange*="updateCtrlCmmi"]');
@@ -1659,6 +1670,10 @@
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
             <div class="srtm-field"><label>Overall Assessment Result</label><select data-write-only="true" onchange="updateCtrlResult('${ctrl.id}',this.value)"><option value="">&#8212; Select &#8212;</option><option value="MET">MET</option><option value="NOT MET">NOT MET</option><option value="N/A">N/A</option></select></div>
             <div class="srtm-field"><label>CMMI Maturity Level (0&#8211;5)</label><select data-write-only="true" onchange="updateCtrlCmmi('${ctrl.id}',this.value)"><option value="">&#8212; Select &#8212;</option><option value="0">0 &#8212; Nonexistent</option><option value="1">1 &#8212; Performed</option><option value="2">2 &#8212; Managed</option><option value="3">3 &#8212; Defined</option><option value="4">4 &#8212; Measured</option><option value="5">5 &#8212; Optimized</option></select></div>
+          </div>
+          <div id="na-just-${ctrl.id.replace(/\./g,'-')}" style="display:none; margin-bottom:14px; padding:10px 14px; background:#fef9c3; border:1.5px solid #fde047; border-radius:7px;">
+            <label style="font-size:.73rem; font-weight:700; color:#92400e; display:block; margin-bottom:6px;">N/A Justification <span style="color:#dc2626;">*</span> — Required when marking a control N/A</label>
+            <textarea id="na-just-txt-${ctrl.id.replace(/\./g,'-')}" rows="2" placeholder="Explain why this control does not apply to this agency or system..." onchange="updateCtrlNaJustification('${ctrl.id}',this.value)" oninput="updateCtrlNaJustification('${ctrl.id}',this.value)" style="width:100%;padding:8px 10px;border:1px solid #fde047;border-radius:6px;font-size:.78rem;resize:vertical;box-sizing:border-box;font-family:inherit;background:#fffbeb;"></textarea>
           </div>
           <div style="font-size:.75rem; font-weight:700; color:var(--primary); margin-bottom:8px;">Assessment Procedures (${ctrl.procs.length})</div>
           ${procHtml}
@@ -1732,10 +1747,18 @@
       const safe = ctrlId.replace(/\./g,'-');
       const el = document.getElementById('srtm-'+safe);
       const pill = document.getElementById('spill-'+safe);
+      const naJustDiv = document.getElementById('na-just-'+safe);
       if(el) { el.classList.remove('met','not-met','na','unscored'); el.classList.add(value==='MET'?'met':value==='NOT MET'?'not-met':value==='N/A'?'na':'unscored'); }
       if(pill) { pill.className='srtm-pill '+(value==='MET'?'srtm-pill-met':value==='NOT MET'?'srtm-pill-notmet':value==='N/A'?'srtm-pill-na':'srtm-pill-unscored'); pill.textContent=value||'Unscored'; }
+      if(naJustDiv) naJustDiv.style.display = value==='N/A' ? 'block' : 'none';
       _saveSrtmState();
       updateSrtmScoring();
+    }
+
+    function updateCtrlNaJustification(ctrlId, value) {
+      if(!srtmState[ctrlId]) srtmState[ctrlId] = {result:'',cmmi:'',procs:{}};
+      srtmState[ctrlId].naJustification = value;
+      _saveSrtmState();
     }
 
     function updateCtrlCmmi(ctrlId, value) {
@@ -1757,7 +1780,7 @@
             if(st.result==='MET') { metCnt++; fnScores[domain.fn].met++; }
             else if(st.result==='NOT MET') { notMetCnt++; fnScores[domain.fn].notmet++; }
             else if(st.result==='N/A') { naCnt++; fnScores[domain.fn].na++; }
-            if(st.cmmi!=='' && st.cmmi!==undefined && st.cmmi!=='') { cmmiSum+=st.cmmi; scoredCmmi++; fnScores[domain.fn].cmmiSum+=st.cmmi; fnScores[domain.fn].cmmiCnt++; }
+            if(st.result!=='N/A' && st.cmmi!=='' && st.cmmi!==undefined && st.cmmi!=='') { cmmiSum+=st.cmmi; scoredCmmi++; fnScores[domain.fn].cmmiSum+=st.cmmi; fnScores[domain.fn].cmmiCnt++; }
           }
         });
       });
@@ -2286,74 +2309,94 @@
       var key = window.AGENCY_KEY || 'dpscs';
       var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
       var entries = Object.entries(srtm);
-      if (entries.length === 0) return; // no data yet
+      if (entries.length === 0) return;
 
-      // Function mapping for CSF 2.0 IDs
       function csf2fn(id) {
-        if (id.startsWith('GV')) return 'GOVERN';
-        if (id.startsWith('ID')) return 'IDENTIFY';
-        if (id.startsWith('PR')) return 'PROTECT';
-        if (id.startsWith('DE')) return 'DETECT';
-        if (id.startsWith('RS')) return 'RESPOND';
-        if (id.startsWith('RC')) return 'RECOVER';
+        if (id.startsWith('GV')) return 'GOVERN'; if (id.startsWith('ID')) return 'IDENTIFY';
+        if (id.startsWith('PR')) return 'PROTECT'; if (id.startsWith('DE')) return 'DETECT';
+        if (id.startsWith('RS')) return 'RESPOND'; if (id.startsWith('RC')) return 'RECOVER';
         return null;
       }
+      // DPSCS: CJI/corrections → all functions Critical impact
+      function getImpact() { return {label:'Critical', weight:5}; }
+      function cmmiToLikelihood(cmmi) {
+        var c = parseInt(cmmi) || 0;
+        if (c === 0) return {label:'Critical', weight:5};
+        if (c === 1) return {label:'High',     weight:4};
+        if (c === 2) return {label:'Medium',   weight:3};
+        return              {label:'Low',      weight:1};
+      }
+      function scoreToPriority(s) {
+        if (s >= 15) return {label:'P1', cls:'badge-red'};
+        if (s >= 9)  return {label:'P2', cls:'badge-orange'};
+        return              {label:'P3', cls:'badge-orange'};
+      }
+      function fnTagClass(fn) {
+        var m = {GOVERN:'fn-govern',IDENTIFY:'fn-identify',PROTECT:'fn-protect',DETECT:'fn-detect',RESPOND:'fn-respond',RECOVER:'fn-recover'};
+        return m[fn] || '';
+      }
 
-      var byFn = {GOVERN:{sum:0,n:0,notMet:0},IDENTIFY:{sum:0,n:0,notMet:0},
-                  PROTECT:{sum:0,n:0,notMet:0},DETECT:{sum:0,n:0,notMet:0},
-                  RESPOND:{sum:0,n:0,notMet:0},RECOVER:{sum:0,n:0,notMet:0}};
-      var totalCmmi = 0, totalN = 0, totalNotMet = 0, totalAssessed = entries.length;
+      var ctrlMap = {};
+      SRTM_DATA.forEach(function(domain) { domain.controls.forEach(function(ctrl) { ctrlMap[ctrl.id] = {name:ctrl.name, fn:domain.fn}; }); });
+
+      var findings = [];
+      var byFn = {GOVERN:{sum:0,n:0},IDENTIFY:{sum:0,n:0},PROTECT:{sum:0,n:0},DETECT:{sum:0,n:0},RESPOND:{sum:0,n:0},RECOVER:{sum:0,n:0}};
+      var totalCmmi = 0, totalN = 0;
 
       entries.forEach(function(e) {
         var id = e[0], v = e[1];
-        var fn = csf2fn(id);
-        var cmmiVal = (v.cmmi !== undefined) ? Number(v.cmmi) : 0;
-        var isNotMet = (v.result === 'NOT MET');
+        if (v.result === 'N/A') return;
+        var fn = csf2fn(id); var cmmiVal = (v.cmmi !== undefined && v.cmmi !== '') ? Number(v.cmmi) : 0;
         totalCmmi += cmmiVal; totalN++;
-        if (isNotMet) totalNotMet++;
-        if (fn && byFn[fn]) {
-          byFn[fn].sum += cmmiVal; byFn[fn].n++;
-          if (isNotMet) byFn[fn].notMet++;
-        }
+        if (fn && byFn[fn]) { byFn[fn].sum += cmmiVal; byFn[fn].n++; }
+        if (v.result !== 'NOT MET') return;
+        var info = ctrlMap[id]; if (!info) return;
+        var lh = cmmiToLikelihood(v.cmmi); var im = getImpact(info.fn);
+        var score = lh.weight * im.weight; var pr = scoreToPriority(score);
+        findings.push({id:id, name:info.name, fn:info.fn, likelihood:lh, impact:im, score:score, priority:pr});
       });
+      findings.sort(function(a,b) { return b.score - a.score || a.id.localeCompare(b.id); });
 
       var overallCmmi = totalN > 0 ? (totalCmmi / totalN).toFixed(1) : '—';
-      var criticalRisks = totalNotMet; // NOT MET = critical gap
-      var highRisks = Math.round(totalNotMet * 0.6); // subset flagged high severity
+      var p1Count = findings.filter(function(f){return f.priority.label==='P1';}).length;
+      var p2Count = findings.filter(function(f){return f.priority.label==='P2';}).length;
 
-      // Update KPI stat cards in #risk section
-      var riskSec = document.getElementById('risk');
-      if (!riskSec) return;
+      var riskSec = document.getElementById('risk'); if (!riskSec) return;
       var cards = riskSec.querySelectorAll('.stat-card');
-      if (cards[0]) { var sv = cards[0].querySelector('.stat-value'); if(sv) sv.textContent = overallCmmi; }
-      if (cards[1]) { var sv = cards[1].querySelector('.stat-value'); if(sv) sv.textContent = criticalRisks; }
-      if (cards[2]) { var sv = cards[2].querySelector('.stat-value'); if(sv) sv.textContent = highRisks; }
-      if (cards[3]) { var sv = cards[3].querySelector('.stat-value'); if(sv) sv.textContent = totalAssessed; }
+      if (cards[0]) { var sv=cards[0].querySelector('.stat-value'); if(sv) sv.textContent=overallCmmi; }
+      if (cards[1]) { var sv=cards[1].querySelector('.stat-value'); if(sv) sv.textContent=p1Count; }
+      if (cards[2]) { var sv=cards[2].querySelector('.stat-value'); if(sv) sv.textContent=p2Count; }
+      if (cards[3]) { var sv=cards[3].querySelector('.stat-value'); if(sv) sv.textContent=entries.filter(function(e){return e[1].result!=='';}).length; }
 
-      // Update CMMI table rows by matching function label text
-      var fnOrder = ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER'];
-      var rows = riskSec.querySelectorAll('table tbody tr');
-      rows.forEach(function(row) {
-        var fnCell = row.cells[0];
-        var scoreCell = row.cells[2];
-        var gapCell = row.cells[5];
-        if (!fnCell || !scoreCell) return;
-        var fnText = fnCell.innerText.trim().toUpperCase();
-        var fnData = byFn[fnText];
-        if (!fnData || fnData.n === 0) return;
-        var avgScore = (fnData.sum / fnData.n).toFixed(1);
-        scoreCell.textContent = avgScore;
-        // Update gap cell (target 3.0)
-        if (gapCell) {
-          var gap = (Number(avgScore) - 3.0).toFixed(1);
-          gapCell.textContent = gap >= 0 ? '+' + gap : gap;
-          gapCell.style.color = gap >= 0 ? '#16a34a' : '#dc2626';
-        }
+      var allTbodies = riskSec.querySelectorAll('table tbody');
+      allTbodies.forEach(function(tb) {
+        if (tb.id === 'risk-register-tbody') return;
+        Array.from(tb.rows).forEach(function(row) {
+          var fnCell = row.cells[0]; var scoreCell = row.cells[2]; var gapCell = row.cells[5];
+          if (!fnCell || !scoreCell) return;
+          var fnText = fnCell.innerText.trim().toUpperCase(); var fnData = byFn[fnText];
+          if (!fnData || fnData.n === 0) return;
+          var avg = (fnData.sum / fnData.n).toFixed(1); scoreCell.textContent = avg;
+          if (gapCell) { var g=(Number(avg)-3.0).toFixed(1); gapCell.textContent=g>=0?'+'+g:g; gapCell.style.color=g>=0?'#16a34a':'#dc2626'; }
+        });
       });
 
-      // Update Overall CMMI display in any additional spans
       var overallSpans = riskSec.querySelectorAll('.cmmi-overall, #cmmi-overall-val');
-      overallSpans.forEach(function(s) { s.textContent = overallCmmi; });
+      overallSpans.forEach(function(s){s.textContent=overallCmmi;});
+      var riskMatEl=document.getElementById('risk-overall-maturity'); if(riskMatEl&&overallCmmi!=='—') riskMatEl.textContent=overallCmmi;
+
+      var tbody = document.getElementById('risk-register-tbody'); if (!tbody || findings.length===0) return;
+      tbody.innerHTML = findings.map(function(f,i) {
+        var rid='R-'+String(i+1).padStart(3,'0');
+        var lhColor=f.likelihood.label==='Critical'?'#dc2626':f.likelihood.label==='High'?'#ea580c':f.likelihood.label==='Medium'?'#d97706':'#16a34a';
+        var imColor=f.impact.label==='Critical'?'#dc2626':f.impact.label==='High'?'#ea580c':'#16a34a';
+        return '<tr><td>'+rid+'</td><td>'+f.name+' <span style="font-size:.68rem;color:#94a3b8;">'+f.id+'</span></td>'+
+          '<td><span class="fn-tag '+fnTagClass(f.fn)+'">'+f.fn+'</span></td>'+
+          '<td style="color:'+lhColor+';font-weight:600;">'+f.likelihood.label+'</td>'+
+          '<td style="color:'+imColor+';font-weight:600;">'+f.impact.label+'</td>'+
+          '<td><span class="badge '+f.priority.cls+'">'+f.score+'</span></td>'+
+          '<td><strong>'+f.priority.label+'</strong><div style="font-size:.62rem;color:#94a3b8;margin-top:1px;">'+f.likelihood.label+' ('+f.likelihood.weight+') × '+f.impact.label+' ('+f.impact.weight+')</div></td></tr>';
+      }).join('');
     }
 
     // Hook into showSection to update risk when tab is activated
