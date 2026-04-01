@@ -10,7 +10,7 @@
 
   <!-- External dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.0/dist/amazon-cognito-identity.min.js"></script>
-  <script src="src/js/aws-auth.js?v=3"></script>
+  <script src="src/js/aws-auth.js?v=4"></script>
   <script src="src/js/auth-guard.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -18,6 +18,17 @@
   <link rel="stylesheet" href="src/css/main.css?v=10">
   <link rel="stylesheet" href="src/css/components.css?v=4">
   <link rel="stylesheet" href="src/css/accessibility.css?v=4">
+  <style>
+  .user-menu { position:relative; display:inline-block; }
+  #user-avatar { cursor:pointer !important; }
+  .user-dropdown { display:none; position:absolute; top:46px; right:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.16); min-width:230px; z-index:9999; padding:6px 0; border:1px solid #e2e8f0; }
+  .user-dropdown.active { display:block; }
+  .udd-item { display:flex; align-items:center; gap:8px; padding:9px 16px; color:#374151; font-size:.82rem; cursor:pointer; border:none; background:none; width:100%; text-align:left; text-decoration:none; }
+  .udd-item:hover { background:#f8fafc; }
+  .udd-item.danger { color:#dc2626; }
+  .udd-item.danger:hover { background:#fef2f2; }
+  .udd-divider { height:1px; background:#e2e8f0; margin:5px 0; }
+  </style>
 </head>
 <body class="has-agency-bar" data-require-auth="true" data-require-agency="DPSCS">
 
@@ -60,10 +71,20 @@
       </div>
     </div>
     <div class="app-header-right">
-      <div class="avatar" id="user-avatar" aria-label="Logged-in user" title="" style="background:rgba(255,255,255,.2);color:#fff;cursor:default;">?</div>
-      <button class="btn btn-outline btn-sm" data-action="logout" style="color:#fff;border-color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;">Sign Out</button>
-      <span id="user-name" style="display:none;"></span>
-      <span id="user-role" style="display:none;"></span>
+      <div class="user-menu" id="user-menu">
+        <div style="display:flex;align-items:center;gap:9px;cursor:pointer;" onclick="(function(e){e.stopPropagation();var d=document.getElementById('user-dropdown');if(d)d.classList.toggle('active');})(event)">
+          <div class="avatar" id="user-avatar" style="background:rgba(255,255,255,.2);color:#fff;">?</div>
+          <span id="user-role" style="font-size:.78rem;color:rgba(255,255,255,.85);font-weight:500;white-space:nowrap;">—</span>
+        </div>
+        <div class="user-dropdown" id="user-dropdown">
+          <div style="padding:14px 16px 12px;">
+            <div style="font-weight:700;font-size:.88rem;color:#1e293b;" id="user-name">—</div>
+            <div style="font-size:.76rem;color:#94a3b8;margin-top:3px;" id="user-email">—</div>
+          </div>
+          <div class="udd-divider"></div>
+          <a class="udd-item danger" href="#" onclick="anchorAuth.logout();return false;">Sign Out</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -110,123 +131,168 @@
         </div>
 
         <style>
-        .intake-group { margin-bottom: 20px; }
-        .intake-group-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; margin-bottom: 2px; }
-        .intake-group-header > span { font-size: .7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .6px; }
-        .intake-edit-btn { font-size: .7rem; color: #2563eb; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
-        .intake-edit-btn:hover { background: #eff6ff; }
-        .record-row { display: flex; align-items: baseline; padding: 7px 0; border-bottom: 1px solid #f1f5f9; gap: 12px; }
-        .record-row:last-child { border-bottom: none; }
-        .record-label { font-size: .74rem; color: var(--text-muted); min-width: 145px; flex-shrink: 0; }
-        .record-value { font-size: .82rem; color: var(--text); font-weight: 500; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        /* Accordion cards */
+        .acc-card { border:1px solid #dde3ec; border-radius:8px; overflow:hidden; background:#fff; }
+        .acc-head { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; background:#fff; border-bottom:1px solid #eef1f6; }
+        .acc-title { font-size:.82rem; font-weight:700; color:#1e293b; }
+        .acc-right { display:flex; align-items:center; gap:8px; }
+        .acc-confirmed { font-size:.72rem; color:#16a34a; font-weight:600; }
+        .acc-edit-btn { font-size:.72rem; color:#2563eb; background:none; border:1.5px solid #d1d9e6; cursor:pointer; font-weight:600; padding:2px 9px; border-radius:5px; font-family:inherit; transition:all .12s; }
+        .acc-edit-btn:hover { background:#f0f4ff; border-color:#2563eb; }
+        .acc-body { padding:2px 0 4px; }
+        .acc-row { display:flex; align-items:baseline; padding:4px 14px; border-bottom:1px solid #f4f6f9; gap:14px; }
+        .acc-row:last-child { border-bottom:none; }
+        .acc-row .ak { font-size:.75rem; color:#475569; font-weight:600; width:148px; min-width:148px; flex-shrink:0; }
+        .acc-row .av { font-size:.84rem; font-weight:500; color:#1e293b; flex:1; }
+        .acc-row .av.muted { color:#94a3b8; font-weight:400; }
+        .pts { display:none; }
+        .acc-row .av-edit { display:none; padding:4px 8px; border:1.5px solid #cbd5e1; border-radius:5px; font-size:.82rem; font-family:inherit; color:#1e293b; flex:1; background:#fff; min-width:0; }
+        .acc-row .av-edit:focus { outline:none; border-color:#2563eb; }
+        .acc-card.editing .acc-row .av { display:none; }
+        .acc-card.editing .acc-row .av-edit { display:block; }
+        .acc-card.editing .acc-confirmed { display:none; }
+        .acc-card.editing .acc-edit-btn { display:none; }
+        .acc-card .edit-actions { display:none; padding:7px 14px; justify-content:flex-end; gap:8px; border-top:1px solid #f4f6f9; }
+        .acc-card.editing .edit-actions { display:flex; }
+        /* POD tile + kickoff card (Option F style) */
+        .pod-tile { background:linear-gradient(135deg,#7c2d12,#c2410c); color:#fff; border-radius:10px; padding:18px; box-shadow:0 1px 6px rgba(0,0,0,.07); }
+        .pod-label { font-size:.58rem; text-transform:uppercase; letter-spacing:.1em; opacity:.65; margin-bottom:3px; }
+        .pod-size { font-size:2.2rem; font-weight:900; line-height:1; }
+        .pod-sub { font-size:.68rem; opacity:.8; margin-top:4px; }
+        .pod-rows { margin-top:12px; border-top:1px solid rgba(255,255,255,.15); padding-top:12px; display:flex; flex-direction:column; gap:6px; }
+        .pod-row { display:flex; justify-content:space-between; font-size:.72rem; }
+        .pod-row .pk { opacity:.7; }
+        .pod-row .pv { font-weight:600; }
+        .kickoff-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; }
+        .kickoff-title { font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; margin-bottom:10px; }
+        .kickoff-sent { display:flex; align-items:center; gap:6px; padding:8px 10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; font-size:.75rem; color:#16a34a; font-weight:600; margin-bottom:8px; }
         </style>
 
-        <div style="display:grid; grid-template-columns:1fr 380px; gap:16px; align-items:start;">
+        <div style="display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start;">
 
-          <!-- LEFT COLUMN -->
-          <div style="display:flex; flex-direction:column; gap:10px;">
+          <!-- LEFT COLUMN: Accordion cards -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:start;">
 
             <!-- Agency Profile -->
-            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #2563eb; border-radius:8px; padding:14px 16px;">
-              <div class="intake-group" style="margin-bottom:0;">
-                <div class="intake-group-header">
-                  <span>Agency Profile</span>
-                  <button class="intake-edit-btn" onclick="openEditModal('profile')">&#9998; Edit</button>
+            <div class="acc-card" style="grid-column:1/-1">
+              <div class="acc-head">
+                <span class="acc-title">Agency Profile</span>
+                <div class="acc-right">
+                  <span class="acc-confirmed">Confirmed</span>
+                  <button class="acc-edit-btn" onclick="openEditModal('profile')">Edit</button>
                 </div>
-                <div class="record-row"><span class="record-label">Agency Name</span><span class="record-value">MD Dept. of Public Safety &amp; Correctional Services (DPSCS)</span></div>
-                <div class="record-row"><span class="record-label">Primary Contact</span><span class="record-value">Angela Torres, CISO</span></div>
-                <div class="record-row"><span class="record-label">Email</span><span class="record-value">a.torres@dpscs.maryland.gov</span></div>
-                <div class="record-row"><span class="record-label">Phone</span><span class="record-value">(410) 585-3300</span></div>
-                <div class="record-row"><span class="record-label">Assessment ID</span><span class="record-value">MD-DPSCS-2026-003</span></div>
               </div>
+              <div class="acc-body">
+                <div class="acc-row"><span class="ak">Agency Name</span><span class="av" id="iv-agency-name">MD Dept. of Public Safety &amp; Correctional Services (DPSCS)</span><input class="av-edit" type="text" value="MD Dept. of Public Safety &amp; Correctional Services (DPSCS)"></div>
+                <div class="acc-row"><span class="ak">Assessment ID</span><span class="av">MD-DPSCS-2026-003</span></div>
+                <div class="acc-row"><span class="ak">Primary Contact</span><span class="av" id="iv-primary-contact">Angela Torres, CISO</span><input class="av-edit" type="text" value="Angela Torres, CISO"></div>
+                <div class="acc-row"><span class="ak">Phone</span><span class="av" id="iv-phone">(410) 585-3300</span><input class="av-edit" type="text" value="(410) 585-3300"></div>
+                <div class="acc-row"><span class="ak">Email</span><span class="av" id="iv-email">a.torres@dpscs.maryland.gov</span><input class="av-edit" type="text" value="a.torres@dpscs.maryland.gov"></div>
+                <div class="acc-row"><span class="ak">Alt. Contact</span><span class="av muted" id="iv-alt-contact">Not designated</span><input class="av-edit" type="text" placeholder="Name, Title"></div>
+                <div class="acc-row"><span class="ak">Alt. Contact Email</span><span class="av muted" id="iv-alt-email">&#8212;</span><input class="av-edit" type="text" placeholder="email@agency.gov"></div>
+                <div class="acc-row"><span class="ak">Alt. POD Assignment</span><span class="av muted" id="iv-alt-pod">&#8212;</span><input class="av-edit" type="text" placeholder="Assessor name"></div>
+              </div>
+              <div class="edit-actions"><button class="btn btn-outline btn-sm" onclick="cancelIntakeEdit(this)">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveIntakeEdit(this)">Save Changes</button></div>
             </div>
 
             <!-- IT Environment -->
-            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #0891b2; border-radius:8px; padding:14px 16px;">
-              <div class="intake-group" style="margin-bottom:0;">
-                <div class="intake-group-header">
-                  <span>IT Environment</span>
-                  <button class="intake-edit-btn" onclick="openEditModal('environment')">&#9998; Edit</button>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="acc-title">IT Environment</span>
+                <div class="acc-right">
+                  <span class="acc-confirmed">Confirmed</span>
+                  <button class="acc-edit-btn" onclick="openEditModal('environment')">Edit</button>
                 </div>
-                <div class="record-row"><span class="record-label">FTE Tier</span><span class="record-value">1,001&#8211;5,000 FTEs <span class="badge badge-blue">3 pts</span></span></div>
-                <div class="record-row"><span class="record-label">IT Complexity</span><span class="record-value">High <span class="badge badge-orange">3 pts</span></span></div>
-                <div class="record-row"><span class="record-label">Data Sensitivity</span><span class="record-value">High &#8212; FTI/CJIS/HIPAA <span class="badge badge-red">3 pts</span></span></div>
-                <div class="record-row"><span class="record-label">Cloud Environments</span><span class="record-value"><span class="badge badge-blue">Azure Government</span></span></div>
-                <div class="record-row"><span class="record-label">OT/ICS</span><span class="record-value">No OT/ICS</span></div>
-                <div class="record-row"><span class="record-label">Data Types</span><span class="record-value"><span class="badge badge-gray">PII</span> <span class="badge badge-gray">Financial</span> <span class="badge badge-gray">CJIS</span></span></div>
               </div>
+              <div class="acc-body">
+                <div class="acc-row"><span class="ak">FTE Tier</span><span class="av" id="iv-fte-tier">1,001&#8211;5,000 FTEs</span><select class="av-edit"><option>1&#8211;50 FTEs</option><option>51&#8211;250 FTEs</option><option>251&#8211;1,000 FTEs</option><option selected>1,001&#8211;5,000 FTEs</option><option>5,000+ FTEs</option></select></div>
+                <div class="acc-row"><span class="ak">IT Complexity</span><span class="av" id="iv-complexity">High &#8212; Multi-site, legacy + cloud hybrid</span><select class="av-edit"><option>Low &#8212; Single location, standard apps</option><option>Moderate &#8212; Multi-site, some custom apps</option><option selected>High &#8212; Multi-site, legacy + cloud hybrid</option><option>Very High &#8212; Enterprise, critical infrastructure</option></select></div>
+                <div class="acc-row"><span class="ak">Data Sensitivity</span><span class="av" id="iv-sensitivity">High &#8212; FTI/CJIS/HIPAA</span><select class="av-edit"><option>Low</option><option>Moderate &#8212; PII</option><option>Elevated &#8212; PII/PHI</option><option selected>High &#8212; FTI/CJIS/HIPAA</option></select></div>
+                <div class="acc-row"><span class="ak">OT/ICS</span><span class="av" id="iv-ot-ics">None</span><select class="av-edit"><option selected>None</option><option>Yes &#8212; limited interfaces</option><option>Yes &#8212; full integration</option></select></div>
+                <div class="acc-row"><span class="ak">Cloud Environments</span><span class="av" id="iv-cloud">Azure Government</span><input class="av-edit" type="text" value="Azure Government"></div>
+                <div class="acc-row"><span class="ak">On-Premise Infra</span><span class="av" id="iv-onprem">Yes &#8212; Hybrid</span><select class="av-edit"><option>Yes &#8212; Fully On-Prem</option><option selected>Yes &#8212; Hybrid</option><option>Cloud-First (minimal on-prem)</option></select></div>
+                <div class="acc-row"><span class="ak">Infrastructure Age</span><span class="av" id="iv-infra-age">Legacy (10+ yrs)</span><select class="av-edit"><option>Modern (&lt;5 yrs)</option><option>Mixed (5&#8211;10 yrs)</option><option selected>Legacy (10+ yrs)</option></select></div>
+                <div class="acc-row"><span class="ak">Network Segmentation</span><span class="av" id="iv-net-seg">Partially Segmented</span><select class="av-edit"><option>Flat Network</option><option selected>Partially Segmented</option><option>Fully Segmented</option></select></div>
+                <div class="acc-row"><span class="ak">Application Count</span><span class="av" id="iv-app-count">101&#8211;500 apps</span><select class="av-edit"><option>1&#8211;25 apps</option><option>26&#8211;100 apps</option><option selected>101&#8211;500 apps</option><option>500+ apps</option></select></div>
+                <div class="acc-row"><span class="ak">Virtualization</span><span class="av" id="iv-virtual">Partial (VMware/Hyper-V)</span><select class="av-edit"><option>None</option><option selected>Partial (VMware/Hyper-V)</option><option>Fully Virtualized</option></select></div>
+                <div class="acc-row"><span class="ak">Data Types</span><span class="av" id="iv-data-types">PII, Financial, CJIS</span><input class="av-edit" type="text" value="PII, Financial, CJIS"></div>
+              </div>
+              <div class="edit-actions"><button class="btn btn-outline btn-sm" onclick="cancelIntakeEdit(this)">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveIntakeEdit(this)">Save Changes</button></div>
             </div>
 
             <!-- Security Posture -->
-            <div style="background:#fff; border:1px solid var(--border); border-left:4px solid #7c3aed; border-radius:8px; padding:14px 16px;">
-              <div class="intake-group" style="margin-bottom:0;">
-                <div class="intake-group-header">
-                  <span>Security Posture</span>
-                  <button class="intake-edit-btn" onclick="openEditModal('posture')">&#9998; Edit</button>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="acc-title">Security Posture</span>
+                <div class="acc-right">
+                  <span class="acc-confirmed">Confirmed</span>
+                  <button class="acc-edit-btn" onclick="openEditModal('posture')">Edit</button>
                 </div>
-                <div class="record-row"><span class="record-label">Previous Assessment</span><span class="record-value">1&#8211;2 years ago</span></div>
-                <div class="record-row"><span class="record-label">MFA Coverage</span><span class="record-value">Partial &#8212; some users</span></div>
-                <div class="record-row"><span class="record-label">SIEM Deployment</span><span class="record-value">No SIEM deployed <span class="badge badge-red">Not deployed</span></span></div>
-                <div class="record-row"><span class="record-label">IR Plan</span><span class="record-value">Exists, not recently tested</span></div>
-                <div class="record-row"><span class="record-label">Self-Assessed Maturity</span><span class="record-value">Level 2 &#8212; Managed</span></div>
               </div>
+              <div class="acc-body">
+                <div class="acc-row"><span class="ak">Self-Assessed Maturity</span><span class="av" id="iv-maturity">Level 2 &#8212; Managed</span><select class="av-edit"><option>Level 1 &#8212; Initial</option><option selected>Level 2 &#8212; Managed</option><option>Level 3 &#8212; Defined</option><option>Level 4 &#8212; Quantitatively Managed</option><option>Level 5 &#8212; Optimizing</option></select></div>
+                <div class="acc-row"><span class="ak">Previous Assessment</span><span class="av" id="iv-prev-assess">1&#8211;2 years ago</span><select class="av-edit"><option>No prior assessment</option><option>3+ years ago</option><option selected>1&#8211;2 years ago</option><option>Within last year</option></select></div>
+                <div class="acc-row"><span class="ak">MFA Coverage</span><span class="av" id="iv-mfa">Partial &#8212; some users</span><select class="av-edit"><option>Not deployed</option><option selected>Partial &#8212; some users</option><option>Widespread &#8212; most users</option><option>Full &#8212; all users</option></select></div>
+                <div class="acc-row"><span class="ak">IR Plan</span><span class="av" id="iv-ir-plan">Exists, not recently tested</span><select class="av-edit"><option>No IR plan</option><option selected>Exists, not recently tested</option><option>Exists, tested annually</option></select></div>
+                <div class="acc-row"><span class="ak">SIEM Deployment</span><span class="av" id="iv-siem">Not deployed &#8212; gap identified</span><select class="av-edit"><option selected>Not deployed &#8212; gap identified</option><option>Partially deployed</option><option>Fully deployed</option></select></div>
+              </div>
+              <div style="padding:5px 14px 3px; border-top:1px solid #eef1f6; border-bottom:1px solid #eef1f6; background:#f9fafb; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#64748b;">Prior Assessment</span>
+                <span style="font-size:.62rem; color:#94a3b8;">Wave 0 &middot; Q3 2023</span>
+              </div>
+              <div class="acc-body" style="padding-top:2px;">
+                <div class="acc-row"><span class="ak">Assessor</span><span class="av">R. Okafor (DoIT ANCHOR)</span></div>
+                <div class="acc-row"><span class="ak">Maturity Trend</span><span class="av">1.6 &rarr; 2.0 &nbsp;<span style="color:#16a34a;font-size:.75rem;font-weight:700;">&#8593; +0.4</span></span></div>
+                <div class="acc-row"><span class="ak">Total Findings</span><span class="av">17 &nbsp;&#183;&nbsp; 6 critical</span></div>
+                <div class="acc-row"><span class="ak">Remediation</span><span class="av">10 of 17 closed <span style="color:#94a3b8;">(59%)</span></span></div>
+                <div class="acc-row"><span class="ak">SAR Delivered</span><span class="av">Nov 12, 2023</span></div>
+              </div>
+              <div class="edit-actions"><button class="btn btn-outline btn-sm" onclick="cancelIntakeEdit(this)">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveIntakeEdit(this)">Save Changes</button></div>
             </div>
+
 
           </div>
 
           <!-- RIGHT COLUMN -->
           <div style="display:flex; flex-direction:column; gap:10px;">
 
-            <!-- POD + Scope Summary tile -->
-            <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,.07);">
-              <div id="ss-scope-header" style="background:linear-gradient(135deg,#7c2d12,#c2410c); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
-                <div>
-                  <div style="font-size:.6rem; text-transform:uppercase; letter-spacing:.1em; opacity:.7; margin-bottom:4px;">Assessment Scope Category</div>
-                  <div style="font-size:2.2rem; font-weight:900; letter-spacing:.02em; line-height:1;" id="ss-scope-cat-card">LARGE</div>
-                  <div style="font-size:.7rem;opacity:.85;margin-top:4px;">6&#8211;8 Assessors &nbsp;&#183;&nbsp; 42 Days &nbsp;&#183;&nbsp; Wave 1 &#8212; Q1&#8211;Q2 2026</div>
-                </div>
-                </div>
+            <div class="pod-tile" id="ss-scope-header">
+              <div class="pod-label">Assessment Scope</div>
+              <div class="pod-size" id="ss-scope-cat-card">LARGE</div>
+              <div class="pod-sub">6&#8211;8 Assessors &nbsp;&#183;&nbsp; 42 Days</div>
+              <div class="pod-rows">
+                <div class="pod-row"><span class="pk">Wave</span><span class="pv">Wave 1 &#8212; Q1&#8211;Q2 2026</span></div>
+                <div class="pod-row"><span class="pk">Pod</span><span class="pv">POD LARGE</span></div>
+                <div class="pod-row"><span class="pk">Lead Assessor</span><span class="pv">R. Okafor</span></div>
+                <div class="pod-row"><span class="pk">Window</span><span class="pv">Apr 14 &#8211; May 26, 2026</span></div>
+                <div class="pod-row"><span class="pk">Maturity Group</span><span class="pv">Group B (1.5&#8211;2.5)</span></div>
               </div>
-              <div style="padding:14px 16px;">
-                <div style="font-size:.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:8px;">Scope Summary</div>
-                <table style="width:100%; font-size:.78rem; border-collapse:collapse;">
-                  <tbody>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">FTE Tier</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">1,001&#8211;5,000 FTEs&nbsp;<span class="badge badge-blue">3 pts</span></td></tr>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">IT Complexity</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">High &#8212; hybrid cloud, OT/ICS&nbsp;<span class="badge badge-orange">3 pts</span></td></tr>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">Data Sensitivity</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">High &#8212; FTI, CJIS, HIPAA&nbsp;<span class="badge badge-red">3 pts</span></td></tr>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">Cloud</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">Azure Government&nbsp;<span class="badge badge-green">In Scope</span></td></tr>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">OT/ICS</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">Yes &#8212; limited interfaces&nbsp;<span class="badge badge-orange">Partial</span></td></tr>
-                    <tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 2px;color:var(--text-muted);white-space:nowrap;font-size:.76rem;">FIPS Impact</td><td style="padding:5px 2px;font-size:.76rem;word-break:break-word;">High&nbsp;<span class="badge badge-red">HIGH</span></td></tr>
-                    <tr><td style="padding:5px 4px; color:var(--text-muted);">Scope Category</td><td style="padding:5px 4px;"><span id="ss-scope-pts" style="background:#c2410c; color:#fff; border-radius:4px; padding:2px 7px; font-size:.7rem; font-weight:700;">9 pts</span></td><td style="padding:5px 4px; font-weight:700;"><span id="ss-scope-cat" style="color:#c2410c;">LARGE</span</td></tr>
-                  </tbody>
-                </table>
-              </div>
-                  <span id="ss-scope-cat-card2" style="display:none;"></span>
+              <button class="acc-edit-btn" style="color:rgba(255,255,255,.6); margin-top:10px; font-size:.65rem;" onclick="openEditModal('timeline')">Edit Assignment</button>
+              <span id="ss-scope-cat" style="display:none;">LARGE</span>
+              <span id="ss-scope-cat-card2" style="display:none;"></span>
               <span id="scope-total" style="display:none;"></span>
-            </div>
+              <span id="ss-scope-pts" style="display:none;">9</span>
             </div>
 
-            <!-- Assessment Assignment -->
-            <div class="intake-group" style="background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #d97706; border-radius:8px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,.04); margin-top:14px; margin-bottom:0;">
-              <div class="intake-group-header">
-                <span>Assessment Assignment</span>
-                <button class="intake-edit-btn" onclick="openEditModal('timeline')">&#9998; Edit</button>
+            <div style="background:#fff; border:1px solid #dde3ec; border-radius:8px; overflow:hidden;">
+              <div style="padding:8px 13px; background:#fff; border-bottom:1px solid #eef1f6; display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:.78rem; font-weight:700; color:#1e293b;">Pre-Assessment Flags</span>
+                <span style="font-size:.68rem; color:#94a3b8;">5 observations</span>
               </div>
-              <div class="record-row"><span class="record-label">Wave</span><span class="record-value">Wave 1 &#8212; Q1&#8211;Q2 2026</span></div>
-              <div class="record-row"><span class="record-label">Pod</span><span class="record-value">POD LARGE</span></div>
-              <div class="record-row"><span class="record-label">Lead Assessor</span><span class="record-value">R. Okafor</span></div>
-              <div class="record-row"><span class="record-label">Team Size</span><span class="record-value">Large (6&#8211;8 assessors)</span></div>
-              <div class="record-row"><span class="record-label">Start Date</span><span class="record-value">Apr 14, 2026</span></div>
-              <div class="record-row"><span class="record-label">End Date</span><span class="record-value">May 26, 2026</span></div>
-              <div class="record-row"><span class="record-label">Maturity Group</span><span class="record-value">Group B (1.5&#8211;2.5)</span></div>
+              <div>
+                <div style="display:flex; align-items:flex-start; gap:9px; padding:6px 13px; border-bottom:1px solid #f4f6f9;"><span style="color:#dc2626; font-size:.8rem; flex-shrink:0; line-height:1.5;">●</span><span style="font-size:.77rem; color:#374151; line-height:1.45;">No SIEM deployed — DE.CM controls likely to generate findings</span></div>
+                <div style="display:flex; align-items:flex-start; gap:9px; padding:6px 13px; border-bottom:1px solid #f4f6f9;"><span style="color:#dc2626; font-size:.8rem; flex-shrink:0; line-height:1.5;">●</span><span style="font-size:.77rem; color:#374151; line-height:1.45;">Criminal justice data (CJIS) — CJIS Security Policy compliance review required</span></div>
+                <div style="display:flex; align-items:flex-start; gap:9px; padding:6px 13px; border-bottom:1px solid #f4f6f9;"><span style="color:#d97706; font-size:.8rem; flex-shrink:0; line-height:1.5;">●</span><span style="font-size:.77rem; color:#374151; line-height:1.45;">MFA partially deployed — access control gaps expected</span></div>
+                <div style="display:flex; align-items:flex-start; gap:9px; padding:6px 13px; border-bottom:1px solid #f4f6f9;"><span style="color:#d97706; font-size:.8rem; flex-shrink:0; line-height:1.5;">●</span><span style="font-size:.77rem; color:#374151; line-height:1.45;">FTI &amp; HIPAA data — IRS Safeguard and HIPAA Security Rule procedures required</span></div>
+                <div style="display:flex; align-items:flex-start; gap:9px; padding:6px 13px;"><span style="color:#16a34a; font-size:.8rem; flex-shrink:0; line-height:1.5;">●</span><span style="font-size:.77rem; color:#374151; line-height:1.45;">No OT/ICS systems — standard IT assessment scope applies</span></div>
+              </div>
             </div>
 
-            <!-- Assessment Actions -->
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px; margin-top:10px;">
-              <div style="font-size:.7rem; font-weight:800; color:#15803d; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Assessment Actions</div>
-              <div style="font-size:.78rem; color:#166534; margin-bottom:12px;">All intake data confirmed. Ready to initiate the assessment kick-off sequence.</div>
-              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.83rem; font-weight:700; margin-bottom:8px;" onclick="showKickoffModal()">&#128228; Send Kick-Off Package</button>
-              <button class="btn btn-outline" style="width:100%; padding:8px; font-size:.78rem;" onclick="notify('Reminder set for kick-off follow-up in 48 hours.','success')">&#128276; Set Follow-Up Reminder</button>
+            <div class="kickoff-card">
+              <div class="kickoff-title">Kick-Off Package</div>
+              <div class="kickoff-sent">Sent &#8212; Feb 10, 2026</div>
+              <button class="btn btn-primary" style="width:100%; padding:10px; font-size:.83rem; font-weight:700; margin-bottom:7px;" onclick="showKickoffModal()">Send Kick-Off Package</button>
+              <button class="btn btn-outline" style="width:100%; padding:8px; font-size:.78rem;" onclick="notify('Reminder set for kick-off follow-up in 48 hours.','success')">Set Follow-Up Reminder</button>
             </div>
 
           </div>
@@ -237,13 +303,13 @@
           <div style="background:#fff; border-radius:14px; max-width:580px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);">
             <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb); color:#fff; padding:20px 24px; border-radius:14px 14px 0 0;">
               <div style="font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.7; margin-bottom:4px;">ANCHOR Platform — Pre-Assessment</div>
-              <div style="font-size:1.1rem; font-weight:800;">&#128230; Kick-Off Package — Review &amp; Confirm</div>
+              <div style="font-size:1.1rem; font-weight:800;">Kick-Off Package — Review &amp; Confirm</div>
               <div style="font-size:.76rem; opacity:.8; margin-top:4px;">Verify the information below. Confirming saves all intake data and advances the pipeline.</div>
             </div>
             <div id="kickoff-summary-body" style="padding:20px 24px;"></div>
             <div style="padding:14px 24px; border-top:1px solid #e2e8f0; display:flex; gap:10px; justify-content:flex-end; background:#f8fafc; border-radius:0 0 14px 14px;">
               <button class="btn btn-outline" onclick="closeKickoffModal()">Cancel</button>
-              <button class="btn btn-primary" onclick="confirmAndSendKickoff()" style="padding:10px 22px; font-weight:700;">&#10003;&nbsp; Confirm &amp; Send Package</button>
+              <button class="btn btn-primary" onclick="confirmAndSendKickoff()" style="padding:10px 22px; font-weight:700;">Confirm &amp; Send Package</button>
             </div>
           </div>
         </div>
@@ -347,7 +413,46 @@
           if (typeof notify === 'function') notify('&#128230; Kick-off package confirmed and sent to ' + email);
         }
         function openEditModal(section) {
-          if (typeof notify === 'function') notify('Opening ' + section + ' editor \u2014 feature available in full deployment.', 'info');
+          var sectionMap = { profile: 0, environment: 1, posture: 2 };
+          var idx = sectionMap[section];
+          if (idx === undefined) { if (typeof notify === 'function') notify('Edit not available for this field.', 'info'); return; }
+          var cards = document.querySelectorAll('#questionnaire .acc-card');
+          var card = cards[idx];
+          if (!card) return;
+          card.querySelectorAll('.acc-row').forEach(function(row) {
+            var av = row.querySelector('.av');
+            var inp = row.querySelector('.av-edit');
+            if (!av || !inp) return;
+            var displayText = av.textContent.trim();
+            if (inp.tagName === 'SELECT') {
+              for (var i = 0; i < inp.options.length; i++) {
+                if (inp.options[i].text.trim() === displayText) { inp.selectedIndex = i; break; }
+              }
+            } else {
+              inp.value = displayText !== '\u2014' ? displayText : '';
+            }
+          });
+          card.classList.add('editing');
+          var firstInput = card.querySelector('.av-edit');
+          if (firstInput) setTimeout(function() { firstInput.focus(); }, 50);
+        }
+        function saveIntakeEdit(btn) {
+          var card = btn.closest('.acc-card');
+          if (!card) return;
+          card.querySelectorAll('.acc-row').forEach(function(row) {
+            var av = row.querySelector('.av');
+            var inp = row.querySelector('.av-edit');
+            if (!av || !inp) return;
+            var newVal = inp.tagName === 'SELECT' ? inp.options[inp.selectedIndex].text.trim() : inp.value.trim();
+            av.textContent = newVal || '\u2014';
+            av.className = (!newVal || newVal === '\u2014') ? 'av muted' : 'av';
+          });
+          card.classList.remove('editing');
+          if (typeof notify === 'function') notify('Intake data updated successfully.', 'success');
+        }
+        function cancelIntakeEdit(btn) {
+          var card = btn.closest('.acc-card');
+          if (card) card.classList.remove('editing');
         }
         </script>
       </section>
@@ -506,13 +611,30 @@
 
         <!-- INTERVIEW QUESTIONNAIRE TAB -->
         <div class="tab-content" id="t2-interview">
-          <div class="info-box">Structured interview questionnaire aligned to CSF assessment domains. Answers inform control assessment and provide supporting narrative evidence.</div>
+          <div class="info-box">Schedule and track interviews with agency personnel. Responses from the CSF questionnaire below inform control assessment and scoring.</div>
+          <!-- Interview Schedule Stats -->
           <div class="grid-4" style="margin-bottom:18px;">
             <div class="stat-card"><div class="stat-label">Total Questions</div><div class="stat-value" id="iq-total">0</div><div class="stat-sub">Across all domains</div></div>
             <div class="stat-card green"><div class="stat-label">Answered</div><div class="stat-value" id="iq-answered">0</div><div class="stat-sub">Responses recorded</div></div>
-            <div class="stat-card accent"><div class="stat-label">Pending</div><div class="stat-value" id="iq-pending">0</div><div class="stat-sub">Awaiting response</div></div>
-            <div class="stat-card"><div class="stat-label">Personnel</div><div class="stat-value" id="iq-personnel">0</div><div class="stat-sub">Interviewees identified</div></div>
+            <div class="stat-card accent"><div class="stat-label">Scheduled</div><div class="stat-value" id="is-sched-count">0</div><div class="stat-sub">Upcoming interviews</div></div>
+            <div class="stat-card green"><div class="stat-label">Completed</div><div class="stat-value" id="is-done-count">0</div><div class="stat-sub">Interviews finished</div></div>
           </div>
+          <!-- Interview Schedule Card -->
+          <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+              <div class="card-title" style="margin-bottom:0;">Interview Schedule</div>
+              <button class="btn btn-primary btn-sm" onclick="AnchorInterviewScheduler.openModal()">+ Schedule Interview</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>INT #</th><th>Interviewee</th><th>Role</th><th>Date / Time</th><th>Controls Covered</th><th>Status</th><th style="width:130px;"></th></tr>
+                </thead>
+                <tbody id="is-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- CSF Questionnaire Card -->
           <div class="card">
             <div class="card-title">CSF Assessment Interview Questionnaire &#8212; DPSCS</div>
             <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
@@ -725,7 +847,7 @@
           <p>Preliminary findings from GOVERN assessment phase. Risk register will expand as CSF Assessment progresses through all six functions.</p>
         </div>
 
-        <div class="grid-4" style="margin-bottom:20px;">
+        <div class="grid-4" style="margin-bottom:12px;">
           <div class="stat-card accent"><div class="stat-label">Overall CMMI</div><div class="stat-value">1.8</div><div class="stat-sub">Preliminary (GOVERN only)</div></div>
           <div class="stat-card red"><div class="stat-label">Critical Risks</div><div class="stat-value">2</div><div class="stat-sub">Identified to date</div></div>
           <div class="stat-card"><div class="stat-label">High Risks</div><div class="stat-value">3</div><div class="stat-sub">From GOVERN phase</div></div>
@@ -735,11 +857,11 @@
         <div class="grid-2">
           <div class="card">
             <div class="card-title">CSF Function Coverage</div>
-            <div class="chart-wrap-sm"><canvas id="radarChart" height="280"></canvas></div>
+            <div class="chart-wrap-sm"><canvas id="radarChart" height="200"></canvas></div>
           </div>
           <div class="card">
             <div class="card-title">Risk Distribution</div>
-            <div class="chart-wrap-sm"><canvas id="riskChart" height="220"></canvas></div>
+            <div class="chart-wrap-sm"><canvas id="riskChart" height="200"></canvas></div>
           </div>
         </div>
 
@@ -1020,12 +1142,7 @@
             </div>
             <div class="card" style="margin-bottom:12px;">
               <div class="card-title">Appendix B &#8212; Interview Log</div>
-              <div class="table-wrap"><table><thead><tr><th>Interview #</th><th>Interviewee</th><th>Role</th><th>Date</th><th>Controls Covered</th></tr></thead><tbody>
-                <tr><td>INT-001</td><td>D. Kim</td><td>CISO</td><td>Jun 2, 2026</td><td>GV.OC-01, GV.RM-01, GV.SC-01</td></tr>
-                <tr><td>INT-002</td><td>IT Director</td><td>IT Leadership</td><td>Jun 3, 2026</td><td>ID.AM-01, ID.AM-02, PR.PS-01</td></tr>
-                <tr><td>INT-003</td><td>SOC Manager</td><td>Security Operations</td><td>Jun 9, 2026</td><td>DE.CM-01, RS.MA-01, PR.AA-01</td></tr>
-                <tr><td>INT-004</td><td>Network Administrator</td><td>IT Operations</td><td>Jun 10, 2026</td><td>ID.AM-01, PR.PS-01, DE.CM-01</td></tr>
-              </tbody></table></div>
+              <div class="table-wrap"><table><thead><tr><th>Interview #</th><th>Interviewee</th><th>Role</th><th>Date</th><th>Controls Covered</th></tr></thead><tbody id="appendix-b-tbody"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:16px;">Loading...</td></tr></tbody></table></div>
             </div>
             <div class="card">
               <div class="card-title">Appendix C &#8212; Tools &amp; Technology Used</div>
@@ -1050,7 +1167,63 @@
     </div>
   </main>
 
-  <!-- ARTIFACT MODAL -->
+      <!-- INTERVIEW SCHEDULER MODAL -->
+      <div id="is-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:12px;width:560px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);">
+          <div style="background:linear-gradient(135deg,#0f2d5e,#1a4a8a);padding:18px 24px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+            <div style="color:#fff;font-weight:700;font-size:.95rem;" id="is-modal-title">Schedule Interview</div>
+            <button onclick="AnchorInterviewScheduler.closeModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">&times;</button>
+          </div>
+          <div style="padding:22px;">
+            <input type="hidden" id="is-modal-id">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Interviewee Name *</label>
+                <input type="text" id="is-modal-name" placeholder="Full name" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Role / Title</label>
+                <input type="text" id="is-modal-role" placeholder="e.g. CISO, IT Director" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Email</label>
+                <input type="email" id="is-modal-email" placeholder="email@agency.gov" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Status</label>
+                <select id="is-modal-status" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Date *</label>
+                <input type="date" id="is-modal-date" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+              </div>
+              <div>
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Time</label>
+                <input type="time" id="is-modal-time" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+              </div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">CSF Controls to be Covered</label>
+              <input type="text" id="is-modal-controls" placeholder="e.g. GV.OC-01, GV.RM-01, ID.AM-01" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:5px;color:#374151;">Notes</label>
+              <textarea id="is-modal-notes" rows="2" placeholder="Meeting link, prep notes, etc." style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>
+            </div>
+          </div>
+          <div style="padding:14px 24px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:10px;">
+            <button class="btn btn-outline btn-sm" onclick="AnchorInterviewScheduler.closeModal()">Cancel</button>
+            <button class="btn btn-sm" style="background:linear-gradient(135deg,#0f2d5e,#1a4a8a);color:#fff;border:none;" onclick="AnchorInterviewScheduler.saveModal()">Save Interview</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARTIFACT MODAL -->
   <div id="artifact-modal" style="display:none; position:fixed; inset:0; background:rgba(15,30,60,.6); z-index:10000; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#fff; border-radius:14px; max-width:580px; width:100%; max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);">
       <div style="background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; padding:18px 22px; border-radius:14px 14px 0 0; display:flex; justify-content:space-between; align-items:center;">
@@ -1207,7 +1380,7 @@
       const target = document.getElementById(id);
       if(target) target.classList.add('active');
       if(id==='t2-assess') initSrtm();
-      if(id==='t2-interview') { initSrtm(); }
+      if(id==='t2-interview') { initSrtm(); AnchorInterviewScheduler.render(); }
       if(id==='t2-summary') { initSrtm(); updateSummaryCharts(); }
       if(id==='t2-xwalk') { initSrtm(); }
     }
@@ -1778,7 +1951,18 @@
 
     function exportSrtm() { notify('SRTM exported: DPSCS_NIST_CSF_SRTM_Assessment.xlsx \u2014 All controls, procedures, observations, and evidence included.'); }
 
-    document.addEventListener('DOMContentLoaded', function() { initAgencyCharts(); });
+    document.addEventListener('DOMContentLoaded', function() {
+      initAgencyCharts();
+      // Initialize interview scheduler
+      if (window.AnchorInterviewScheduler) {
+        AnchorInterviewScheduler.init('dpscs', [
+          {id:'INT-001', name:'A. Torres', role:'CISO', email:'a.torres@dpscs.maryland.gov', date:'2026-04-15', time:'10:00', controls:'GV.OC-01, GV.RM-01, GV.SC-01', status:'Completed', notes:''},
+          {id:'INT-002', name:'M. Okonkwo', role:'IT Security Officer', email:'', date:'2026-04-16', time:'14:00', controls:'ID.AM-01, ID.AM-02, PR.PS-01', status:'Completed', notes:''},
+          {id:'INT-003', name:'C. Hayes', role:'SOC Manager', email:'', date:'2026-04-22', time:'10:00', controls:'DE.CM-01, RS.MA-01, PR.AA-01', status:'Scheduled', notes:'CJIS environment briefing required first'},
+          {id:'INT-004', name:'S. Rivera', role:'Network Administrator', email:'', date:'2026-04-23', time:'13:00', controls:'ID.AM-01, PR.PS-01, DE.CM-01', status:'Scheduled', notes:''}
+        ]);
+      }
+    });
 
     // ── Agency Rep Evidence Submission ────────────────────────────────────────
     const evUploaded = [];
@@ -2331,5 +2515,13 @@
       notify(newId+' logged — visible in Findings & Remediation → Additional Findings.');
     };
 </script>
+<script>
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('user-menu');
+  var drop = document.getElementById('user-dropdown');
+  if (drop && menu && !menu.contains(e.target)) drop.classList.remove('active');
+});
+</script>
+  <script src="src/js/interview-scheduler.js"></script>
 </body>
 </html>

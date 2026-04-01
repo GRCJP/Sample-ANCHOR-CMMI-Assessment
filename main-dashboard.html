@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="src/css/accessibility.css?v=4">
   <link rel="stylesheet" href="src/css/master-tracker.css?v=4">
   <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.0/dist/amazon-cognito-identity.min.js"></script>
-  <script src="src/js/aws-auth.js?v=3"></script>
+  <script src="src/js/aws-auth.js?v=4"></script>
   <script src="src/js/auth-guard.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
@@ -155,21 +155,20 @@
       </div>
     </div>
     <div class="app-header-right">
-      <div class="user-menu">
-        <div class="avatar" id="user-avatar" title="Click for options" style="background:rgba(255,255,255,.15);color:#fff;">JW</div>
+      <div class="user-menu" id="user-menu">
+        <div style="display:flex;align-items:center;gap:9px;cursor:pointer;" onclick="toggleUserDropdown(event)">
+          <div class="avatar" id="user-avatar" style="background:rgba(255,255,255,.15);color:#fff;">SP</div>
+          <span id="user-role" style="font-size:.78rem;color:rgba(255,255,255,.85);font-weight:500;white-space:nowrap;">Lead Assessor</span>
+        </div>
         <div class="user-dropdown" id="user-dropdown">
-          <div class="user-info">
-            <div class="user-name" id="user-name">Loading...</div>
-            <div class="user-email" id="user-email">...</div>
-            <div class="user-role" id="user-role">...</div>
+          <div style="padding:14px 16px 12px;">
+            <div style="font-weight:700;font-size:.88rem;color:#1e293b;" id="user-name">Loading...</div>
+            <div style="font-size:.76rem;color:#94a3b8;margin-top:3px;" id="user-email">—</div>
           </div>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item" onclick="logout(); return false;">
-            <span></span> Logout
-          </a>
+          <a href="#" class="dropdown-item" style="color:#dc2626;" onclick="logout(); return false;">Sign Out</a>
         </div>
       </div>
-      <button class="btn btn-outline btn-sm" data-action="logout" onclick="logout()" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:.75rem;">Sign Out</button>
     </div>
   </header>
 
@@ -705,13 +704,11 @@
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                 <div>
                   <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:6px;color:#374151;">Start Date</label>
-                  <input type="text" id="wem-start" placeholder="e.g. Jan 2026" pattern="[A-Z][a-z]{2}\s\d{4}" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-                  <div style="font-size:.7rem;color:#6b7280;margin-top:4px;">Format: Mon YYYY (e.g. Jan 2026)</div>
+                  <input type="month" id="wem-start" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
                 </div>
                 <div>
                   <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:6px;color:#374151;">End Date</label>
-                  <input type="text" id="wem-end" placeholder="e.g. Jun 2026" pattern="[A-Z][a-z]{2}\s\d{4}" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
-                  <div style="font-size:.7rem;color:#6b7280;margin-top:4px;">Format: Mon YYYY (e.g. Jun 2026)</div>
+                  <input type="month" id="wem-end" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
                 </div>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
@@ -727,7 +724,8 @@
                 </div>
                 <div>
                   <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:6px;color:#374151;">Agency Count</label>
-                  <input type="text" id="wem-agencies" placeholder="e.g. 15 agencies" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+                  <input type="number" id="wem-agencies" min="0" max="90" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+                  <div style="font-size:.7rem;color:#6b7280;margin-top:4px;">Auto-updated by resequencing; editable manually</div>
                 </div>
               </div>
               <div style="margin-bottom:16px;">
@@ -764,8 +762,10 @@
             </div>
             <div style="padding:24px;">
               <div style="margin-bottom:16px;">
-                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:6px;color:#374151;">Agency Name</label>
-                <input type="text" id="rseq-agency" placeholder="e.g. MDOT, DPSCS, State Police…" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+                <label style="font-size:.78rem;font-weight:700;display:block;margin-bottom:6px;color:#374151;">Agency</label>
+                <select id="rseq-agency" onchange="onAgencySelect(this)" style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem;font-family:inherit;box-sizing:border-box;">
+                  <option value="">— Select an agency —</option>
+                </select>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
                 <div>
@@ -1390,6 +1390,11 @@
             <div class="form-group"><label>Data Classification</label><select id="ca-dataclass"><option value="High – PII, Financial, CJI" selected>High – PII, Financial, CJI</option><option value="Moderate – Internal Use">Moderate – Internal Use</option><option value="Low – Public">Low – Public</option></select></div>
             <div class="form-group"><label>FIPS 199 Categorization</label><select id="ca-fips"><option value="HIGH" selected>HIGH</option><option value="MODERATE">MODERATE</option><option value="LOW">LOW</option></select></div>
             <div class="form-group"><label>Executive Branch</label><select id="ca-execbranch"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+            <div class="form-group"><label>On-Premise Infrastructure</label><select id="ca-onprem"><option value="Yes – Fully On-Prem">Yes – Fully On-Prem</option><option value="Yes – Hybrid" selected>Yes – Hybrid</option><option value="Cloud-First (minimal on-prem)">Cloud-First (minimal on-prem)</option></select></div>
+            <div class="form-group"><label>Infrastructure Age</label><select id="ca-infra-age"><option value="Modern (&lt;5 yrs)">Modern (&lt;5 yrs)</option><option value="Mixed (5–10 yrs)" selected>Mixed (5–10 yrs)</option><option value="Legacy (10+ yrs)">Legacy (10+ yrs)</option></select></div>
+            <div class="form-group"><label>Network Segmentation</label><select id="ca-net-seg"><option value="Flat Network">Flat Network</option><option value="Partially Segmented" selected>Partially Segmented</option><option value="Fully Segmented">Fully Segmented</option></select></div>
+            <div class="form-group"><label>Application Count</label><select id="ca-app-count"><option value="1–25">1–25</option><option value="26–100">26–100</option><option value="101–500" selected>101–500</option><option value="500+">500+</option></select></div>
+            <div class="form-group"><label>Virtualization</label><select id="ca-virtual"><option value="None">None</option><option value="Partial (VMware/Hyper-V)" selected>Partial (VMware/Hyper-V)</option><option value="Fully Virtualized">Fully Virtualized</option></select></div>
             <div class="form-group"><label>DoIT Enterprise</label><select id="ca-doit"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
           </div>
         </div>
@@ -1576,6 +1581,7 @@
         email:'ca-email', phone:'ca-phone', altName:'ca-alt-name', altEmail:'ca-alt-email',
         systemType:'ca-systype', agencySize:'ca-size', dataClassification:'ca-dataclass', fips:'ca-fips',
         execBranch:'ca-execbranch', doitEnterprise:'ca-doit', leadAssessor:'ca-assessor', teamSize:'ca-teamsize',
+        onPremInfra:'ca-onprem', infraAge:'ca-infra-age', networkSegmentation:'ca-net-seg', appCount:'ca-app-count', virtualization:'ca-virtual',
         template:'ca-template', maturityGroup:'ca-matgroup', startDate:'ca-start', endDate:'ca-end',
         scope:'ca-scope', notes:'ca-notes'
       };
@@ -1673,6 +1679,11 @@
         endDate: document.getElementById('ca-end').value,
         scope: document.getElementById('ca-scope').value.trim(),
         notes: document.getElementById('ca-notes').value.trim(),
+        onPremInfra: document.getElementById('ca-onprem')?.value || '',
+        infraAge: document.getElementById('ca-infra-age')?.value || '',
+        networkSegmentation: document.getElementById('ca-net-seg')?.value || '',
+        appCount: document.getElementById('ca-app-count')?.value || '',
+        virtualization: document.getElementById('ca-virtual')?.value || '',
         status: isUpdate ? 'Updated' : 'Created',
         createdAt: existing?.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -1700,7 +1711,15 @@
       
       setTimeout(() => {
         closeCreateAssessmentModal();
-        window.location.href = `agency-${agencyKey}.html`;
+        // Only navigate to agency page if it's one of the pre-built demo pages
+        const BUILT_AGENCY_PAGES = ['mdot', 'dpscs', 'msde'];
+        if (BUILT_AGENCY_PAGES.includes(agencyKey)) {
+          window.location.href = `agency-${agencyKey}.html`;
+        } else {
+          // Dynamic agency — stay on dashboard, navigate to portfolio
+          showSection('sa');
+          notify(`✓ ${agencyName} added to portfolio. Find it in the Agency Management table.`);
+        }
       }, 1200);
     }
 
@@ -1883,7 +1902,12 @@
       }
       const current = JSON.parse(localStorage.getItem(`assessment_${agencyId}`) || '{}');
       logActivity('Opened Assessment', current.agencyName || agencyId.toUpperCase(), 'Navigated to intake and scoping view');
-      window.location.href = `agency-${agencyId}.html`;
+      const BUILT_AGENCY_PAGES = ['mdot', 'dpscs', 'msde'];
+      if (BUILT_AGENCY_PAGES.includes(agencyId)) {
+        window.location.href = `agency-${agencyId}.html`;
+      } else {
+        notify(`⚠️ ${current.agencyName || agencyId.toUpperCase()} — full agency view not yet provisioned. Assessment data saved to portfolio.`);
+      }
     }
 
     // ---- UPLOAD SIMULATION ----
@@ -1914,7 +1938,7 @@
     // ---- PIPELINE GANTT ----
     function buildPipelineGantt() {
       // Base agencies from the demo cohort
-      const baseAgencies = [
+      const baseAgenciesRaw = [
         {name:'MDOT', w:1, assess:[1,3], report:[3,4], done:false},
         {name:'MSDE', w:1, assess:[0,2], report:[2,3], done:true},
         {name:'DPSCS', w:1, assess:[0,1], report:[1,2], done:true},
@@ -1931,7 +1955,20 @@
         {name:'Wave 5 Agencies (×15)', w:5, assess:[7,9], report:[9,10], done:false},
         {name:'Wave 6 Agencies (×15)', w:6, assess:[9,10], report:[10,10], done:false},
       ];
-      
+
+      // Apply any wave reassignments from resequencing
+      const _agWaves = loadAgencyWaves();
+      const baseAgencies = baseAgenciesRaw.map(a => {
+        const currentWave = (_agWaves[a.name] !== undefined) ? _agWaves[a.name] : a.w;
+        if (currentWave === a.w) return a;
+        const s = currentWave - 1;
+        return Object.assign({}, a, {
+          w: currentWave,
+          assess: [s, Math.min(s + 2, 10)],
+          report: [Math.min(s + 2, 10), Math.min(s + 3, 10)]
+        });
+      });
+
       // Get hidden base agencies
       const hiddenBase = JSON.parse(localStorage.getItem('hidden_base_agencies') || '[]');
       
@@ -1942,11 +1979,14 @@
         const stored = JSON.parse(localStorage.getItem(`assessment_${key}`) || '{}');
         if(!stored || Object.keys(stored).length === 0) return;
         // Determine wave from stored data or default to 1
-        const wave = stored.wave ? parseInt(stored.wave.match(/\d+/)?.[0] || 1) : 1;
+        const agencyName2 = stored.agencyName || key.toUpperCase();
+        const wave = (_agWaves[agencyName2] !== undefined)
+          ? _agWaves[agencyName2]
+          : (stored.wave ? parseInt(stored.wave.match(/\d+/)?.[0] || 1) : 1);
         // Determine status from stored data
         const isComplete = stored.status === 'Complete';
         dynamicAgencies.push({
-          name: stored.agencyName || key.toUpperCase(),
+          name: agencyName2,
           w: wave,
           assess: [wave-1, wave+1],
           report: [wave+1, wave+2],
@@ -2889,17 +2929,16 @@
         if (avatar) avatar.textContent = getInitials(user.name);
         if (userName) userName.textContent = user.name || 'Unknown';
         if (userEmail) userEmail.textContent = user.email || '';
-        if (userRole) userRole.textContent = (user.role || 'user').replace('_', ' ');
+        if (userRole) userRole.textContent = user.display_role || (user.role || 'user').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
       } catch (e) {
         console.error('Error loading user info:', e);
       }
     }
 
-    function toggleUserDropdown() {
+    function toggleUserDropdown(e) {
+      if (e) e.stopPropagation();
       const dropdown = document.getElementById('user-dropdown');
-      if (dropdown) {
-        dropdown.classList.toggle('active');
-      }
+      if (dropdown) dropdown.classList.toggle('active');
     }
 
     function logout() {
@@ -2917,16 +2956,11 @@
       }, 500);
     }
 
-    // Add click handler for avatar
-    document.getElementById('user-avatar').addEventListener('click', function(e) {
-      e.stopPropagation();
-      toggleUserDropdown();
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function() {
+    // Close dropdown when clicking outside user-menu
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('user-menu');
       const dropdown = document.getElementById('user-dropdown');
-      if (dropdown) dropdown.classList.remove('active');
+      if (dropdown && menu && !menu.contains(e.target)) dropdown.classList.remove('active');
     });
 
     // Load user info on page load
@@ -3154,7 +3188,73 @@
     // ══════════════════════════════════════════════════════════════════
     // WAVE MANAGEMENT — interactive wave table, edit modal, resequence
     // ══════════════════════════════════════════════════════════════════
-    const WAVES_LS_KEY = 'anchor_waves_state';
+    const WAVES_LS_KEY    = 'anchor_waves_state';
+    const AGENCY_WAVES_KEY = 'anchor_agency_waves';
+
+    // Named agencies available for resequencing (excludes wave-block placeholders)
+    const BASE_AGENCY_LIST = [
+      {name:'MDOT',                    defaultWave:1},
+      {name:'MSDE',                    defaultWave:1},
+      {name:'DPSCS',                   defaultWave:1},
+      {name:'MD State Police',         defaultWave:1},
+      {name:'Dept. of Agriculture',    defaultWave:2},
+      {name:'MD Dept. of Commerce',    defaultWave:2},
+      {name:'MD Dept. of Environment', defaultWave:2},
+      {name:'MD Human Services',       defaultWave:3},
+      {name:'MD Dept. of Health',      defaultWave:3},
+      {name:'MD Insurance Admin',      defaultWave:3},
+      {name:'MD State Archives',       defaultWave:3},
+      {name:"Governor's Office",       defaultWave:4}
+    ];
+
+    function loadAgencyWaves() {
+      try {
+        const raw = localStorage.getItem(AGENCY_WAVES_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      const d = {};
+      BASE_AGENCY_LIST.forEach(a => { d[a.name] = a.defaultWave; });
+      return d;
+    }
+    function saveAgencyWaves(map) {
+      try { localStorage.setItem(AGENCY_WAVES_KEY, JSON.stringify(map)); } catch(e) {}
+    }
+    function getAllNamedAgencies() {
+      const waves = loadAgencyWaves();
+      const result = BASE_AGENCY_LIST.map(a => ({
+        name: a.name, wave: waves[a.name] !== undefined ? waves[a.name] : a.defaultWave, isDynamic: false
+      }));
+      const dynList = JSON.parse(localStorage.getItem('dynamic_agencies') || '[]');
+      dynList.forEach(key => {
+        try {
+          const s = JSON.parse(localStorage.getItem('assessment_' + key) || '{}');
+          if (!s || !s.agencyName) return;
+          const w = waves[s.agencyName] !== undefined
+            ? waves[s.agencyName]
+            : (s.wave ? parseInt((s.wave.match(/\d+/) || [1])[0]) : 1);
+          result.push({name: s.agencyName, wave: w, isDynamic: true, key});
+        } catch(e) {}
+      });
+      return result;
+    }
+    function computeWaveCount(waveNum) {
+      return getAllNamedAgencies().filter(a => a.wave === waveNum).length;
+    }
+    // Convert "Jan 2026" → "2026-01" for <input type="month">
+    function toMonthInput(str) {
+      if (!str) return '';
+      const mo = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',
+                  Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+      const m = str.match(/^([A-Z][a-z]{2})\s(\d{4})$/);
+      return (m && mo[m[1]]) ? m[2] + '-' + mo[m[1]] : '';
+    }
+    // Auto-set From Wave when agency is selected in resequence modal
+    function onAgencySelect(sel) {
+      const opt = sel.options[sel.selectedIndex];
+      if (opt && opt.dataset.wave) {
+        document.getElementById('rseq-from').value = 'wave' + opt.dataset.wave;
+      }
+    }
 
     const WAVE_DEFAULTS = {
       wave1: { label:'Wave 1', period:'Jan–Jun 2026',  start:'Jan 2026',  end:'Jun 2026',  agencies:'15 agencies', agencyTypes:'Large + High-Risk',                pods:'3 Large, 2 Medium',         status:'In Progress', slippage:0,   notes:'' },
@@ -3257,19 +3357,20 @@
       const state = loadWavesState();
       const w = state[key];
       if (!w) return;
-      document.getElementById('wem-wave-key').value = key;
-      document.getElementById('wem-title').textContent = `Edit Wave Schedule — ${w.label}`;
+      const waveNum = parseInt(key.replace('wave',''), 10);
+      const count   = computeWaveCount(waveNum);
+      document.getElementById('wem-wave-key').value  = key;
+      document.getElementById('wem-title').textContent   = `Edit Wave Schedule — ${w.label}`;
       document.getElementById('wem-subtitle').textContent = w.period;
-      document.getElementById('wem-start').value    = w.start   || '';
-      document.getElementById('wem-end').value      = w.end     || '';
-      document.getElementById('wem-status').value   = w.status  || 'Planned';
-      document.getElementById('wem-agencies').value = w.agencies|| '';
-      document.getElementById('wem-pods').value     = w.pods    || '';
-      document.getElementById('wem-slippage').value = w.slippage|| 0;
-      document.getElementById('wem-notes').value    = w.notes   || '';
+      document.getElementById('wem-start').value     = toMonthInput(w.start) || '';
+      document.getElementById('wem-end').value       = toMonthInput(w.end)   || '';
+      document.getElementById('wem-status').value    = w.status   || 'Planned';
+      document.getElementById('wem-agencies').value  = count;
+      document.getElementById('wem-pods').value      = w.pods     || '';
+      document.getElementById('wem-slippage').value  = w.slippage || 0;
+      document.getElementById('wem-notes').value     = w.notes    || '';
       updateSlippagePreview();
-      const modal = document.getElementById('wave-edit-modal');
-      modal.style.display = 'flex';
+      document.getElementById('wave-edit-modal').style.display = 'flex';
     }
 
     function closeWaveEditModal() {
@@ -3327,16 +3428,16 @@
     }
 
     function saveWaveEdit() {
-      const key      = document.getElementById('wem-wave-key').value;
-      const startRaw = document.getElementById('wem-start').value.trim();
-      const endRaw   = document.getElementById('wem-end').value.trim();
-      const start    = normalizeMonthYear(startRaw);
-      const end      = normalizeMonthYear(endRaw);
-      const status   = document.getElementById('wem-status').value;
-      const agencies = document.getElementById('wem-agencies').value.trim();
-      const pods     = document.getElementById('wem-pods').value.trim();
-      const slippage = parseInt(document.getElementById('wem-slippage').value, 10) || 0;
-      const notes    = document.getElementById('wem-notes').value.trim();
+      const key       = document.getElementById('wem-wave-key').value;
+      const startRaw  = document.getElementById('wem-start').value.trim();
+      const endRaw    = document.getElementById('wem-end').value.trim();
+      const start     = normalizeMonthYear(startRaw);
+      const end       = normalizeMonthYear(endRaw);
+      const status    = document.getElementById('wem-status').value;
+      const agencyCnt = parseInt(document.getElementById('wem-agencies').value, 10) || 0;
+      const pods      = document.getElementById('wem-pods').value.trim();
+      const slippage  = parseInt(document.getElementById('wem-slippage').value, 10) || 0;
+      const notes     = document.getElementById('wem-notes').value.trim();
 
       const state = loadWavesState();
       if (!state[key]) return;
@@ -3344,7 +3445,7 @@
       state[key].end      = end;
       state[key].period   = start && end ? start + ' – ' + end : state[key].period;
       state[key].status   = status;
-      state[key].agencies = agencies;
+      state[key].agencies = agencyCnt + ' agenc' + (agencyCnt === 1 ? 'y' : 'ies');
       state[key].pods     = pods;
       state[key].slippage = slippage;
       state[key].notes    = notes;
@@ -3358,9 +3459,15 @@
     const _rseqLog = [];
 
     function openResequenceModal() {
+      // Populate agency dropdown sorted by wave then name
+      const agencies = getAllNamedAgencies().sort((a,b) => a.wave - b.wave || a.name.localeCompare(b.name));
+      const sel = document.getElementById('rseq-agency');
+      sel.innerHTML = '<option value="">— Select an agency —</option>' +
+        agencies.map(a => `<option value="${a.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" data-wave="${a.wave}">${a.name} — Wave ${a.wave}</option>`).join('');
+
       const logEl = document.getElementById('rseq-log');
       if (logEl) logEl.innerHTML = _rseqLog.length
-        ? _rseqLog.map(l=>`<div>${l}</div>`).join('')
+        ? _rseqLog.map(l => `<div style="margin-bottom:4px;">${l}</div>`).join('')
         : '<span style="color:#9ca3af;">No moves recorded yet.</span>';
       document.getElementById('resequence-modal').style.display = 'flex';
     }
@@ -3370,35 +3477,60 @@
     }
 
     function applyResequence() {
-      const agency = document.getElementById('rseq-agency').value.trim();
-      const from   = document.getElementById('rseq-from').value;
-      const to     = document.getElementById('rseq-to').value;
-      if (!agency) { notify('Enter an agency name to move.'); return; }
+      const agencyName = document.getElementById('rseq-agency').value;
+      const from = document.getElementById('rseq-from').value;
+      const to   = document.getElementById('rseq-to').value;
+      if (!agencyName) { notify('Select an agency to move.'); return; }
       if (from === to) { notify('From and To wave must be different.'); return; }
 
-      const state  = loadWavesState();
-      const fromW  = state[from];
-      const toW    = state[to];
+      const fromNum = parseInt(from.replace('wave',''), 10);
+      const toNum   = parseInt(to.replace('wave',''), 10);
 
-      // adjust agency counts
-      const bump = (key, delta) => {
-        const m = state[key].agencies.match(/(\d+)/);
-        if (m) state[key].agencies = state[key].agencies.replace(/\d+/, String(Math.max(0, parseInt(m[1],10)+delta)));
-      };
-      bump(from, -1);
-      bump(to,   +1);
+      // 1. Save agency wave override
+      const agencyWaves = loadAgencyWaves();
+      agencyWaves[agencyName] = toNum;
+      saveAgencyWaves(agencyWaves);
 
-      const logEntry = `${new Date().toLocaleTimeString()} — Moved <strong>${agency}</strong> from ${fromW.label} to ${toW.label}`;
+      // 2. Update dynamic assessment record if applicable
+      try {
+        const dynList = JSON.parse(localStorage.getItem('dynamic_agencies') || '[]');
+        dynList.forEach(key => {
+          try {
+            const s = JSON.parse(localStorage.getItem('assessment_' + key) || '{}');
+            if (s && s.agencyName === agencyName) {
+              s.wave = 'Wave ' + toNum;
+              localStorage.setItem('assessment_' + key, JSON.stringify(s));
+            }
+          } catch(e) {}
+        });
+      } catch(e) {}
+
+      // 3. Recompute all wave agency counts from real assignments
+      const state = loadWavesState();
+      for (let i = 1; i <= 6; i++) {
+        const cnt = computeWaveCount(i);
+        state['wave' + i].agencies = cnt + ' agenc' + (cnt === 1 ? 'y' : 'ies');
+      }
+      saveWavesState(state);
+
+      // 4. Log the move
+      const logEntry = `${new Date().toLocaleTimeString()} — Moved <strong>${agencyName}</strong> from Wave ${fromNum} to Wave ${toNum}`;
       _rseqLog.unshift(logEntry);
 
-      saveWavesState(state);
+      // 5. Re-render everything
       renderWavesTable();
+      buildPipelineGantt();
+
+      // 6. Refresh agency dropdown with updated wave labels
+      const agencies = getAllNamedAgencies().sort((a,b) => a.wave - b.wave || a.name.localeCompare(b.name));
+      const sel = document.getElementById('rseq-agency');
+      sel.innerHTML = '<option value="">— Select an agency —</option>' +
+        agencies.map(a => `<option value="${a.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" data-wave="${a.wave}">${a.name} — Wave ${a.wave}</option>`).join('');
 
       const logEl = document.getElementById('rseq-log');
-      if (logEl) logEl.innerHTML = _rseqLog.map(l=>`<div style="margin-bottom:4px;">${l}</div>`).join('');
+      if (logEl) logEl.innerHTML = _rseqLog.map(l => `<div style="margin-bottom:4px;">${l}</div>`).join('');
 
-      document.getElementById('rseq-agency').value = '';
-      notify(`${agency} moved from ${fromW.label} to ${toW.label}.`);
+      notify(`${agencyName} moved to Wave ${toNum}.`);
     }
     // ── End Wave Management ────────────────────────────────────────────
 

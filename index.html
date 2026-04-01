@@ -78,14 +78,14 @@
 
         .login-subtitle {
             font-size: 0.85rem;
-            color: #64748b;
+            color: #1e293b;
             text-align: center;
             margin-bottom: 3px;
         }
 
         .login-tagline {
             font-size: 0.78rem;
-            color: #94a3b8;
+            color: #334155;
             text-align: center;
             margin-bottom: 12px;
         }
@@ -121,7 +121,7 @@
             display: block;
             margin-bottom: 6px;
             font-weight: 600;
-            color: #1e293b;
+            color: #0f172a;
             font-size: 0.85rem;
         }
         
@@ -143,7 +143,7 @@
         
         .form-help {
             font-size: 0.75rem;
-            color: #64748b;
+            color: #334155;
             margin-top: 4px;
         }
         
@@ -159,7 +159,7 @@
             align-items: center;
             cursor: pointer;
             font-size: 0.8rem;
-            color: #475569;
+            color: #0f172a;
         }
         
         .checkbox-label input[type="checkbox"] {
@@ -285,7 +285,7 @@
         .login-footer {
             text-align: center;
             font-size: 0.72rem;
-            color: #64748b;
+            color: #334155;
             margin-top: 14px;
         }
         
@@ -299,7 +299,7 @@
         
         .platform-info {
             font-size: 0.7rem;
-            opacity: 0.85;
+            color: #334155;
             margin-bottom: 15px;
         }
         
@@ -311,18 +311,13 @@
         
         .assurit-text {
             font-size: 0.7rem;
-            color: #94a3b8;
+            color: #334155;
             margin-bottom: 8px;
         }
         
         .assurit-logo img {
             height: 24px;
             width: auto;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-        }
-        
-        .assurit-logo img:hover {
             opacity: 1;
         }
         
@@ -370,63 +365,40 @@
                 <span class="badge badge-green">AWS Cloud Platform</span>
             </div>
             
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required 
-                           placeholder="Enter your email address" 
-                           aria-describedby="email-help">
-                    <div id="email-help" class="form-help">
-                        Use your registered Maryland DoIT email
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required 
-                           placeholder="Enter your password"
-                           aria-describedby="password-help">
-                    <div id="password-help" class="form-help">
-                        Enter your secure password
-                    </div>
-                </div>
-                
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="remember" name="remember">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="forgot-password">Forgot password?</a>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" id="loginBtn">
-                    <span class="btn-text">Sign in to Platform</span>
-                    <span class="btn-loading" style="display: none;">
-                        <span class="spinner"></span>
-                        Signing in...
-                    </span>
-                </button>
-            </form>
-            
+            <!-- Single sign-in form -->
+            <div class="form-group">
+                <label for="demo-persona-select">Email / Account</label>
+                <select id="demo-persona-select" class="demo-dropdown">
+                  <option value="">— Select an account —</option>
+                  <option value="pm">james.wilson@doit.maryland.gov (Program Manager)</option>
+                  <option value="assessor">j.williams@assurit.com (Lead Assessor)</option>
+                  <option value="mdot">l.harmon@mdot.maryland.gov (Agency Rep — MDOT)</option>
+                  <option value="dpscs">a.torres@dpscs.maryland.gov (Agency Rep — DPSCS)</option>
+                  <option value="msde">p.hall@msde.maryland.gov (Agency Rep — MSDE)</option>
+                  <option value="reviewer">reviewer@doit.maryland.gov (DoIT Executive Reviewer)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••••••">
+            </div>
+
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="remember" name="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%;padding:13px;font-size:.95rem;" onclick="launchDemoLogin()">
+                Sign in to Platform
+            </button>
+
             <div id="loginError" class="error-message" style="display: none;">
                 <span class="error-icon"></span>
                 <span class="error-text"></span>
-            </div>
-
-            <div class="demo-section">
-                <h3>Demo Access</h3>
-                <p style="font-size:.75rem;color:#64748b;text-align:center;margin-bottom:12px;">Select a role and launch instantly — no password required.</p>
-                <select id="demo-persona-select" class="demo-dropdown" style="margin-bottom:8px;">
-                  <option value="">— Select a demo account —</option>
-                  <option value="pm">Program Manager / Admin — Full access</option>
-                  <option value="assessor">Lead Assessor — J. Williams</option>
-                  <option value="mdot">Agency Rep — MDOT (L. Harmon)</option>
-                  <option value="dpscs">Agency Rep — DPSCS (A. Torres)</option>
-                  <option value="msde">Agency Rep — MSDE (P. Hall)</option>
-                  <option value="reviewer">DoIT Executive Reviewer — Read-only</option>
-                </select>
-                <button type="button" class="btn btn-primary" style="width:100%;padding:11px;font-size:.9rem;" onclick="launchDemoLogin()">Launch Demo</button>
-                <p style="font-size:.68rem;color:#94a3b8;text-align:center;margin-top:10px;">Or sign in above with your Cognito credentials</p>
             </div>
 
             <!-- System Use Notification -->
@@ -448,9 +420,9 @@
                 <!-- Assurit Branding -->
                 <div class="assurit-branding">
                     <div class="assurit-text">In partnership with</div>
-                    <a href="https://www.assurit.com" target="_blank" class="assurit-logo">
+                    <div class="assurit-logo">
                         <img src="https://www.assurit.com/wp-content/uploads/assurit_logo@2x.png" alt="Assurit Consulting Group">
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -543,6 +515,12 @@
           };
           localStorage.setItem('anchor_session', JSON.stringify(session));
           window.location.replace(p.landing);
+        }
+
+        function handlePersonaSelect(val) {
+          // Clear any validation highlight when user picks something
+          const sel = document.getElementById('demo-persona-select');
+          if (sel) sel.style.borderColor = '';
         }
 
         function launchDemoLogin() {

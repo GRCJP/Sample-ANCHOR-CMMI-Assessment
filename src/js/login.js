@@ -25,11 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Form submit
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await handleLogin();
-  });
+  // Form submit (Cognito path — only present in production build)
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await handleLogin();
+    });
+  }
 
   // Enter key in inputs
   document.addEventListener('keypress', (e) => {
@@ -94,8 +97,8 @@ function showBanner(type, msg) {
   div.id = 'login-banner';
   div.style.cssText = `background:${c.bg};border:1px solid ${c.border};color:${c.text};padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;font-size:.85rem;`;
   div.innerHTML = `<span>${c.icon}</span><span>${msg}</span>`;
-  const form = document.getElementById('loginForm');
-  form.parentNode.insertBefore(div, form);
+  const anchor = document.getElementById('loginForm') || document.getElementById('loginError') || document.body;
+  anchor.parentNode.insertBefore(div, anchor);
 }
 
 function clearBanner() {

@@ -781,6 +781,7 @@
 
     const view = document.createElement('div');
     view.id = 'agency-evidence-view';
+    view.style.cssText = 'padding:24px 28px;box-sizing:border-box;';
     section.insertBefore(view, section.firstChild);
 
     renderEvidenceView();
