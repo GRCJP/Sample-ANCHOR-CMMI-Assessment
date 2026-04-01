@@ -660,7 +660,7 @@
 
             <!-- Control header -->
             <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-              <span id="sa-dot-${ctrl.id}" style="font-size:1.1rem;margin-top:2px;cursor:default;" title="${done ? 'Complete' : inProg ? 'In progress' : 'Not started'}">${done ? '' : inProg ? '📝' : '○'}</span>
+              <span id="sa-dot-${ctrl.id}" style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;cursor:default;${done ? 'background:#0f2d5e;' : inProg ? 'background:#94a3b8;' : 'border:2px solid #cbd5e0;background:transparent;'}" title="${done ? 'Complete' : inProg ? 'In progress' : 'Not started'}"></span>
               <div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px;">
                   <span style="font-size:.65rem;font-weight:800;background:${ctrl.fnColor}15;color:${ctrl.fnColor};padding:3px 8px;border-radius:4px;border:1px solid ${ctrl.fnColor}30;">${ctrl.id}</span>
@@ -741,6 +741,7 @@
     `;
 
     section.innerHTML = html;
+    updateProgress(loadAnswers());
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
