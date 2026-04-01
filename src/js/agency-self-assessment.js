@@ -531,9 +531,9 @@
     CONTROLS.forEach(ctrl => {
       const dot = document.getElementById('sa-dot-' + ctrl.id);
       if (!dot) return;
-      if (isComplete(ctrl, answers))       { dot.textContent = ''; dot.title = 'Complete — all questions answered and artifact uploaded'; }
-      else if (isAnswered(ctrl, answers))  { dot.textContent = '📝'; dot.title = 'In progress — artifact still needed'; }
-      else                                  { dot.textContent = '○';  dot.title = 'Not started'; }
+      if (isComplete(ctrl, answers))       { dot.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;background:#0f2d5e;vertical-align:middle;'; dot.textContent = ''; dot.title = 'Complete — all questions answered and artifact uploaded'; }
+      else if (isAnswered(ctrl, answers))  { dot.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;background:#94a3b8;vertical-align:middle;'; dot.textContent = ''; dot.title = 'In progress — artifact still needed'; }
+      else                                  { dot.style.cssText = 'display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid #cbd5e0;background:transparent;vertical-align:middle;'; dot.textContent = ''; dot.title = 'Not started'; }
     });
   }
 
@@ -556,9 +556,8 @@
 
     let html = `
       ${agencyRepRole ? `
-      <div style="background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 100%);border-radius:12px;padding:24px 28px;margin-bottom:24px;color:#fff;">
+      <div style="background:#0f2d5e;border-radius:12px;padding:24px 28px;margin-bottom:24px;color:#fff;">
         <div style="display:flex;align-items:flex-start;gap:16px;">
-          <div style="font-size:2rem;flex-shrink:0;">🏛️</div>
           <div>
             <div style="font-size:1.05rem;font-weight:800;margin-bottom:6px;">Welcome to Your Cybersecurity Self-Assessment</div>
             <div style="font-size:.84rem;opacity:.92;line-height:1.6;margin-bottom:14px;">This portal is your agency's official submission point for the Maryland DoIT Cybersecurity Assessment Program. Your responses and evidence directly inform your agency's cybersecurity maturity rating and the resulting Security Assessment Report (SAR).</div>
@@ -595,36 +594,39 @@
             <div id="sa-complete-count" style="font-size:.74rem;color:#059669;font-weight:600;">${complete} of ${total} fully complete (all answers + artifact uploaded)</div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <button class="btn btn-outline btn-sm" onclick="saveSelfAssessmentDraft()">💾 Save Draft</button>
-            <button class="btn btn-primary btn-sm" onclick="submitSelfAssessment()">📤 Submit to Assessor</button>
+            <button class="btn btn-outline btn-sm" onclick="saveSelfAssessmentDraft()">Save Draft</button>
+            <button class="btn btn-primary btn-sm" onclick="submitSelfAssessment()">Submit to Assessor</button>
           </div>
         </div>
         <div style="background:#e2e8f0;border-radius:99px;height:8px;overflow:hidden;">
-          <div id="sa-progress-bar" style="height:100%;width:${pct}%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:99px;transition:width .4s ease;"></div>
+          <div id="sa-progress-bar" style="height:100%;width:${pct}%;background:#1a4a8a;border-radius:99px;transition:width .4s ease;"></div>
         </div>
       </div>
 
       <!-- Legend -->
-      <div style="display:flex;gap:16px;margin-bottom:22px;flex-wrap:wrap;font-size:.73rem;color:#475569;">
-        <span>○ Not started</span>
-        <span>📝 Answers in progress — artifact still needed</span>
-        <span> Fully complete — all answers + artifact uploaded</span>
+      <div style="display:flex;gap:20px;margin-bottom:22px;flex-wrap:wrap;align-items:center;">
+        <span style="display:flex;align-items:center;gap:6px;font-size:.73rem;color:#64748b;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid #cbd5e0;flex-shrink:0;"></span>Not started</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.73rem;color:#64748b;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#94a3b8;flex-shrink:0;"></span>Answers in progress — artifact still needed</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:.73rem;color:#64748b;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0f2d5e;flex-shrink:0;"></span>Fully complete — all answers + artifact uploaded</span>
       </div>
     `;
 
-    // Template banner
+    // Template banner — always visible for troubleshooting (assessors and agency reps)
     const tplType = getTemplateType();
     const tpl = tplType && TEMPLATE_CONFIGS[tplType];
-    if (tpl) {
-      html += `
-      <div style="background:${tpl.bg};border:1.5px solid ${tpl.color}40;border-left:4px solid ${tpl.color};border-radius:10px;padding:14px 18px;margin-bottom:22px;display:flex;align-items:flex-start;gap:12px;">
-        <div style="flex-shrink:0;background:${tpl.color};color:#fff;font-size:.65rem;font-weight:900;padding:4px 10px;border-radius:5px;letter-spacing:.06em;margin-top:1px;">TEMPLATE</div>
-        <div>
-          <div style="font-size:.88rem;font-weight:800;color:${tpl.color};margin-bottom:3px;">${tpl.label}</div>
-          <div style="font-size:.78rem;color:#334155;line-height:1.55;">${tpl.description}</div>
-        </div>
-      </div>`;
-    }
+    const tplLabel = tpl ? tpl.label : (() => {
+      try { return JSON.parse(localStorage.getItem('anchor_assessments') || '[]')
+        .find(a => a.agency === (window.AGENCY_KEY || ''))?.template || 'Standard Enterprise IT'; } catch(e) { return 'Standard Enterprise IT'; }
+    })();
+    html += `
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #0f2d5e;border-radius:8px;padding:12px 16px;margin-bottom:22px;display:flex;align-items:center;gap:12px;">
+      <div style="flex-shrink:0;background:#0f2d5e;color:#fff;font-size:.65rem;font-weight:900;padding:3px 9px;border-radius:4px;letter-spacing:.06em;white-space:nowrap;">TEMPLATE</div>
+      <div style="flex:1;">
+        <span style="font-size:.85rem;font-weight:700;color:#0f2d5e;">${tplLabel}</span>
+        ${tpl ? `<span style="font-size:.74rem;color:#64748b;margin-left:10px;">${tpl.description}</span>` : ''}
+      </div>
+      <div style="font-size:.68rem;color:#94a3b8;white-space:nowrap;">Active questionnaire template</div>
+    </div>`;
 
     FN_ORDER.forEach(fn => {
       const ctrls = byFn[fn];
