@@ -1737,9 +1737,9 @@
         ? '<select onchange="setEvidenceReview(\'' + ctrl.id + '\',this.value);this.value=\'\';" ' +
           'style="font-size:.68rem;border:1px solid #d1d5db;border-radius:5px;padding:3px 6px;background:#fff;color:#374151;cursor:pointer;">' +
           '<option value="">Action…</option>' +
-          '<option value="accepted">✓ Accept</option>' +
-          '<option value="reviewing">⏳ Under Review</option>' +
-          '<option value="returned">↩ Return</option>' +
+          '<option value="accepted">Accept</option>' +
+          '<option value="reviewing">Under Review</option>' +
+          '<option value="returned">Return</option>' +
           '</select>'
         : '<span style="font-size:.68rem;color:#d1d5db;">—</span>';
 

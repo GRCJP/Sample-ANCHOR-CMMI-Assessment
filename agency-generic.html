@@ -135,10 +135,6 @@
           <p>Capture agency profile, IT environment, and security posture to configure the assessment. Pod assignment and wave scheduling are predefined by the client.</p>
         </div>
 
-        <div class="anchor-banner">
-          <div><strong>ANCHOR Framework &#8212; PRE-ASSESS Phase:</strong> Agency profile and IT environment details inform scheduling placement, template selection, and pod scoping. All assignment parameters are confirmed by the client and reviewed by the lead assessor prior to kick-off.</div>
-        </div>
-
         <style>
         .acc-card { border:1px solid #dde3ec; border-radius:8px; overflow:hidden; background:#fff; }
         .acc-head { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; background:#fff; border-bottom:1px solid #eef1f6; }
@@ -148,7 +144,7 @@
         .acc-edit-btn { font-size:.72rem; color:#2563eb; background:none; border:1.5px solid #d1d9e6; cursor:pointer; font-weight:600; padding:2px 9px; border-radius:5px; font-family:inherit; transition:all .12s; }
         .acc-edit-btn:hover { background:#f0f4ff; border-color:#2563eb; }
         .acc-body { padding:2px 0 4px; }
-        .acc-row { display:flex; align-items:baseline; padding:4px 14px; border-bottom:1px solid #f4f6f9; gap:14px; }
+        .acc-row { display:flex; align-items:baseline; padding:6px 14px; border-bottom:1px solid #f4f6f9; gap:14px; }
         .acc-row:last-child { border-bottom:none; }
         .acc-row .ak { font-size:.75rem; color:#475569; font-weight:600; width:148px; min-width:148px; flex-shrink:0; }
         .acc-row .av { font-size:.84rem; font-weight:500; color:#1e293b; flex:1; }
@@ -173,12 +169,43 @@
         .kickoff-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; }
         .kickoff-title { font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; margin-bottom:10px; }
         .kickoff-sent { display:flex; align-items:center; gap:6px; padding:8px 10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; font-size:.75rem; color:#16a34a; font-weight:600; margin-bottom:8px; }
+        .itpl-card:hover { background:#eff6ff !important; }
         </style>
 
         <div style="display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start;">
 
           <!-- LEFT COLUMN -->
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:start;">
+
+            <!-- Assessment Template -->
+            <div style="grid-column:1/-1;background:#fff;border:1px solid #dde3ec;border-radius:8px;overflow:hidden;">
+              <div style="padding:7px 14px;background:#f8fafc;border-bottom:1px solid #eef1f6;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;">Assessment Template</span>
+                <span style="font-size:.68rem;color:#94a3b8;">Select one</span>
+              </div>
+              <div id="intake-tpl-grid">
+                <div class="itpl-card" data-tpl="Cloud &amp; SaaS-First" onclick="selectIntakeTpl(this)" style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f4f6f9;cursor:pointer;background:#fff;">
+                  <div class="itpl-chk" style="display:none;width:15px;height:15px;flex-shrink:0;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;align-items:center;justify-content:center;">&#10003;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:.8rem;color:#1e3a5f;">Cloud &amp; SaaS-First</div><div style="font-size:.68rem;color:#64748b;line-height:1.35;margin-top:1px;">For agencies operating predominantly in cloud and SaaS environments</div></div>
+                </div>
+                <div class="itpl-card" data-tpl="Hybrid + FTI Safeguards" onclick="selectIntakeTpl(this)" style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f4f6f9;cursor:pointer;background:#fff;">
+                  <div class="itpl-chk" style="display:none;width:15px;height:15px;flex-shrink:0;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;align-items:center;justify-content:center;">&#10003;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:.8rem;color:#1e3a5f;">Hybrid + FTI Safeguards</div><div style="font-size:.68rem;color:#64748b;line-height:1.35;margin-top:1px;">IRS Pub 1075, CJIS requirements, high-risk data — hybrid infrastructure</div></div>
+                </div>
+                <div class="itpl-card" data-tpl="Standard Enterprise IT" onclick="selectIntakeTpl(this)" style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f4f6f9;cursor:pointer;background:#fff;">
+                  <div class="itpl-chk" style="display:none;width:15px;height:15px;flex-shrink:0;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;align-items:center;justify-content:center;">&#10003;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:.8rem;color:#1e3a5f;">Standard Enterprise IT</div><div style="font-size:.68rem;color:#64748b;line-height:1.35;margin-top:1px;">Full NIST CSF 2.0 across all 6 functions — mixed on-prem/cloud, no specialized overlay</div></div>
+                </div>
+                <div class="itpl-card" data-tpl="Small Agency Streamlined" onclick="selectIntakeTpl(this)" style="display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid #f4f6f9;cursor:pointer;background:#fff;">
+                  <div class="itpl-chk" style="display:none;width:15px;height:15px;flex-shrink:0;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;align-items:center;justify-content:center;">&#10003;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:.8rem;color:#1e3a5f;">Small Agency Streamlined</div><div style="font-size:.68rem;color:#64748b;line-height:1.35;margin-top:1px;">Abbreviated assessment for agencies with &lt;100 employees and low-risk profiles</div></div>
+                </div>
+                <div class="itpl-card" data-tpl="Reassessment / Follow-up" onclick="selectIntakeTpl(this)" style="display:flex;align-items:center;gap:10px;padding:7px 14px;cursor:pointer;background:#fff;">
+                  <div class="itpl-chk" style="display:none;width:15px;height:15px;flex-shrink:0;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.55rem;font-weight:900;align-items:center;justify-content:center;">&#10003;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:.8rem;color:#1e3a5f;">Reassessment / Follow-up</div><div style="font-size:.68rem;color:#64748b;line-height:1.35;margin-top:1px;">Targeted review for agencies completing POA&amp;M remediation — prior data carries forward</div></div>
+                </div>
+              </div>
+            </div>
 
             <!-- Agency Profile -->
             <div class="acc-card" style="grid-column:1/-1">
@@ -189,15 +216,19 @@
                   <button class="acc-edit-btn" onclick="openEditModal('profile')">Edit</button>
                 </div>
               </div>
-              <div class="acc-body">
-                <div class="acc-row"><span class="ak">Agency Name</span><span class="av" id="iv-agency-name">Maryland State Department of Education (MSDE)</span><input class="av-edit" type="text" value="Maryland State Department of Education (MSDE)"></div>
-                <div class="acc-row"><span class="ak">Assessment ID</span><span class="av" id="iv-assessment-id">Auto-generated</span></div>
-                <div class="acc-row"><span class="ak">Primary Contact</span><span class="av" id="iv-primary-contact">Patricia Hall, CISO</span><input class="av-edit" type="text" value="Patricia Hall, CISO"></div>
-                <div class="acc-row"><span class="ak">Phone</span><span class="av" id="iv-phone">(410) 767-0100</span><input class="av-edit" type="text" value="(410) 767-0100"></div>
-                <div class="acc-row"><span class="ak">Email</span><span class="av" id="iv-email">p.hall@msde.maryland.gov</span><input class="av-edit" type="text" value="p.hall@msde.maryland.gov"></div>
-                <div class="acc-row"><span class="ak">Alt. Contact</span><span class="av muted" id="iv-alt-contact">Not designated</span><input class="av-edit" type="text" placeholder="Name, Title"></div>
-                <div class="acc-row"><span class="ak">Alt. Contact Email</span><span class="av muted" id="iv-alt-email">&#8212;</span><input class="av-edit" type="text" placeholder="email@agency.gov"></div>
-                <div class="acc-row"><span class="ak">Alt. POD Assignment</span><span class="av muted" id="iv-alt-pod">&#8212;</span><input class="av-edit" type="text" placeholder="Assessor name"></div>
+              <div class="acc-body" style="display:grid;grid-template-columns:1fr 1fr;">
+                <div style="border-right:1px solid #f4f6f9;">
+                  <div class="acc-row"><span class="ak">Agency Name</span><span class="av" id="iv-agency-name">Maryland State Department of Education (MSDE)</span><input class="av-edit" type="text" value="Maryland State Department of Education (MSDE)"></div>
+                  <div class="acc-row"><span class="ak">Assessment ID</span><span class="av" id="iv-assessment-id">Auto-generated</span></div>
+                  <div class="acc-row"><span class="ak">Primary Contact</span><span class="av" id="iv-primary-contact">Patricia Hall, CISO</span><input class="av-edit" type="text" value="Patricia Hall, CISO"></div>
+                  <div class="acc-row"><span class="ak">Phone</span><span class="av" id="iv-phone">(410) 767-0100</span><input class="av-edit" type="text" value="(410) 767-0100"></div>
+                </div>
+                <div>
+                  <div class="acc-row"><span class="ak">Email</span><span class="av" id="iv-email">p.hall@msde.maryland.gov</span><input class="av-edit" type="text" value="p.hall@msde.maryland.gov"></div>
+                  <div class="acc-row"><span class="ak">Alt. Contact</span><span class="av muted" id="iv-alt-contact">Not designated</span><input class="av-edit" type="text" placeholder="Name, Title"></div>
+                  <div class="acc-row"><span class="ak">Alt. Contact Email</span><span class="av muted" id="iv-alt-email">&#8212;</span><input class="av-edit" type="text" placeholder="email@agency.gov"></div>
+                  <div class="acc-row"><span class="ak">Alt. POD Assignment</span><span class="av muted" id="iv-alt-pod">&#8212;</span><input class="av-edit" type="text" placeholder="Assessor name"></div>
+                </div>
               </div>
               <div class="edit-actions"><button class="btn btn-outline btn-sm" onclick="cancelIntakeEdit(this)">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveIntakeEdit(this)">Save Changes</button></div>
             </div>
@@ -354,6 +385,26 @@
             }
           });
         }
+        function syncIntakeTpl(val) {
+          document.querySelectorAll('#intake-tpl-grid .itpl-card').forEach(function(c) {
+            var sel = c.getAttribute('data-tpl') === val;
+            c.style.background = sel ? '#dbeafe' : '#fff';
+            c.style.borderLeft = sel ? '3px solid #0f2d5e' : '';
+            c.style.paddingLeft = sel ? '11px' : '14px';
+            var chk = c.querySelector('.itpl-chk'); if (chk) chk.style.display = sel ? 'flex' : 'none';
+          });
+        }
+        function selectIntakeTpl(el) {
+          var val = el.getAttribute('data-tpl');
+          syncIntakeTpl(val);
+          if (window._genericAgencyData) window._genericAgencyData.template = val;
+          try {
+            var key = window.AGENCY_KEY;
+            var s = JSON.parse(localStorage.getItem(key) || '{}');
+            s.template = val;
+            localStorage.setItem(key, JSON.stringify(s));
+          } catch(e) {}
+        }
         function showKickoffModal() {
           var _d = window._genericAgencyData || {};
           var agencyName   = _d.agencyName || window.AGENCY_KEY.toUpperCase();
@@ -362,6 +413,7 @@
           var assessmentId = 'MD-' + (window.AGENCY_KEY||'GEN').toUpperCase() + '-' + new Date().getFullYear() + '-001';
           var wave         = _d.wave || 'Wave 1 \u2014 Q1 2026';
           var template     = _d.template || 'Standard Enterprise IT';
+          var _tplDesc = {'Cloud & SaaS-First':'Cloud security, vendor management, and SaaS-hosted data protection','Hybrid + FTI Safeguards':'IRS Pub 1075 and CJIS requirements for FTI and criminal justice data','OT/ICS + Critical Infrastructure':'IT/OT segmentation and NIST SP 800-82 for operational technology','Standard Enterprise IT':'Full NIST CSF 2.0 across all 6 functions and 106 subcategories','Small Agency Streamlined':'Abbreviated assessment for low-risk agencies under 100 employees','Reassessment / Follow-up':'Targeted review against prior findings and POA\u0026M remediation'}[template] || 'Questionnaire, evidence requests, and CSF controls scoped to this profile.';
           var pod          = _d.pod ? ('POD ' + _d.pod) : 'POD MEDIUM';
           var assessor     = _d.leadAssessor || 'S. Patel';
           var teamSize     = _d.teamSize || 'Standard';
@@ -399,15 +451,11 @@
             '<div style="font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.55);margin-bottom:5px;">Team Size</div>' +
             '<div style="font-size:.83rem;font-weight:700;color:#fff;">' + teamSize + '</div></div>' +
             '</div></div>' +
-            '<div style="padding:14px 18px;border-bottom:1px solid #dde5f0;">' +
-            '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#64748b;margin-bottom:9px;">Assessment Template</div>' +
-            '<div style="padding-left:12px;border-left:3px solid #0f2d5e;">' +
-            '<select onchange="(function(v){try{var k=\'assessment_\'+(window.AGENCY_KEY||\'unknown\');var d=JSON.parse(localStorage.getItem(k)||\'{}}\');d.template=v;localStorage.setItem(k,JSON.stringify(d));}catch(e){}})(this.value)" style="font-size:.85rem;font-weight:700;color:#0f2d5e;border:1px solid #c7d4e8;border-radius:5px;padding:3px 8px;background:#fff;cursor:pointer;margin-bottom:4px;">' +
-            '<option value="Cloud &amp; SaaS-First"' + (template==="Cloud & SaaS-First"?" selected":"") + '>Cloud &amp; SaaS-First</option>' +
-            '<option value="Hybrid + FTI Safeguards"' + (template==="Hybrid + FTI Safeguards"?" selected":"") + '>Hybrid + FTI Safeguards</option>' +
-            '<option value="OT/ICS + Critical Infrastructure"' + (template==="OT/ICS + Critical Infrastructure"?" selected":"") + '>OT/ICS + Critical Infrastructure</option>' +
-            '<option value="Standard Enterprise IT"' + (template==="Standard Enterprise IT"?" selected":"") + '>Standard Enterprise IT</option></select>' +
-            '<div style="font-size:.71rem;color:#64748b;margin-top:2px;">Questionnaire, evidence requests, and CSF controls are scoped to this template.</div>' +
+            '<div style="padding:14px 18px;border-bottom:1px solid #dde5f0;display:flex;align-items:flex-start;gap:12px;">' +
+            '<div style="flex:1;">' +
+            '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#64748b;margin-bottom:5px;">Assessment Template</div>' +
+            '<div style="font-weight:700;font-size:.88rem;color:#0f2d5e;margin-bottom:3px;">' + template + '</div>' +
+            '<div style="font-size:.72rem;color:#64748b;line-height:1.5;">' + _tplDesc + '</div>' +
             '</div></div>' +
             '<div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #dde5f0;">' +
             '<div style="padding:14px 18px;border-right:1px solid #dde5f0;">' +
@@ -1023,8 +1071,8 @@
           </div>
           <!-- Methodology Panel -->
           <div style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px;font-size:.75rem;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div style="font-weight:700;color:#1e3a5f;">How Risk Scores Are Calculated</div><span style="font-size:.65rem;background:#e8edf5;color:#0f2d5e;padding:2px 9px;border-radius:4px;font-weight:700;border:1px solid #c7d4e8;letter-spacing:.03em;">ESG-Aligned Scoring</span></div>
-            <div style="color:#475569;margin-bottom:10px;line-height:1.6;">Findings are derived from controls scored <strong>NOT MET</strong> during the NIST CSF 2.0 assessment. <strong>Likelihood</strong> is derived from the control's CMMI maturity score — a lower CMMI level means weaker control implementation, which means higher probability of exploit. <strong>Impact</strong> reflects data sensitivity and mission criticality of the affected system. Score is calculated as:<br><strong style="color:#1e3a5f;">Score = Likelihood Weight × Impact Weight</strong><br><span style="font-size:.68rem;color:#64748b;">Scoring criteria are validated per Assurit's Evaluation Standards Guide (ESG) before delivery to OSM.</span></div>
+            <div style="font-weight:700;color:#1e3a5f;margin-bottom:10px;">How Risk Scores Are Calculated</div>
+            <div style="color:#475569;margin-bottom:10px;line-height:1.6;">Findings are derived from controls scored <strong>NOT MET</strong> during the NIST CSF 2.0 assessment. <strong>Likelihood</strong> is derived from the control's CMMI maturity score — a lower CMMI level means weaker control implementation, which means higher probability of exploit. <strong>Impact</strong> reflects data sensitivity and mission criticality of the affected system. Score is calculated as:<br><strong style="color:#1e3a5f;">Score = Likelihood Weight × Impact Weight</strong></div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
               <div>
                 <div style="font-weight:700;color:#1e3a5f;margin-bottom:6px;font-size:.72rem;">CMMI Score → Likelihood</div>
@@ -1073,7 +1121,7 @@
               <div style="display:flex;flex-direction:column;gap:5px;">
                 <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>Control Identified</strong> — DE.CM-01 scored NOT MET: no SIEM deployed, no centralized log aggregation</div></div>
                 <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>Evidence Reviewed</strong> — No log aggregation tool, no alert configuration, no monitoring runbooks found in audit evidence package</div></div>
-                <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>CMMI Level Set</strong> — ESG criteria confirm <strong>CMMI 1 (Initial)</strong>: need was recognized but no formal documented process or tooling in place</div></div>
+                <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>CMMI Level Set</strong> — <strong>CMMI 1 (Initial)</strong>: need was recognized but no formal documented process or tooling in place</div></div>
                 <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>Agency Context</strong> — Agency manages state data classified at Moderate or High sensitivity → data classified as <strong>Critical</strong></div></div>
                 <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>Likelihood Assigned</strong> — CMMI 1 = weaker control = higher exploit probability → <strong style="color:#ea580c;">Likelihood: High (Weight = 4)</strong></div></div>
                 <div style="display:flex;align-items:flex-start;gap:8px;"><div style="min-width:18px;height:18px;background:#0f2d5e;color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</div><div style="color:#475569;font-size:.7rem;line-height:1.5;"><strong>Impact Assigned</strong> — High-sensitivity state data exposure = Critical → <strong style="color:#dc2626;">Impact: Critical (Weight = 5)</strong></div></div>
@@ -1721,6 +1769,8 @@
       var _tplDisp = d.template || 'Standard Enterprise IT';
       var _tplRow = document.getElementById('ss-template-pod-row');
       if (_tplRow) _tplRow.textContent = _tplDisp;
+      // Sync template card selection in the intake grid
+      syncIntakeTpl(_tplDisp);
       setTimeout(function() {
         var navType = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0] || {}).type;
         if (navType !== 'reload') { sessionStorage.removeItem('activeSection'); return; }

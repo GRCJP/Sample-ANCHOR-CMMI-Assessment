@@ -907,10 +907,10 @@
           <div class="table-wrap" style="overflow-x:auto;">
             <table style="width:100%; table-layout:fixed;">
               <colgroup>
-                <col style="width:22%;"><col style="width:10%;"><col style="width:10%;"><col style="width:9%;"><col style="width:15%;"><col style="width:8%;"><col style="width:26%;">
+                <col style="width:20%;"><col style="width:9%;"><col style="width:8%;"><col style="width:8%;"><col style="width:13%;"><col style="width:14%;"><col style="width:7%;"><col style="width:21%;">
               </colgroup>
               <thead>
-                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Stage</th><th>%</th><th>Actions</th></tr>
+                <tr><th>Agency</th><th>Status</th><th>Intake</th><th>POD</th><th>Template</th><th>Stage</th><th>%</th><th>Actions</th></tr>
               </thead>
               <tbody id="portfolio-body"></tbody>
             </table>
@@ -1411,10 +1411,49 @@
         <!-- Assessment Parameters -->
         <div class="card" style="margin-bottom:14px; background:#fafbfd;">
           <div class="card-title">Assessment Parameters</div>
+
+          <!-- Template card grid -->
+          <div style="margin-bottom:18px;">
+            <label style="font-size:.78rem;font-weight:700;color:#374151;display:block;margin-bottom:10px;">Assessment Template</label>
+            <input type="hidden" id="ca-template" value="Hybrid + FTI Safeguards">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="ca-template-grid">
+
+              <div class="tpl-card" data-tpl="Cloud &amp; SaaS-First" onclick="selectTplCard(this)" style="border:2px solid #e2e8f0;border-radius:9px;padding:13px 14px;cursor:pointer;background:#fff;position:relative;transition:border-color .15s,background .15s;">
+                <div style="font-weight:700;font-size:.85rem;color:#1e3a5f;margin-bottom:4px;padding-right:20px;">Cloud &amp; SaaS-First</div>
+                <div style="font-size:.72rem;color:#64748b;line-height:1.5;">For agencies operating predominantly in cloud and SaaS environments</div>
+                <div class="tpl-check" style="display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;">&#10003;</div>
+              </div>
+
+              <div class="tpl-card tpl-selected" data-tpl="Hybrid + FTI Safeguards" onclick="selectTplCard(this)" style="border:2px solid #0f2d5e;border-radius:9px;padding:13px 14px;cursor:pointer;background:#f0f4fa;position:relative;transition:border-color .15s,background .15s;">
+                <div style="font-weight:700;font-size:.85rem;color:#1e3a5f;margin-bottom:4px;padding-right:20px;">Hybrid + FTI Safeguards</div>
+                <div style="font-size:.72rem;color:#64748b;line-height:1.5;">IRS Pub 1075, CJIS requirements, high-risk data — hybrid infrastructure</div>
+                <div class="tpl-check" style="position:absolute;top:10px;right:10px;width:18px;height:18px;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;">&#10003;</div>
+              </div>
+
+              <div class="tpl-card" data-tpl="Standard Enterprise IT" onclick="selectTplCard(this)" style="border:2px solid #e2e8f0;border-radius:9px;padding:13px 14px;cursor:pointer;background:#fff;position:relative;transition:border-color .15s,background .15s;">
+                <div style="font-weight:700;font-size:.85rem;color:#1e3a5f;margin-bottom:4px;padding-right:20px;">Standard Enterprise IT</div>
+                <div style="font-size:.72rem;color:#64748b;line-height:1.5;">Full NIST CSF 2.0 across all 6 functions — mixed on-prem/cloud, no specialized overlay</div>
+                <div class="tpl-check" style="display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;">&#10003;</div>
+              </div>
+
+              <div class="tpl-card" data-tpl="Small Agency Streamlined" onclick="selectTplCard(this)" style="border:2px solid #e2e8f0;border-radius:9px;padding:13px 14px;cursor:pointer;background:#fff;position:relative;transition:border-color .15s,background .15s;">
+                <div style="font-weight:700;font-size:.85rem;color:#1e3a5f;margin-bottom:4px;padding-right:20px;">Small Agency Streamlined</div>
+                <div style="font-size:.72rem;color:#64748b;line-height:1.5;">Abbreviated assessment for agencies with &lt;100 employees and low-risk profiles</div>
+                <div class="tpl-check" style="display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;">&#10003;</div>
+              </div>
+
+              <div class="tpl-card" data-tpl="Reassessment / Follow-up" onclick="selectTplCard(this)" style="border:2px solid #e2e8f0;border-radius:9px;padding:13px 14px;cursor:pointer;background:#fff;position:relative;transition:border-color .15s,background .15s;">
+                <div style="font-weight:700;font-size:.85rem;color:#1e3a5f;margin-bottom:4px;padding-right:20px;">Reassessment / Follow-up</div>
+                <div style="font-size:.72rem;color:#64748b;line-height:1.5;">Targeted review for agencies completing POA&amp;M remediation — prior data carries forward</div>
+                <div class="tpl-check" style="display:none;position:absolute;top:10px;right:10px;width:18px;height:18px;background:#0f2d5e;border-radius:50%;color:#fff;font-size:.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;">&#10003;</div>
+              </div>
+
+            </div>
+          </div>
+
           <div class="form-grid">
             <div class="form-group"><label>Lead Assessor</label><select id="ca-assessor"><option value="J. Williams" selected>J. Williams</option><option value="S. Patel">S. Patel</option><option value="R. Okafor">R. Okafor</option><option value="T. Adams">T. Adams</option><option value="M. Chen">M. Chen</option></select></div>
             <div class="form-group"><label>Team Size</label><select id="ca-teamsize"><option value="Large">Large</option><option value="Standard">Standard</option><option value="Small">Small</option></select></div>
-            <div class="form-group"><label>Assessment Template</label><select id="ca-template"><option value="Cloud & SaaS-First">Cloud &amp; SaaS-First</option><option value="Hybrid + FTI Safeguards" selected>Hybrid + FTI Safeguards</option><option value="OT/ICS + Critical Infrastructure">OT/ICS + Critical Infrastructure</option><option value="Standard Enterprise IT">Standard Enterprise IT</option><option value="Small Agency Streamlined">Small Agency Streamlined</option><option value="Reassessment / Follow-up">Reassessment / Follow-up</option></select></div>
             <div class="form-group"><label>Maturity Group</label><select id="ca-matgroup"><option value="Group A (0.0–1.4)">Group A (0.0–1.4)</option><option value="Group B (1.5–2.5)" selected>Group B (1.5–2.5)</option><option value="Group C (2.6–3.4)">Group C (2.6–3.4)</option><option value="Group D (3.5–4.4)">Group D (3.5–4.4)</option><option value="Group E (4.5–5.0)">Group E (4.5–5.0)</option></select></div>
             <div class="form-group"><label>Start Date</label><input id="ca-start" type="date"></div>
             <div class="form-group"><label>Target End Date</label><input id="ca-end" type="date"></div>
@@ -1742,16 +1781,91 @@
         if(document.getElementById('ca-doit')) document.getElementById('ca-doit').value = 'Yes';
         if(document.getElementById('ca-assessor')) document.getElementById('ca-assessor').value = 'J. Williams';
         if(document.getElementById('ca-teamsize')) document.getElementById('ca-teamsize').value = 'Large';
-        if(document.getElementById('ca-template')) document.getElementById('ca-template').value = 'Hybrid + FTI Safeguards';
         if(document.getElementById('ca-matgroup')) document.getElementById('ca-matgroup').value = 'Group B (1.5–2.5)';
       }
       if(modal) modal.style.display = 'block';
+      // Sync template card selection to whatever value is now active
+      var tplEl = document.getElementById('ca-template');
+      var tplVal = (tplEl && tplEl.value) ? tplEl.value : 'Hybrid + FTI Safeguards';
+      syncTplCards(tplVal);
     }
 
     function closeCreateAssessmentModal() {
       const modal = document.getElementById('create-assessment-modal');
       if(modal) modal.style.display = 'none';
     }
+
+    var _TEMPLATE_INFO = {
+      'Cloud & SaaS-First': {
+        who: 'Agencies operating predominantly in cloud and SaaS environments (e.g., MSDE)',
+        focus: 'Cloud security, vendor management, shared responsibility model, student/agency data in hosted platforms',
+        frameworks: 'NIST CSF 2.0 + FedRAMP alignment',
+        stages: 'Cloud Scoping → SaaS Inventory → Evidence → Risk → SAR',
+        evidence: '45 items', pod: 'Medium POD'
+      },
+      'Hybrid + FTI Safeguards': {
+        who: 'Agencies handling Federal Tax Information (FTI) or Criminal Justice Information (CJI) — e.g., DPSCS',
+        focus: 'IRS Pub 1075 safeguards, CJIS Security Policy requirements, high-risk data protection, hybrid infrastructure',
+        frameworks: 'NIST CSF 2.0 + IRS Pub 1075 + CJIS SP',
+        stages: 'Extended Intake → Full CSF → FTI/CJIS Review → Risk → POA&M → SAR',
+        evidence: '92 items', pod: 'Large POD'
+      },
+      'OT/ICS + Critical Infrastructure': {
+        who: 'Agencies with Operational Technology or Industrial Control Systems — e.g., MDOT',
+        focus: 'IT/OT segmentation, safety system integrity, cyber-physical infrastructure risks',
+        frameworks: 'NIST CSF 2.0 + NIST SP 800-82',
+        stages: 'OT Scoping → CSF + 800-82 → Evidence → Risk → POA&M → SAR',
+        evidence: '92 items', pod: 'XL POD'
+      },
+      'Standard Enterprise IT': {
+        who: 'Agencies with mixed on-prem/cloud infrastructure and no specialized regulatory overlay',
+        focus: 'Full NIST CSF 2.0 coverage across all 6 functions and 106 subcategories',
+        frameworks: 'NIST CSF 2.0',
+        stages: 'Intake → Mapping → Evidence → Risk → POA&M → SAR',
+        evidence: '68 items', pod: 'Medium POD'
+      },
+      'Small Agency Streamlined': {
+        who: 'Agencies with <100 employees and low-risk system profiles',
+        focus: 'Abbreviated control set, reduced evidence burden, essential risk coverage',
+        frameworks: 'NIST CSF 2.0 (abbreviated)',
+        stages: 'Intake → Mapping → Evidence → Risk → SAR',
+        evidence: '32 items', pod: 'Small POD'
+      },
+      'Reassessment / Follow-up': {
+        who: 'Agencies returning after POA&M remediation cycle — prior assessment data carries forward',
+        focus: 'Verification of remediated findings, delta analysis against prior scores, updated risk register',
+        frameworks: 'NIST CSF 2.0 (targeted)',
+        stages: 'POA&M Review → Evidence → Verification → Update SAR',
+        evidence: '18 items', pod: 'Existing POD'
+      }
+    };
+    function selectTplCard(el) {
+      document.querySelectorAll('#ca-template-grid .tpl-card').forEach(function(c) {
+        c.style.border = '2px solid #e2e8f0';
+        c.style.background = '#fff';
+        var chk = c.querySelector('.tpl-check');
+        if (chk) chk.style.display = 'none';
+      });
+      el.style.border = '2px solid #0f2d5e';
+      el.style.background = '#f0f4fa';
+      var chk = el.querySelector('.tpl-check');
+      if (chk) chk.style.display = 'flex';
+      var val = el.getAttribute('data-tpl');
+      var hidden = document.getElementById('ca-template');
+      if (hidden) hidden.value = val;
+    }
+    function syncTplCards(val) {
+      document.querySelectorAll('#ca-template-grid .tpl-card').forEach(function(c) {
+        var match = c.getAttribute('data-tpl') === val;
+        c.style.border = match ? '2px solid #0f2d5e' : '2px solid #e2e8f0';
+        c.style.background = match ? '#f0f4fa' : '#fff';
+        var chk = c.querySelector('.tpl-check');
+        if (chk) chk.style.display = match ? 'flex' : 'none';
+      });
+      var hidden = document.getElementById('ca-template');
+      if (hidden) hidden.value = val;
+    }
+    function updateTemplateInfo(val) { syncTplCards(val); }
 
     function createSystemAssessment() {
       const originalKey = (document.getElementById('ca-original-key').value || '').trim().toLowerCase();
@@ -1952,11 +2066,14 @@
         const intake = getIntakeStatus(id);
         const pod = getPod(id);
         const intakeBadge = intake==='Submitted' ? 'badge-green' : intake==='Draft' ? 'badge-blue' : intake==='Created' ? 'badge-green' : 'badge-gray';
+        const stored = JSON.parse(localStorage.getItem(`assessment_${id}`) || '{}');
+        const tplShort = (stored.template || '—').replace(' + ', '+').replace(' / ', '/');
         return `<tr>
           <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.name}">${a.name}</td>
           <td>${statusBadge(a.status)}</td>
           <td><span class="badge ${intakeBadge}">${intake}</span></td>
           <td>${pod}</td>
+          <td style="font-size:.75rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;" title="${stored.template || ''}">${tplShort}</td>
           <td style="font-size:.78rem;">${a.stage}</td>
           <td>${a.progress}</td>
           <td>
@@ -1968,7 +2085,7 @@
           </td>
         </tr>`;
       });
-      tb.innerHTML = rows.length ? rows.join('') : '<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">No agencies match the current filters.</td></tr>';
+      tb.innerHTML = rows.length ? rows.join('') : '<tr><td colspan="8" style="text-align:center;color:#64748b;padding:24px;">No agencies match the current filters.</td></tr>';
       // Keep dashboard metrics in sync with portfolio data
       updateDashboardStats();
     }
