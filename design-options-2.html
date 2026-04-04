@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intake Design Options — Round 2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; padding: 24px; display: flex; flex-direction: column; gap: 28px; }
+
+  .option { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+  .option-label { font-size: .65rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-block; padding: 3px 10px; border-radius: 4px; margin-bottom: 20px; }
+
+  /* shared */
+  .chip { font-size: .67rem; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
+  .chip.blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+  .chip.red { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+  .chip.green { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  .edit-link { font-size: .68rem; color: #2563eb; font-weight: 600; cursor: pointer; background: none; border: none; padding: 0; }
+  .btn-primary { background: #2563eb; color: #fff; border: none; border-radius: 7px; padding: 9px 18px; font-size: .82rem; font-weight: 700; cursor: pointer; }
+  .btn-outline { background: #fff; color: #374151; border: 1px solid #d1d5db; border-radius: 7px; padding: 7px 16px; font-size: .78rem; cursor: pointer; }
+
+  /* ── OPTION D: Header badge + Workflow + Accordions ── */
+  .d-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+  .d-head-left h2 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .pod-badge { background: linear-gradient(135deg,#1e3a5f,#2563eb); color: #fff; border-radius: 8px; padding: 3px 12px; font-size: .75rem; font-weight: 800; letter-spacing: .04em; white-space: nowrap; }
+  .d-head-meta { font-size: .75rem; color: #64748b; margin-top: 4px; display: flex; align-items: center; gap: 10px; }
+  .d-head-meta span { display: flex; align-items: center; gap: 4px; }
+  .d-steps { display: flex; gap: 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+  .d-step { flex: 1; padding: 9px 14px; border-right: 1px solid #e2e8f0; }
+  .d-step:last-child { border-right: none; background: #eff6ff; }
+  .d-step .sn { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #16a34a; margin-bottom: 1px; }
+  .d-step:last-child .sn { color: #2563eb; }
+  .d-step .sl { font-size: .75rem; font-weight: 600; color: #1e293b; }
+  .d-step .ss { font-size: .66rem; color: #64748b; margin-top: 1px; }
+  .d-body { display: grid; grid-template-columns: 1fr 260px; gap: 16px; }
+  .d-accordions { display: flex; flex-direction: column; gap: 6px; }
+  .d-acc { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+  .d-acc-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #fafafa; }
+  .d-acc-head-left { display: flex; align-items: center; gap: 8px; }
+  .d-acc-head-left .icon { font-size: .85rem; }
+  .d-acc-head-left .title { font-size: .78rem; font-weight: 700; }
+  .d-acc-head-right { display: flex; align-items: center; gap: 10px; }
+  .d-acc-head-right .summary { font-size: .7rem; color: #64748b; }
+  .d-acc-head-right .confirmed { font-size: .7rem; color: #16a34a; font-weight: 600; }
+  .d-acc-body { padding: 10px 14px; border-top: 1px solid #f1f5f9; background: #fff; display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  .d-row { display: flex; flex-direction: column; padding: 5px 0; border-bottom: 1px solid #f8fafc; }
+  .d-row .k { font-size: .69rem; color: #94a3b8; }
+  .d-row .v { font-size: .79rem; font-weight: 500; color: #1e293b; margin-top: 1px; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+  .d-right { display: flex; flex-direction: column; gap: 10px; }
+  .d-action { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; }
+  .d-action .at { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #15803d; margin-bottom: 8px; }
+  .d-sent { display: flex; align-items: center; gap: 6px; font-size: .76rem; color: #16a34a; background: rgba(22,163,74,.06); border: 1px solid #bbf7d0; border-radius: 6px; padding: 7px 10px; margin-bottom: 8px; }
+  .d-scope-summary { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+  .d-scope-summary .st { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 8px; }
+  .d-scope-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid #f8fafc; font-size: .75rem; }
+  .d-scope-row:last-child { border-bottom: none; }
+  .d-scope-row .sk { color: #64748b; }
+  .d-scope-row .sv { font-weight: 600; }
+
+  /* ── OPTION E: Big header card + 3-col stacked ── */
+  .e-hero { background: linear-gradient(135deg, #1e3a5f, #2563eb); color: #fff; border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; }
+  .e-hero .agency-info { flex: 1; }
+  .e-hero .agency-info h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+  .e-hero .agency-info .meta { font-size: .72rem; opacity: .8; display: flex; gap: 16px; flex-wrap: wrap; }
+  .e-hero .pod-block { text-align: center; border-left: 1px solid rgba(255,255,255,.2); padding-left: 20px; }
+  .e-hero .pod-block .pl { font-size: .58rem; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
+  .e-hero .pod-block .pv { font-size: 1.6rem; font-weight: 900; line-height: 1.1; }
+  .e-hero .pod-block .ps { font-size: .65rem; opacity: .75; }
+  .e-hero .action-block { border-left: 1px solid rgba(255,255,255,.2); padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .btn-white { background: #fff; color: #1d4ed8; border: none; border-radius: 7px; padding: 8px 16px; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 7px; padding: 7px 16px; font-size: .75rem; cursor: pointer; white-space: nowrap; }
+  .e-sent { font-size: .7rem; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: 5px; }
+  .e-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .e-col { }
+  .e-col-title { font-size: .64rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #94a3b8; padding-bottom: 7px; border-bottom: 2px solid #e2e8f0; margin-bottom: 0; display: flex; justify-content: space-between; }
+  .e-row { display: flex; flex-direction: column; padding: 6px 0; border-bottom: 1px solid #f8fafc; }
+  .e-row:last-child { border-bottom: none; }
+  .e-row .ek { font-size: .69rem; color: #94a3b8; }
+  .e-row .ev { font-size: .79rem; font-weight: 500; color: #1e293b; margin-top: 1px; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+
+  /* ── OPTION F: Confirmed checklist view ── */
+  .f-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .f-head h2 { font-size: 1.35rem; font-weight: 700; }
+  .f-sub { font-size: .78rem; color: #64748b; margin-bottom: 16px; }
+  .f-meta-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .f-meta-bar .fmb-item { font-size: .75rem; color: #475569; display: flex; align-items: center; gap: 5px; }
+  .f-meta-bar .sep { color: #cbd5e1; }
+  .f-body { display: grid; grid-template-columns: 1fr 270px; gap: 16px; }
+  .f-left { display: flex; flex-direction: column; gap: 12px; }
+  .f-section { }
+  .f-section-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; }
+  .f-section-head .fsh-left { display: flex; align-items: center; gap: 8px; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #64748b; }
+  .f-section-head .fsh-check { font-size: .7rem; color: #16a34a; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .f-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  .f-row { display: flex; align-items: baseline; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f8fafc; }
+  .f-row:last-child { border-bottom: none; }
+  .f-row .fk { font-size: .72rem; color: #94a3b8; min-width: 120px; flex-shrink: 0; }
+  .f-row .fv { font-size: .79rem; font-weight: 500; color: #1e293b; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+  .f-right { display: flex; flex-direction: column; gap: 10px; }
+  .f-pod { background: linear-gradient(135deg,#1e3a5f,#2563eb); color: #fff; border-radius: 10px; padding: 16px 18px; }
+  .f-pod .fpl { font-size: .58rem; text-transform: uppercase; letter-spacing: .1em; opacity: .65; margin-bottom: 3px; }
+  .f-pod .fpv { font-size: 2rem; font-weight: 900; line-height: 1; }
+  .f-pod .fps { font-size: .68rem; opacity: .8; margin-top: 4px; }
+  .f-pod .fp-rows { margin-top: 10px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+  .f-pod .fp-row { display: flex; justify-content: space-between; font-size: .71rem; }
+  .f-pod .fp-row .fpk { opacity: .7; }
+  .f-pod .fp-row .fpv2 { font-weight: 600; }
+  .f-action { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+  .f-action .fat { font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #94a3b8; margin-bottom: 10px; }
+  .f-kickoff-status { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; font-size: .75rem; color: #16a34a; font-weight: 600; margin-bottom: 8px; }
+  .f-reminder { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: .74rem; color: #92400e; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- OPTION D: Header badge + Workflow steps + Accordions + compact right -->
+<div class="option">
+  <div class="option-label">Option D — Badge in Header + Steps + Accordions</div>
+
+  <div class="d-head">
+    <div class="d-head-left">
+      <h2>Agency Setup &amp; Intake <span class="pod-badge">● MEDIUM</span></h2>
+      <div class="d-head-meta">
+        <span>Maryland State Dept. of Education</span>
+        <span>·</span>
+        <span>MD-MSDE-2026-006</span>
+        <span>·</span>
+        <span>Wave 1 — Q1 2026</span>
+        <span>·</span>
+        <span>S. Patel (Lead)</span>
+      </div>
+    </div>
+    <button class="edit-link" style="font-size:.75rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:5px 14px;">✏ Edit Setup Info</button>
+  </div>
+
+  <!-- workflow steps -->
+  <div class="d-steps">
+    <div class="d-step"><div class="sn">✓ Step 1</div><div class="sl">Agency Profile</div><div class="ss">Confirmed</div></div>
+    <div class="d-step"><div class="sn">✓ Step 2</div><div class="sl">IT Environment</div><div class="ss">Confirmed</div></div>
+    <div class="d-step"><div class="sn">✓ Step 3</div><div class="sl">Security Posture</div><div class="ss">Confirmed</div></div>
+    <div class="d-step"><div class="sn">✓ Step 4</div><div class="sl">Assignment</div><div class="ss">S. Patel · POD MEDIUM</div></div>
+    <div class="d-step"><div class="sn">→ Step 5</div><div class="sl">Send Kick-Off</div><div class="ss">Ready to send</div></div>
+  </div>
+
+  <div class="d-body">
+    <div class="d-accordions">
+
+      <div class="d-acc">
+        <div class="d-acc-head">
+          <div class="d-acc-head-left"><span class="icon">👤</span><span class="title">Agency Profile</span></div>
+          <div class="d-acc-head-right"><span class="summary">Patricia Hall · MD-MSDE-2026-006</span><span class="confirmed">✓ Confirmed</span></div>
+        </div>
+        <div class="d-acc-body">
+          <div class="d-row"><span class="k">Agency Name</span><span class="v">Maryland State Dept. of Education (MSDE)</span></div>
+          <div class="d-row"><span class="k">Primary Contact</span><span class="v">Patricia Hall, CISO</span></div>
+          <div class="d-row"><span class="k">Email</span><span class="v">p.hall@msde.maryland.gov</span></div>
+          <div class="d-row"><span class="k">Phone</span><span class="v">(410) 767-0100</span></div>
+        </div>
+      </div>
+
+      <div class="d-acc">
+        <div class="d-acc-head">
+          <div class="d-acc-head-left"><span class="icon">🖥</span><span class="title">IT Environment</span></div>
+          <div class="d-acc-head-right"><span class="summary">Moderate · Elevated PII · Azure + GCP</span><span class="confirmed">✓ Confirmed</span></div>
+        </div>
+        <div class="d-acc-body">
+          <div class="d-row"><span class="k">FTE Tier</span><span class="v">251–1,000 FTEs <span class="chip blue">2 pts</span></span></div>
+          <div class="d-row"><span class="k">IT Complexity</span><span class="v">Moderate <span class="chip blue">2 pts</span></span></div>
+          <div class="d-row"><span class="k">Data Sensitivity</span><span class="v">Elevated — PII/PHI <span class="chip blue">2 pts</span></span></div>
+          <div class="d-row"><span class="k">Cloud</span><span class="v"><span class="chip">Azure Government</span><span class="chip">Google Cloud</span></span></div>
+          <div class="d-row"><span class="k">OT/ICS</span><span class="v">None</span></div>
+          <div class="d-row"><span class="k">Data Types</span><span class="v"><span class="chip">PII</span><span class="chip">Financial</span></span></div>
+        </div>
+      </div>
+
+      <div class="d-acc">
+        <div class="d-acc-head">
+          <div class="d-acc-head-left"><span class="icon">🛡</span><span class="title">Security Posture</span></div>
+          <div class="d-acc-head-right"><span class="summary">Level 3 · No SIEM · Partial MFA</span><span class="confirmed">✓ Confirmed</span></div>
+        </div>
+        <div class="d-acc-body">
+          <div class="d-row"><span class="k">Self-Assessed Maturity</span><span class="v">Level 3 — Defined</span></div>
+          <div class="d-row"><span class="k">Previous Assessment</span><span class="v">1–2 years ago</span></div>
+          <div class="d-row"><span class="k">MFA Coverage</span><span class="v">Partial — some users</span></div>
+          <div class="d-row"><span class="k">SIEM Deployment</span><span class="v">Not deployed <span class="chip red">Gap</span></span></div>
+          <div class="d-row"><span class="k">IR Plan</span><span class="v">Exists, not recently tested</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-right">
+      <div class="d-scope-summary">
+        <div class="st">Assessment Assignment</div>
+        <div class="d-scope-row"><span class="sk">Wave</span><span class="sv">Wave 1 — Q1 2026</span></div>
+        <div class="d-scope-row"><span class="sk">Pod</span><span class="sv">POD MEDIUM</span></div>
+        <div class="d-scope-row"><span class="sk">Lead Assessor</span><span class="sv">S. Patel</span></div>
+        <div class="d-scope-row"><span class="sk">Team</span><span class="sv">3–4 Assessors</span></div>
+        <div class="d-scope-row"><span class="sk">Window</span><span class="sv">Feb 17 – Mar 31, 2026</span></div>
+        <div class="d-scope-row"><span class="sk">Maturity Group</span><span class="sv">Group C (2.6–3.4)</span></div>
+      </div>
+      <div class="d-action">
+        <div class="at">Kick-Off Package</div>
+        <div class="d-sent">✅ Sent — Jan 15, 2026</div>
+        <button class="btn-primary" style="width:100%;margin-bottom:7px;">📨 Resend Package</button>
+        <button class="btn-outline" style="width:100%;">🔔 Set Reminder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- OPTION E: Hero banner with badge + 3-col grid -->
+<div class="option">
+  <div class="option-label">Option E — Hero Banner with Badge + 3-Column Grid</div>
+
+  <div class="e-hero">
+    <div class="agency-info">
+      <h2>Maryland State Dept. of Education <span style="background:rgba(255,255,255,.18);border-radius:6px;padding:2px 10px;font-size:.72rem;font-weight:700;letter-spacing:.04em;">● MEDIUM</span></h2>
+      <div class="meta">
+        <span>MD-MSDE-2026-006</span>
+        <span>Wave 1 — Q1 2026</span>
+        <span>Lead: S. Patel</span>
+        <span>Feb 17 – Mar 31, 2026</span>
+      </div>
+    </div>
+    <div class="action-block" style="border-left:1px solid rgba(255,255,255,.2);padding-left:20px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+      <div class="e-sent">✅ Kick-Off Sent — Jan 15, 2026</div>
+      <button class="btn-white">📨 Resend Kick-Off</button>
+      <button class="btn-ghost">🔔 Set Reminder</button>
+    </div>
+  </div>
+
+  <div class="e-grid">
+    <div class="e-col">
+      <div class="e-col-title">Agency Profile <button class="edit-link">✏ Edit</button></div>
+      <div class="e-row"><span class="ek">Agency</span><span class="ev">Maryland State Dept. of Education</span></div>
+      <div class="e-row"><span class="ek">Contact</span><span class="ev">Patricia Hall, CISO</span></div>
+      <div class="e-row"><span class="ek">Email</span><span class="ev">p.hall@msde.maryland.gov</span></div>
+      <div class="e-row"><span class="ek">Phone</span><span class="ev">(410) 767-0100</span></div>
+      <div class="e-row"><span class="ek">Assessment ID</span><span class="ev">MD-MSDE-2026-006</span></div>
+    </div>
+    <div class="e-col">
+      <div class="e-col-title">IT Environment <button class="edit-link">✏ Edit</button></div>
+      <div class="e-row"><span class="ek">FTE Tier</span><span class="ev">251–1,000 FTEs <span class="chip blue">2 pts</span></span></div>
+      <div class="e-row"><span class="ek">IT Complexity</span><span class="ev">Moderate <span class="chip blue">2 pts</span></span></div>
+      <div class="e-row"><span class="ek">Data Sensitivity</span><span class="ev">Elevated — PII/PHI <span class="chip blue">2 pts</span></span></div>
+      <div class="e-row"><span class="ek">Cloud</span><span class="ev"><span class="chip">Azure Gov</span><span class="chip">GCP</span></span></div>
+      <div class="e-row"><span class="ek">Data Types</span><span class="ev"><span class="chip">PII</span><span class="chip">Financial</span></span></div>
+    </div>
+    <div class="e-col">
+      <div class="e-col-title">Security Posture <button class="edit-link">✏ Edit</button></div>
+      <div class="e-row"><span class="ek">Self-Assessed Maturity</span><span class="ev">Level 3 — Defined</span></div>
+      <div class="e-row"><span class="ek">Previous Assessment</span><span class="ev">1–2 years ago</span></div>
+      <div class="e-row"><span class="ek">MFA Coverage</span><span class="ev">Partial — some users</span></div>
+      <div class="e-row"><span class="ek">SIEM</span><span class="ev">Not deployed <span class="chip red">Gap</span></span></div>
+      <div class="e-row"><span class="ek">IR Plan</span><span class="ev">Exists, not tested</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- OPTION F: Clean sections with assignment sidebar and pod badge in header -->
+<div class="option">
+  <div class="option-label">Option F — Compact Sections + Assignment Sidebar</div>
+
+  <div class="f-head">
+    <div>
+      <h2>Agency Setup &amp; Intake</h2>
+    </div>
+    <button class="edit-link" style="font-size:.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:5px 14px;">✏ Edit Setup Info</button>
+  </div>
+  <div class="f-meta-bar">
+    <span class="pod-badge">● MEDIUM</span>
+    <span class="f-meta-bar fmb-item" style="font-size:.75rem;color:#475569;">Maryland State Dept. of Education</span>
+    <span style="color:#cbd5e1">·</span>
+    <span style="font-size:.75rem;color:#475569;">MD-MSDE-2026-006</span>
+    <span style="color:#cbd5e1">·</span>
+    <span style="font-size:.75rem;color:#475569;">Wave 1 — Q1 2026</span>
+    <span style="color:#cbd5e1">·</span>
+    <span style="font-size:.75rem;color:#475569;">S. Patel</span>
+  </div>
+
+  <div class="f-body">
+    <div class="f-left">
+
+      <div class="f-section">
+        <div class="f-section-head">
+          <div class="fsh-left">👤 Agency Profile</div>
+          <div class="fsh-check">✓ Confirmed</div>
+        </div>
+        <div class="f-rows">
+          <div class="f-row"><span class="fk">Agency Name</span><span class="fv">Maryland State Dept. of Education (MSDE)</span></div>
+          <div class="f-row"><span class="fk">Primary Contact</span><span class="fv">Patricia Hall, CISO</span></div>
+          <div class="f-row"><span class="fk">Email</span><span class="fv">p.hall@msde.maryland.gov</span></div>
+          <div class="f-row"><span class="fk">Phone</span><span class="fv">(410) 767-0100</span></div>
+        </div>
+      </div>
+
+      <div class="f-section">
+        <div class="f-section-head">
+          <div class="fsh-left">🖥 IT Environment</div>
+          <div class="fsh-check">✓ Confirmed</div>
+        </div>
+        <div class="f-rows">
+          <div class="f-row"><span class="fk">FTE Tier</span><span class="fv">251–1,000 FTEs <span class="chip blue">2 pts</span></span></div>
+          <div class="f-row"><span class="fk">IT Complexity</span><span class="fv">Moderate <span class="chip blue">2 pts</span></span></div>
+          <div class="f-row"><span class="fk">Data Sensitivity</span><span class="fv">Elevated — PII/PHI <span class="chip blue">2 pts</span></span></div>
+          <div class="f-row"><span class="fk">Cloud</span><span class="fv"><span class="chip">Azure Gov</span><span class="chip">GCP</span></span></div>
+          <div class="f-row"><span class="fk">Data Types</span><span class="fv"><span class="chip">PII</span><span class="chip">Financial</span></span></div>
+        </div>
+      </div>
+
+      <div class="f-section">
+        <div class="f-section-head">
+          <div class="fsh-left">🛡 Security Posture</div>
+          <div class="fsh-check">✓ Confirmed</div>
+        </div>
+        <div class="f-rows">
+          <div class="f-row"><span class="fk">Self-Assessed Maturity</span><span class="fv">Level 3 — Defined</span></div>
+          <div class="f-row"><span class="fk">Previous Assessment</span><span class="fv">1–2 years ago</span></div>
+          <div class="f-row"><span class="fk">MFA Coverage</span><span class="fv">Partial — some users</span></div>
+          <div class="f-row"><span class="fk">SIEM</span><span class="fv">Not deployed <span class="chip red">Gap</span></span></div>
+          <div class="f-row"><span class="fk">IR Plan</span><span class="fv">Exists, not recently tested</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="f-right">
+      <div class="f-pod">
+        <div class="fpl">Assessment Scope</div>
+        <div class="fpv">MEDIUM</div>
+        <div class="fps">3–4 Assessors · 42 Days</div>
+        <div class="fp-rows">
+          <div class="fp-row"><span class="fpk">Wave</span><span class="fpv2">Wave 1 — Q1 2026</span></div>
+          <div class="fp-row"><span class="fpk">Pod</span><span class="fpv2">POD MEDIUM</span></div>
+          <div class="fp-row"><span class="fpk">Lead</span><span class="fpv2">S. Patel</span></div>
+          <div class="fp-row"><span class="fpk">Window</span><span class="fpv2">Feb 17 – Mar 31</span></div>
+          <div class="fp-row"><span class="fpk">Maturity Group</span><span class="fpv2">Group C</span></div>
+        </div>
+      </div>
+      <div class="f-action">
+        <div class="fat">Kick-Off Package</div>
+        <div class="f-kickoff-status">✅ Sent — Jan 15, 2026</div>
+        <div class="f-reminder">🔔 Follow-up reminder set for Jan 17</div>
+        <button class="btn-primary" style="width:100%;margin-bottom:6px;">📨 Resend Package</button>
+        <button class="btn-outline" style="width:100%;">+ Add Note</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

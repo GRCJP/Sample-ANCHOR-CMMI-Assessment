@@ -591,3 +591,145 @@ class AgencyAssessment {
 document.addEventListener('DOMContentLoaded', () => {
   window.agencyAssessment = new AgencyAssessment();
 });
+
+// ════════════════════════════════════════════════════════════════════════════════
+// Shared SRTM Utilities (used by all agency files)
+// ════════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Computes per-function and overall statistics from SRTM state
+ * @param {Object} srtmState - { 'GV.OC-01': {result, cmmi, procs}, ... }
+ * @param {Array} srtmData - Domain array: [{fn: 'GOVERN', controls: [...]}, ...]
+ * @returns {Object} - {GOVERN: {total, met, notMet, na, cmmiAvg, notMetCtrls[]}, ..., overall: {cmmi, met, notMet, total}}
+ */
+function computeFnStats(srtmState, srtmData) {
+  var fnStats = {};
+  var totalMet = 0, totalNotMet = 0, totalNa = 0, totalCmmi = 0, totalCmmiCnt = 0;
+
+  srtmData.forEach(function(domain) {
+    var s = {
+      fn: domain.fn,
+      total: domain.controls.length,
+      met: 0,
+      notMet: 0,
+      na: 0,
+      unscored: 0,
+      cmmiSum: 0,
+      cmmiCnt: 0,
+      notMetCtrls: []
+    };
+
+    domain.controls.forEach(function(ctrl) {
+      var st = srtmState[ctrl.id];
+      if (!st || !st.result) {
+        s.unscored++;
+      } else if (st.result === 'MET') {
+        s.met++;
+        totalMet++;
+      } else if (st.result === 'NOT MET') {
+        s.notMet++;
+        totalNotMet++;
+        s.notMetCtrls.push({
+          id: ctrl.id,
+          name: ctrl.name || ctrl.id,
+          cmmi: st.cmmi || '—',
+          obs: st.obs || ''
+        });
+      } else if (st.result === 'N/A') {
+        s.na++;
+        totalNa++;
+      }
+
+      if (st && st.cmmi !== '' && st.cmmi !== undefined) {
+        var cmmiVal = Number(st.cmmi);
+        s.cmmiSum += cmmiVal;
+        s.cmmiCnt++;
+        totalCmmi += cmmiVal;
+        totalCmmiCnt++;
+      }
+    });
+
+    fnStats[domain.fn] = s;
+  });
+
+  fnStats.overall = {
+    cmmi: totalCmmiCnt > 0 ? (totalCmmi / totalCmmiCnt).toFixed(1) : '—',
+    met: totalMet,
+    notMet: totalNotMet,
+    na: totalNa,
+    total: totalMet + totalNotMet + totalNa,
+    cmmiTotal: totalCmmi,
+    cmmiCount: totalCmmiCnt
+  };
+
+  return fnStats;
+}
+
+/**
+ * Maps NIST CSF control ID to function
+ * @param {string} ctrlId - e.g., 'GV.OC-01', 'DE.CM-01'
+ * @returns {string} - e.g., 'GOVERN', 'DETECT', or null
+ */
+function csf2fn(ctrlId) {
+  if (ctrlId.startsWith('GV')) return 'GOVERN';
+  if (ctrlId.startsWith('ID')) return 'IDENTIFY';
+  if (ctrlId.startsWith('PR')) return 'PROTECT';
+  if (ctrlId.startsWith('DE')) return 'DETECT';
+  if (ctrlId.startsWith('RS')) return 'RESPOND';
+  if (ctrlId.startsWith('RC')) return 'RECOVER';
+  return null;
+}
+
+/**
+ * Handles navigation with optional filtering and scrolling
+ * @param {string} sectionId - Section to navigate to (e.g., 'csf', 'risk')
+ * @param {string|null} filterFn - CSF function to filter by (e.g., 'GOVERN')
+ * @param {string|null} scrollTargetId - Element ID to scroll to
+ */
+function navigateTo(sectionId, filterFn, scrollTargetId) {
+  var btn = document.querySelector('.nav-item[onclick*="\'' + sectionId + '\'"]');
+  if (btn && typeof showSection === 'function') {
+    showSection(sectionId, btn);
+  }
+
+  if (filterFn && typeof switchSrtmDomain === 'function') {
+    setTimeout(function() {
+      switchSrtmDomain(filterFn, null);
+    }, 150);
+  }
+
+  if (scrollTargetId) {
+    setTimeout(function() {
+      var el = document.getElementById(scrollTargetId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+/**
+ * Downloads data as CSV file
+ * @param {string} filename - Name of the file to download
+ * @param {Array} rows - Array of arrays (rows), first row typically headers
+ */
+function downloadCSV(filename, rows) {
+  var csv = rows.map(function(r) {
+    return r.map(function(c) {
+      var s = String(c == null ? '' : c);
+      // Escape double quotes, wrap in quotes if contains comma/newline
+      if (/[,"\n]/.test(s)) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }).join(',');
+  }).join('\n');
+
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

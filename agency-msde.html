@@ -1279,9 +1279,9 @@
 
         <div class="grid-4" style="margin-bottom:20px;">
           <div class="stat-card accent"><div class="stat-label">CMMI Score</div><div class="stat-value"><span id="sar-overall-maturity">2.3</span> / 5.0</div><div class="stat-sub">Managed level</div></div>
-          <div class="stat-card"><div class="stat-label">Total Controls</div><div class="stat-value">32</div><div class="stat-sub">NIST CSF 2.0</div></div>
-          <div class="stat-card green"><div class="stat-label">Controls MET</div><div class="stat-value">18</div><div class="stat-sub">Requirements satisfied</div></div>
-          <div class="stat-card red"><div class="stat-label">Controls NOT MET</div><div class="stat-value">14</div><div class="stat-sub">Require remediation</div></div>
+          <div class="stat-card"><div class="stat-label">Total Controls</div><div class="stat-value" id="sar-stat-total">32</div><div class="stat-sub">NIST CSF 2.0</div></div>
+          <div class="stat-card green"><div class="stat-label">Controls MET</div><div class="stat-value" id="sar-stat-met">18</div><div class="stat-sub">Requirements satisfied</div></div>
+          <div class="stat-card red"><div class="stat-label">Controls NOT MET</div><div class="stat-value" id="sar-stat-notmet">14</div><div class="stat-sub">Require remediation</div></div>
         </div>
 
         <!-- 2. Scope & Methodology -->
@@ -1297,7 +1297,7 @@
           <div class="card-title">3. Maturity by CSF Function</div>
           <div class="table-wrap"><table>
             <thead><tr><th>Function</th><th>Controls Assessed</th><th>MET</th><th>NOT MET</th><th>Avg CMMI</th><th>Score</th></tr></thead>
-            <tbody>
+            <tbody id="sar-fn-summary-tbody">
               <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>5</td><td>3</td><td>2</td><td>2.1</td><td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;"><div style="width:42%;height:6px;background:#0f2d5e;border-radius:3px;"></div></div><span style="font-size:.72rem;font-weight:700;color:#374151;">42%</span></div></td></tr>
               <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>6</td><td>3</td><td>3</td><td>2.4</td><td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;"><div style="width:48%;height:6px;background:#1d4ed8;border-radius:3px;"></div></div><span style="font-size:.72rem;font-weight:700;color:#374151;">48%</span></div></td></tr>
               <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>7</td><td>5</td><td>2</td><td>2.5</td><td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;"><div style="width:50%;height:6px;background:#0d9488;border-radius:3px;"></div></div><span style="font-size:.72rem;font-weight:700;color:#374151;">50%</span></div></td></tr>
@@ -1319,7 +1319,7 @@
           <div class="card-title">4. Findings Detail</div>
           <div class="table-wrap"><table>
             <thead><tr><th>Control ID</th><th>Control Name</th><th>Function</th><th>CMMI</th><th>Observation</th></tr></thead>
-            <tbody>
+            <tbody id="sar-findings-tbody">
               <tr><td>DE.CM-01</td><td>Network Monitoring</td><td><span class="fn-tag fn-detect">DETECT</span></td><td><strong>ML1</strong></td><td>No centralized log management or SIEM in place</td></tr>
               <tr><td>PR.AA-01</td><td>Identity &amp; Credential Mgmt</td><td><span class="fn-tag fn-protect">PROTECT</span></td><td><strong>ML1</strong></td><td>MFA not enforced on privileged accounts</td></tr>
               <tr><td>ID.AM-01</td><td>Hardware Asset Inventory</td><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td><strong>ML2</strong></td><td>Asset inventory estimated 40% incomplete</td></tr>
@@ -1335,7 +1335,7 @@
           <div class="card-title">5. Full Control Assessment Results</div>
           <div class="table-wrap"><table>
             <thead><tr><th>Function</th><th>ID</th><th>Control</th><th>Category</th><th>Result</th><th>CMMI</th></tr></thead>
-            <tbody>
+            <tbody id="sar-full-results-tbody">
               <!-- GOVERN -->
               <tr style="background:#f8fafc;"><td><span class="fn-tag fn-govern">GOVERN</span></td><td>GV.OC-01</td><td>Mission Alignment</td><td>Organizational Context</td><td><span class="badge badge-green">MET</span></td><td>ML3</td></tr>
               <tr style="background:#f8fafc;"><td><span class="fn-tag fn-govern">GOVERN</span></td><td>GV.RM-01</td><td>Risk Management Objectives</td><td>Risk Mgmt Strategy</td><td><span class="badge badge-red">NOT MET</span></td><td>ML2</td></tr>
@@ -1383,7 +1383,7 @@
           <div class="card-title">6. Plan of Action &amp; Milestones (POA&amp;M)</div>
           <div class="table-wrap"><table>
             <thead><tr><th>ID</th><th>Finding</th><th>Control</th><th>Priority</th><th>Action</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
-            <tbody>
+            <tbody id="sar-poam-tbody">
               <tr><td>PM-001</td><td>Deploy SIEM / log management</td><td>DE.CM-01</td><td><span class="badge badge-red">CRITICAL</span></td><td>Procure and deploy Splunk Enterprise Security or equivalent; integrate all log sources</td><td>SOC Manager</td><td>2026-05-19</td><td><span class="badge badge-orange">In Progress</span></td></tr>
               <tr><td>PM-002</td><td>Enforce MFA for all privileged accounts</td><td>PR.AA-01</td><td><span class="badge badge-red">CRITICAL</span></td><td>Configure Azure AD / Okta MFA enforcement; revoke non-compliant sessions</td><td>IT Director</td><td>2026-04-30</td><td><span class="badge badge-orange">In Progress</span></td></tr>
               <tr><td>PM-003</td><td>Complete hardware asset inventory</td><td>ID.AM-01</td><td><span class="badge badge-red">CRITICAL</span></td><td>Deploy Qualys Asset Inventory; reconcile CMDB with field office discovery</td><td>Network Admin</td><td>2026-05-15</td><td><span class="badge badge-orange">In Progress</span></td></tr>
@@ -2550,25 +2550,82 @@
 
     function initAgencyCharts() {
       if (typeof Chart === 'undefined') return;
+
+      // Destroy existing charts
       ['radarChart','riskChart','findingsChart','sarRadarChart'].forEach(id => {
         const el = document.getElementById(id);
         if (el) { const existing = Chart.getChart(el); if (existing) existing.destroy(); }
       });
+
+      // Read live SRTM state
+      var key = window.AGENCY_KEY || 'msde';
+      var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
+      var fnStats = computeFnStats(srtm, SRTM_DATA);
+
+      // Build per-function CMMI averages
+      var fnNames = ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER'];
+      var cmmiData = fnNames.map(function(fn) {
+        var s = fnStats[fn];
+        return s && s.cmmiCnt > 0 ? parseFloat((s.cmmiSum / s.cmmiCnt).toFixed(1)) : 0;
+      });
+
+      // Main maturity radar chart
       const radarEl = document.getElementById('radarChart');
       if (radarEl) {
-        new Chart(radarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Current (CMMI)',data:[2.1,2.5,2.8,1.9,2.4,2.1],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',pointBackgroundColor:'#2563a8',borderWidth:2},{label:'Target (3.0)',data:[3,3,3,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],pointBackgroundColor:'#27ae60',borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
+        new Chart(radarEl, {
+          type:'radar',
+          data:{
+            labels:fnNames,
+            datasets:[
+              {label:'Current (CMMI)', data:cmmiData, backgroundColor:'rgba(37,99,168,.15)', borderColor:'#2563a8', pointBackgroundColor:'#2563a8', borderWidth:2},
+              {label:'Target (3.0)', data:[3,3,3,3,3,3], backgroundColor:'rgba(39,174,96,.1)', borderColor:'#27ae60', borderDash:[5,4], pointBackgroundColor:'#27ae60', borderWidth:2}
+            ]
+          },
+          options:{responsive:true, maintainAspectRatio:false, scales:{r:{min:0, max:5, ticks:{stepSize:1}}}, plugins:{legend:{position:'bottom'}}}
+        });
       }
+
+      // Risk doughnut chart (TODO: compute from findingsarray)
       const riskEl = document.getElementById('riskChart');
       if (riskEl) {
-        new Chart(riskEl, { type:'doughnut', data:{labels:['Critical (P1)','High (P2)','Medium (P3)','Low'],datasets:[{data:[3,3,0,0],backgroundColor:['#dc2626','#ea580c','#d97706','#16a34a'],borderWidth:0}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right'}}} });
+        new Chart(riskEl, {
+          type:'doughnut',
+          data:{
+            labels:['Critical (P1)','High (P2)','Medium (P3)','Low'],
+            datasets:[{data:[3,3,0,0], backgroundColor:['#dc2626','#ea580c','#d97706','#16a34a'], borderWidth:0}]
+          },
+          options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right'}}}
+        });
       }
+
+      // Findings bar chart by function
       const findingsEl = document.getElementById('findingsChart');
       if (findingsEl) {
-        new Chart(findingsEl, { type:'bar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Critical',data:[0,1,0,1,1,0],backgroundColor:'#dc2626',borderRadius:4},{label:'High',data:[1,0,1,0,0,1],backgroundColor:'#ea580c',borderRadius:4},{label:'Medium',data:[0,0,0,0,0,0],backgroundColor:'#d97706',borderRadius:4},{label:'Low',data:[0,0,0,0,0,0],backgroundColor:'#16a34a',borderRadius:4}] }, options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}},plugins:{legend:{position:'bottom'}}} });
+        var notMetCounts = fnNames.map(function(fn) { var s = fnStats[fn]; return s ? s.notMet : 0; });
+        new Chart(findingsEl, {
+          type:'bar',
+          data:{
+            labels:fnNames,
+            datasets:[{label:'NOT MET', data:notMetCounts, backgroundColor:'#dc2626', borderRadius:4}]
+          },
+          options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true}}, plugins:{legend:{position:'bottom'}}}
+        });
       }
+
+      // SAR maturity radar
       const sarRadarEl = document.getElementById('sarRadarChart');
       if (sarRadarEl) {
-        new Chart(sarRadarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Current',data:[2.1,2.5,2.8,1.9,2.4,2.1],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},{label:'Target (3.0)',data:[3,3,3,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
+        new Chart(sarRadarEl, {
+          type:'radar',
+          data:{
+            labels:fnNames,
+            datasets:[
+              {label:'Current', data:cmmiData, backgroundColor:'rgba(37,99,168,.15)', borderColor:'#2563a8', borderWidth:2},
+              {label:'Target (3.0)', data:[3,3,3,3,3,3], backgroundColor:'rgba(39,174,96,.1)', borderColor:'#27ae60', borderDash:[5,4], borderWidth:2}
+            ]
+          },
+          options:{responsive:true, maintainAspectRatio:false, scales:{r:{min:0, max:5, ticks:{stepSize:1}}}, plugins:{legend:{position:'bottom'}}}
+        });
       }
     }
   </script>
@@ -2914,11 +2971,116 @@
       }).join('');
     }
 
-    // Hook into showSection to update risk when tab is activated
+    // ── Update SAR Section from Live SRTM Data ─────────────────────────────────────
+    function updateSarFromSrtm() {
+      var key = window.AGENCY_KEY || 'msde';
+      var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
+      var fnStats = computeFnStats(srtm, SRTM_DATA);
+
+      // Update stat cards
+      ['sar-stat-total','sar-stat-met','sar-stat-notmet'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'sar-stat-total') el.textContent = fnStats.overall.total;
+        else if (id === 'sar-stat-met') el.textContent = fnStats.overall.met;
+        else if (id === 'sar-stat-notmet') el.textContent = fnStats.overall.notMet;
+      });
+
+      // Update overall CMMI
+      if (fnStats.overall.cmmi !== '—') {
+        var overallEl = document.getElementById('sar-overall-maturity');
+        if (overallEl) overallEl.textContent = fnStats.overall.cmmi;
+      }
+
+      // Update Section 3 — Maturity by CSF Function
+      var fnTable = document.getElementById('sar-fn-summary-tbody');
+      if (fnTable) {
+        var cmmiColors = ['#6b7280','#dc2626','#ea580c','#d97706','#16a34a','#0d9488'];
+        fnTable.innerHTML = Object.entries(fnStats).filter(function(e){ return e[0] !== 'overall'; }).map(function(e) {
+          var fn = e[0]; var s = e[1];
+          var avg = s.cmmiCnt > 0 ? (s.cmmiSum / s.cmmiCnt).toFixed(1) : '—';
+          var ml = s.cmmiCnt > 0 ? Math.min(5, Math.floor(s.cmmiSum / s.cmmiCnt)) : 0;
+          var pct = s.total > 0 ? Math.round((s.met + s.notMet + s.na) / s.total * 100) : 0;
+          return '<tr><td><span class="fn-tag ' + (fn==='GOVERN'?'fn-govern':fn==='IDENTIFY'?'fn-identify':fn==='PROTECT'?'fn-protect':fn==='DETECT'?'fn-detect':fn==='RESPOND'?'fn-respond':'fn-recover') + '">' + fn + '</span></td>' +
+            '<td>' + s.total + '</td><td style="color:#16a34a;font-weight:700;">' + s.met + '</td><td style="color:#dc2626;font-weight:700;">' + s.notMet + '</td>' +
+            '<td><strong style="color:' + cmmiColors[ml] + '">' + avg + '</strong></td>' +
+            '<td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;"><div style="width:' + pct + '%;height:6px;background:#0f2d5e;border-radius:3px;"></div></div><span style="font-size:.72rem;font-weight:700;color:#374151;">' + pct + '%</span></div></td></tr>';
+        }).join('');
+      }
+
+      // Update Section 4 — Findings Detail (NOT MET controls only)
+      var findTable = document.getElementById('sar-findings-tbody');
+      if (findTable) {
+        var allFindings = [];
+        Object.entries(fnStats).forEach(function(e) {
+          if (e[0] === 'overall') return;
+          e[1].notMetCtrls.forEach(function(c) {
+            allFindings.push({ id: c.id, name: c.name, fn: e[0], cmmi: c.cmmi, obs: c.obs });
+          });
+        });
+        findTable.innerHTML = allFindings.length === 0
+          ? '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">All controls MET — no findings.</td></tr>'
+          : allFindings.map(function(f) {
+              var fnClass = f.fn==='GOVERN'?'fn-govern':f.fn==='IDENTIFY'?'fn-identify':f.fn==='PROTECT'?'fn-protect':f.fn==='DETECT'?'fn-detect':f.fn==='RESPOND'?'fn-respond':'fn-recover';
+              return '<tr><td><a href="#" onclick="navigateTo(\'csf\',\'' + f.fn + '\');setTimeout(()=>toggleSrtmCtrl(\'' + f.id + '\'),200);return false;" style="color:#2563a8;text-decoration:none;font-weight:600;">' + f.id + '</a></td>' +
+                '<td>' + f.name + '</td><td><span class="fn-tag ' + fnClass + '">' + f.fn + '</span></td>' +
+                '<td><strong>' + f.cmmi + '</strong></td><td style="font-size:.78rem;color:var(--text-muted);">' + (f.obs || '—') + '</td></tr>';
+            }).join('');
+      }
+
+      // Update Section 5 — Full Control Assessment Results
+      var allCtrlTable = document.getElementById('sar-full-results-tbody');
+      if (allCtrlTable) {
+        var allRows = [];
+        SRTM_DATA.forEach(function(domain) {
+          domain.controls.forEach(function(ctrl) {
+            var st = srtm[ctrl.id] || {};
+            var result = st.result || '';
+            var cmmi = st.cmmi !== undefined && st.cmmi !== '' ? st.cmmi : '—';
+            var resultBadge = result === 'MET' ? 'badge badge-green' : result === 'NOT MET' ? 'badge badge-red' : 'badge badge-gray';
+            var fnClass = domain.fn==='GOVERN'?'fn-govern':domain.fn==='IDENTIFY'?'fn-identify':domain.fn==='PROTECT'?'fn-protect':domain.fn==='DETECT'?'fn-detect':domain.fn==='RESPOND'?'fn-respond':'fn-recover';
+            allRows.push('<tr><td><span class="fn-tag ' + fnClass + '">' + domain.fn + '</span></td>' +
+              '<td><code>' + ctrl.id + '</code></td><td>' + (ctrl.name||ctrl.id) + '</td><td>—</td>' +
+              '<td><span class="' + resultBadge + '">' + (result||'—') + '</span></td>' +
+              '<td>' + cmmi + '</td></tr>');
+          });
+        });
+        allCtrlTable.innerHTML = allRows.join('');
+      }
+
+      // Update Section 6 — POA&M from NOT MET controls
+      var poamTable = document.getElementById('sar-poam-tbody');
+      if (poamTable) {
+        var poamRows = [];
+        var pmId = 1;
+        Object.entries(fnStats).forEach(function(e) {
+          if (e[0] === 'overall') return;
+          e[1].notMetCtrls.forEach(function(c) {
+            var priority = c.cmmi <= 1 ? 'CRITICAL' : c.cmmi === 2 ? 'HIGH' : 'MEDIUM';
+            var priorityClass = priority === 'CRITICAL' ? 'badge-red' : 'badge-orange';
+            var dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + (priority === 'CRITICAL' ? 30 : priority === 'HIGH' ? 60 : 90));
+            var dueDateStr = dueDate.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+            var pmStr = 'PM-' + String(pmId).padStart(3, '0');
+            pmId++;
+            poamRows.push('<tr><td>' + pmStr + '</td><td>' + c.name + ' <span style="font-size:.68rem;color:#94a3b8;">' + c.id + '</span></td>' +
+              '<td>' + c.id + '</td><td><span class="' + priorityClass + '">' + priority + '</span></td>' +
+              '<td>Remediate control to at least ML' + (Number(c.cmmi)+1) + '</td><td>CISO / IT Director</td>' +
+              '<td>' + dueDateStr + '</td><td><span style="color:#94a3b8;font-size:.78rem;">Not Started</span></td></tr>');
+          });
+        });
+        poamTable.innerHTML = poamRows.length === 0
+          ? '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px;">No open items. All controls MET.</td></tr>'
+          : poamRows.join('');
+      }
+    }
+
+    // Hook into showSection to update risk and sar when tabs are activated
     var _origShowSection = window.showSection;
     window.showSection = function(id, btn) {
       if (_origShowSection) _origShowSection(id, btn);
       if (id === 'risk') { setTimeout(updateRiskFromSRTM, 50); }
+      if (id === 'sar') { setTimeout(updateSarFromSrtm, 50); }
     };
     // Also run on page load if risk is initially active
     document.addEventListener('DOMContentLoaded', function() {
