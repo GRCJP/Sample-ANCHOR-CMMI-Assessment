@@ -2311,7 +2311,15 @@
       });
       const radarEl = document.getElementById('radarChart');
       if (radarEl) {
-        new Chart(radarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Scored (GOVERN Only)',data:[1.6,null,null,null,null,null],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',pointBackgroundColor:'#2563a8',borderWidth:2,spanGaps:false},{label:'Target (3.0)',data:[3,3,3,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],pointBackgroundColor:'#27ae60',borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
+        var srtmDpscs = JSON.parse(localStorage.getItem('anchor_srtm_dpscs') || '{}');
+        var fnStatsDpscs = computeFnStats(srtmDpscs, SRTM_DATA);
+        var radarData = [fnStatsDpscs.GOVERN?.cmmiCnt > 0 ? (fnStatsDpscs.GOVERN.cmmiSum / fnStatsDpscs.GOVERN.cmmiCnt).toFixed(1) : null,
+                         fnStatsDpscs.IDENTIFY?.cmmiCnt > 0 ? (fnStatsDpscs.IDENTIFY.cmmiSum / fnStatsDpscs.IDENTIFY.cmmiCnt).toFixed(1) : null,
+                         fnStatsDpscs.PROTECT?.cmmiCnt > 0 ? (fnStatsDpscs.PROTECT.cmmiSum / fnStatsDpscs.PROTECT.cmmiCnt).toFixed(1) : null,
+                         fnStatsDpscs.DETECT?.cmmiCnt > 0 ? (fnStatsDpscs.DETECT.cmmiSum / fnStatsDpscs.DETECT.cmmiCnt).toFixed(1) : null,
+                         fnStatsDpscs.RESPOND?.cmmiCnt > 0 ? (fnStatsDpscs.RESPOND.cmmiSum / fnStatsDpscs.RESPOND.cmmiCnt).toFixed(1) : null,
+                         fnStatsDpscs.RECOVER?.cmmiCnt > 0 ? (fnStatsDpscs.RECOVER.cmmiSum / fnStatsDpscs.RECOVER.cmmiCnt).toFixed(1) : null];
+        new Chart(radarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Scored (GOVERN Only)',data:radarData,backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',pointBackgroundColor:'#2563a8',borderWidth:2,spanGaps:false},{label:'Target (3.0)',data:[3,3,3,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],pointBackgroundColor:'#27ae60',borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
       }
       const riskEl = document.getElementById('riskChart');
       if (riskEl) {
@@ -2323,9 +2331,127 @@
       }
       const sarRadarEl = document.getElementById('sarRadarChart');
       if (sarRadarEl) {
-        new Chart(sarRadarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Current',data:[1.4,1.8,2.0,1.2,1.6,1.4],backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},{label:'Target',data:[3,3,4,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
+        var fnStats = computeFnStats(JSON.parse(localStorage.getItem('anchor_srtm_dpscs') || '{}'), SRTM_DATA);
+        var sarData = [fnStats.GOVERN?.cmmiCnt > 0 ? (fnStats.GOVERN.cmmiSum / fnStats.GOVERN.cmmiCnt).toFixed(1) : 1.4,
+                       fnStats.IDENTIFY?.cmmiCnt > 0 ? (fnStats.IDENTIFY.cmmiSum / fnStats.IDENTIFY.cmmiCnt).toFixed(1) : 1.8,
+                       fnStats.PROTECT?.cmmiCnt > 0 ? (fnStats.PROTECT.cmmiSum / fnStats.PROTECT.cmmiCnt).toFixed(1) : 2.0,
+                       fnStats.DETECT?.cmmiCnt > 0 ? (fnStats.DETECT.cmmiSum / fnStats.DETECT.cmmiCnt).toFixed(1) : 1.2,
+                       fnStats.RESPOND?.cmmiCnt > 0 ? (fnStats.RESPOND.cmmiSum / fnStats.RESPOND.cmmiCnt).toFixed(1) : 1.6,
+                       fnStats.RECOVER?.cmmiCnt > 0 ? (fnStats.RECOVER.cmmiSum / fnStats.RECOVER.cmmiCnt).toFixed(1) : 1.4];
+        new Chart(sarRadarEl, { type:'radar', data:{ labels:['Govern','Identify','Protect','Detect','Respond','Recover'], datasets:[{label:'Current',data:sarData,backgroundColor:'rgba(37,99,168,.15)',borderColor:'#2563a8',borderWidth:2},{label:'Target',data:[3,3,4,3,3,3],backgroundColor:'rgba(39,174,96,.1)',borderColor:'#27ae60',borderDash:[5,4],borderWidth:2}] }, options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:5,ticks:{stepSize:1}}},plugins:{legend:{position:'bottom'}}} });
       }
     }
+
+    function updateSarFromSrtm() {
+      var key = window.AGENCY_KEY || 'dpscs';
+      var srtm = JSON.parse(localStorage.getItem('anchor_srtm_' + key) || '{}');
+      var fnStats = computeFnStats(srtm, SRTM_DATA);
+
+      // Update stat cards
+      ['sar-stat-total','sar-stat-met','sar-stat-notmet'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'sar-stat-total') el.textContent = fnStats.overall.total;
+        else if (id === 'sar-stat-met') el.textContent = fnStats.overall.met;
+        else if (id === 'sar-stat-notmet') el.textContent = fnStats.overall.notMet;
+      });
+
+      // Update overall CMMI
+      if (fnStats.overall.cmmi !== '—') {
+        var overallEl = document.getElementById('sar-overall-maturity');
+        if (overallEl) overallEl.textContent = fnStats.overall.cmmi;
+      }
+
+      // Update Section 3 — Maturity by CSF Function
+      var fnTable = document.getElementById('sar-fn-summary-tbody');
+      if (fnTable) {
+        var cmmiColors = ['#6b7280','#dc2626','#ea580c','#d97706','#16a34a','#0d9488'];
+        fnTable.innerHTML = Object.entries(fnStats).filter(function(e){ return e[0] !== 'overall'; }).map(function(e) {
+          var fn = e[0]; var s = e[1];
+          var avg = s.cmmiCnt > 0 ? (s.cmmiSum / s.cmmiCnt).toFixed(1) : '—';
+          var ml = s.cmmiCnt > 0 ? Math.min(5, Math.floor(s.cmmiSum / s.cmmiCnt)) : 0;
+          var pct = s.total > 0 ? Math.round((s.met + s.notMet + s.na) / s.total * 100) : 0;
+          return '<tr><td><span class="fn-tag ' + (fn==='GOVERN'?'fn-govern':fn==='IDENTIFY'?'fn-identify':fn==='PROTECT'?'fn-protect':fn==='DETECT'?'fn-detect':fn==='RESPOND'?'fn-respond':'fn-recover') + '">' + fn + '</span></td>' +
+            '<td>' + s.total + '</td><td style="color:#16a34a;font-weight:700;">' + s.met + '</td><td style="color:#dc2626;font-weight:700;">' + s.notMet + '</td>' +
+            '<td><strong style="color:' + cmmiColors[ml] + '">' + avg + '</strong></td>' +
+            '<td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;"><div style="width:' + pct + '%;height:6px;background:#0f2d5e;border-radius:3px;"></div></div><span style="font-size:.72rem;font-weight:700;color:#374151;">' + pct + '%</span></div></td></tr>';
+        }).join('');
+      }
+
+      // Update Section 4 — Findings Detail (NOT MET controls only)
+      var findTable = document.getElementById('sar-findings-tbody');
+      if (findTable) {
+        var allFindings = [];
+        Object.entries(fnStats).forEach(function(e) {
+          if (e[0] === 'overall') return;
+          e[1].notMetCtrls.forEach(function(c) {
+            allFindings.push({ id: c.id, name: c.name, fn: e[0], cmmi: c.cmmi, obs: c.obs });
+          });
+        });
+        findTable.innerHTML = allFindings.length === 0
+          ? '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">All controls MET — no findings.</td></tr>'
+          : allFindings.map(function(f) {
+              var fnClass = f.fn==='GOVERN'?'fn-govern':f.fn==='IDENTIFY'?'fn-identify':f.fn==='PROTECT'?'fn-protect':f.fn==='DETECT'?'fn-detect':f.fn==='RESPOND'?'fn-respond':'fn-recover';
+              return '<tr><td><a href="#" onclick="navigateTo(\'csf\',\'' + f.fn + '\');setTimeout(()=>toggleSrtmCtrl(\'' + f.id + '\'),200);return false;" style="color:#2563a8;text-decoration:none;font-weight:600;">' + f.id + '</a></td>' +
+                '<td>' + f.name + '</td><td><span class="fn-tag ' + fnClass + '">' + f.fn + '</span></td>' +
+                '<td><strong>' + f.cmmi + '</strong></td><td style="font-size:.78rem;color:var(--text-muted);">' + (f.obs || '—') + '</td></tr>';
+            }).join('');
+      }
+
+      // Update Section 5 — Full Control Assessment Results
+      var allCtrlTable = document.getElementById('sar-full-results-tbody');
+      if (allCtrlTable) {
+        var allRows = [];
+        SRTM_DATA.forEach(function(domain) {
+          domain.controls.forEach(function(ctrl) {
+            var st = srtm[ctrl.id] || {};
+            var result = st.result || '';
+            var cmmi = st.cmmi !== undefined && st.cmmi !== '' ? st.cmmi : '—';
+            var resultBadge = result === 'MET' ? 'badge badge-green' : result === 'NOT MET' ? 'badge badge-red' : 'badge badge-gray';
+            var fnClass = domain.fn==='GOVERN'?'fn-govern':domain.fn==='IDENTIFY'?'fn-identify':domain.fn==='PROTECT'?'fn-protect':domain.fn==='DETECT'?'fn-detect':domain.fn==='RESPOND'?'fn-respond':'fn-recover';
+            allRows.push('<tr><td><span class="fn-tag ' + fnClass + '">' + domain.fn + '</span></td>' +
+              '<td><code>' + ctrl.id + '</code></td><td>' + (ctrl.name||ctrl.id) + '</td><td>—</td>' +
+              '<td><span class="' + resultBadge + '">' + (result||'—') + '</span></td>' +
+              '<td>' + cmmi + '</td></tr>');
+          });
+        });
+        allCtrlTable.innerHTML = allRows.join('');
+      }
+
+      // Update Section 6 — POA&M from NOT MET controls
+      var poamTable = document.getElementById('sar-poam-tbody');
+      if (poamTable) {
+        var poamRows = [];
+        var pmId = 1;
+        Object.entries(fnStats).forEach(function(e) {
+          if (e[0] === 'overall') return;
+          e[1].notMetCtrls.forEach(function(c) {
+            var priority = c.cmmi <= 1 ? 'CRITICAL' : c.cmmi === 2 ? 'HIGH' : 'MEDIUM';
+            var priorityClass = priority === 'CRITICAL' ? 'badge-red' : 'badge-orange';
+            var dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + (priority === 'CRITICAL' ? 30 : priority === 'HIGH' ? 60 : 90));
+            var dueDateStr = dueDate.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+            var pmStr = 'PM-' + String(pmId).padStart(3, '0');
+            pmId++;
+            poamRows.push('<tr><td>' + pmStr + '</td><td>' + c.name + ' <span style="font-size:.68rem;color:#94a3b8;">' + c.id + '</span></td>' +
+              '<td>' + c.id + '</td><td><span class="' + priorityClass + '">' + priority + '</span></td>' +
+              '<td>Remediate control to at least ML' + (Number(c.cmmi)+1) + '</td><td>CISO / IT Director</td>' +
+              '<td>' + dueDateStr + '</td><td><span style="color:#94a3b8;font-size:.78rem;">Not Started</span></td></tr>');
+          });
+        });
+        poamTable.innerHTML = poamRows.length === 0
+          ? '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:20px;">No open items. All controls MET.</td></tr>'
+          : poamRows.join('');
+      }
+    }
+
+    // Hook into showSection to update risk and sar when tabs are activated
+    var _origShowSection = window.showSection;
+    window.showSection = function(id, btn) {
+      if (_origShowSection) _origShowSection(id, btn);
+      if (id === 'risk') { setTimeout(updateRiskFromSRTM, 50); }
+      if (id === 'sar') { setTimeout(updateSarFromSrtm, 50); }
+    };
   </script>
   <script src="src/js/intake-workflow.js?v=3"></script>
 
@@ -2389,7 +2515,7 @@
                 <th style="padding:8px 10px;text-align:center;border:1px solid #1e3a5f;">Avg CMMI</th>
                 <th style="padding:8px 10px;text-align:center;border:1px solid #1e3a5f;">Score %</th>
               </tr></thead>
-              <tbody>
+              <tbody id="sar-fn-summary-tbody">
                 <tr style="background:#f8fafc;"><td style="padding:7px 10px;border:1px solid #e2e8f0;font-weight:700;">GOVERN</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">5</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">4</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.4</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">20%</td></tr>
                 <tr><td style="padding:7px 10px;border:1px solid #e2e8f0;font-weight:700;">IDENTIFY</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">4</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">1</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">3</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">1.8</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">25%</td></tr>
                 <tr style="background:#f8fafc;"><td style="padding:7px 10px;border:1px solid #e2e8f0;font-weight:700;">PROTECT</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">5</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#16a34a;font-weight:700;">2</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;color:#dc2626;font-weight:700;">3</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">2.0</td><td style="padding:7px 10px;border:1px solid #e2e8f0;text-align:center;">40%</td></tr>
@@ -2410,7 +2536,7 @@
                 <th style="padding:8px 10px;text-align:center;border:1px solid #1e3a5f;">CMMI</th>
                 <th style="padding:8px 10px;text-align:left;border:1px solid #1e3a5f;">Observation</th>
               </tr></thead>
-              <tbody>
+              <tbody id="sar-findings-tbody">
                 <tr style="background:#fff8f8;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;font-family:monospace;font-size:.8rem;">DE.CM-01</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">Network Monitoring</td><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;">DETECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">ML1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">No centralized SIEM; facility networks not aggregated or analyzed</td></tr>
                 <tr><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;font-family:monospace;font-size:.8rem;">PR.AA-01</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">Identity &amp; Credential Mgmt</td><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;">PROTECT</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">ML1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">Physical access systems not integrated with enterprise IAM; no unified audit trail</td></tr>
                 <tr style="background:#fff8f8;"><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;font-family:monospace;font-size:.8rem;">ID.AM-01</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">Hardware Asset Inventory</td><td style="padding:6px 10px;border:1px solid #e2e8f0;font-weight:700;">IDENTIFY</td><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;">ML1</td><td style="padding:6px 10px;border:1px solid #e2e8f0;">Legacy systems (OBSCIS, WMS) not in inventory; no decommission plan</td></tr>
@@ -2432,7 +2558,7 @@
                 <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">Result</th>
                 <th style="padding:7px 10px;text-align:center;border:1px solid #1e3a5f;">CMMI</th>
               </tr></thead>
-              <tbody>
+              <tbody id="sar-full-results-tbody">
                 <tr style="background:#f8fafc;"><td style="padding:5px 10px;border:1px solid #e8edf5;font-weight:700;font-size:.75rem;">GOVERN</td><td style="padding:5px 10px;border:1px solid #e8edf5;font-family:monospace;font-size:.75rem;">GV.OC-01</td><td style="padding:5px 10px;border:1px solid #e8edf5;">Mission Alignment</td><td style="padding:5px 10px;border:1px solid #e8edf5;color:#64748b;">Organizational Context</td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;"><span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:10px;font-size:.72rem;font-weight:700;">MET</span></td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;font-weight:700;">ML2</td></tr>
                 <tr style="background:#f8fafc;"><td style="padding:5px 10px;border:1px solid #e8edf5;font-weight:700;font-size:.75rem;">GOVERN</td><td style="padding:5px 10px;border:1px solid #e8edf5;font-family:monospace;font-size:.75rem;">GV.RM-01</td><td style="padding:5px 10px;border:1px solid #e8edf5;">Risk Management Objectives</td><td style="padding:5px 10px;border:1px solid #e8edf5;color:#64748b;">Risk Mgmt Strategy</td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;"><span style="background:#fee2e2;color:#991b1b;padding:1px 7px;border-radius:10px;font-size:.72rem;font-weight:700;">NOT MET</span></td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;font-weight:700;">ML1</td></tr>
                 <tr style="background:#f8fafc;"><td style="padding:5px 10px;border:1px solid #e8edf5;font-weight:700;font-size:.75rem;">GOVERN</td><td style="padding:5px 10px;border:1px solid #e8edf5;font-family:monospace;font-size:.75rem;">GV.PO-01</td><td style="padding:5px 10px;border:1px solid #e8edf5;">Cybersecurity Policy</td><td style="padding:5px 10px;border:1px solid #e8edf5;color:#64748b;">Policy</td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;"><span style="background:#fee2e2;color:#991b1b;padding:1px 7px;border-radius:10px;font-size:.72rem;font-weight:700;">NOT MET</span></td><td style="padding:5px 10px;border:1px solid #e8edf5;text-align:center;font-weight:700;">ML1</td></tr>
@@ -2473,7 +2599,7 @@
                 <th style="padding:7px 10px;border:1px solid #1e3a5f;">Due</th>
                 <th style="padding:7px 10px;border:1px solid #1e3a5f;">Status</th>
               </tr></thead>
-              <tbody>
+              <tbody id="sar-poam-tbody">
                 <tr style="background:#fff8f8;"><td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700;">PM-001</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Deploy SIEM for facility networks</td><td style="padding:5px 8px;border:1px solid #e2e8f0;font-family:monospace;font-size:.75rem;">DE.CM-01</td><td style="padding:5px 8px;border:1px solid #e2e8f0;text-align:center;"><span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:10px;font-size:.7rem;font-weight:700;">CRITICAL</span></td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Procure SIEM; aggregate logs from all 25+ facilities; establish 24×7 alerting</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">SOC Manager</td><td style="padding:5px 8px;border:1px solid #e2e8f0;white-space:nowrap;">2026-07-14</td><td style="padding:5px 8px;border:1px solid #e2e8f0;color:#94a3b8;font-size:.78rem;">Not Started</td></tr>
                 <tr><td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700;">PM-002</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Integrate physical &amp; logical IAM</td><td style="padding:5px 8px;border:1px solid #e2e8f0;font-family:monospace;font-size:.75rem;">PR.AA-01</td><td style="padding:5px 8px;border:1px solid #e2e8f0;text-align:center;"><span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:10px;font-size:.7rem;font-weight:700;">CRITICAL</span></td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Integrate badge access &amp; CCTV with enterprise IAM; create unified audit trail</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">IT Director</td><td style="padding:5px 8px;border:1px solid #e2e8f0;white-space:nowrap;">2026-07-14</td><td style="padding:5px 8px;border:1px solid #e2e8f0;color:#94a3b8;font-size:.78rem;">Not Started</td></tr>
                 <tr style="background:#fff8f8;"><td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700;">PM-003</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Update legacy system inventory</td><td style="padding:5px 8px;border:1px solid #e2e8f0;font-family:monospace;font-size:.75rem;">ID.AM-01</td><td style="padding:5px 8px;border:1px solid #e2e8f0;text-align:center;"><span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:10px;font-size:.7rem;font-weight:700;">CRITICAL</span></td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Include OBSCIS, WMS, and EOL systems in CMDB; develop decommission roadmap</td><td style="padding:5px 8px;border:1px solid #e2e8f0;">Network Admin</td><td style="padding:5px 8px;border:1px solid #e2e8f0;white-space:nowrap;">2026-08-01</td><td style="padding:5px 8px;border:1px solid #e2e8f0;color:#94a3b8;font-size:.78rem;">Not Started</td></tr>
