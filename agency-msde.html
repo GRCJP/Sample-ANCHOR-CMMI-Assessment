@@ -977,8 +977,8 @@
         </div>
 
         <div class="grid-4" style="margin-bottom:12px;">
-          <div class="stat-card accent"><div class="stat-label">Overall CMMI</div><div class="stat-value"><span id="risk-overall-maturity">2.3</span></div><div class="stat-sub">Target: 3.0</div></div>
-          <div class="stat-card red"><div class="stat-label">Critical Risks</div><div class="stat-value">3</div><div class="stat-sub">P1 findings</div></div>
+          <div class="stat-card accent" id="risk-stat-cmmi" style="cursor:pointer;" onclick="navigateTo('risk', null, 'risk-register-tbody');"><div class="stat-label">Overall CMMI</div><div class="stat-value"><span id="risk-overall-maturity">2.3</span></div><div class="stat-sub">Target: 3.0</div></div>
+          <div class="stat-card red" id="risk-stat-p1" style="cursor:pointer;" onclick="navigateTo('risk', null, 'risk-register-tbody');"><div class="stat-label">Critical Risks</div><div class="stat-value">3</div><div class="stat-sub">P1 findings</div></div>
           <div class="stat-card"><div class="stat-label">High Risks</div><div class="stat-value">7</div><div class="stat-sub">30-day remediation</div></div>
           <div class="stat-card green"><div class="stat-label">Controls Assessed</div><div class="stat-value">23</div><div class="stat-sub">NIST CSF 2.0</div></div>
         </div>
@@ -999,7 +999,7 @@
           <div class="table-wrap">
             <table>
               <thead><tr><th>NIST CSF Function</th><th>Domain</th><th>CMMI Score</th><th>Maturity Level</th><th>Target</th><th>Gap</th></tr></thead>
-              <tbody>
+              <tbody id="cmmi-fn-tbody">
                 <tr><td><span class="fn-tag fn-govern">GOVERN</span></td><td>Governance &amp; Risk Strategy</td><td><strong>2.1</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--danger);font-weight:700;">-0.9</td></tr>
                 <tr><td><span class="fn-tag fn-identify">IDENTIFY</span></td><td>Asset &amp; Risk Management</td><td><strong>2.5</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.5</td></tr>
                 <tr><td><span class="fn-tag fn-protect">PROTECT</span></td><td>Access Control &amp; Training</td><td><strong>2.8</strong></td><td>Managed</td><td>3.0</td><td style="color:var(--warn);font-weight:700;">-0.2</td></tr>
@@ -2976,6 +2976,22 @@
           '<td><span class="badge '+f.priority.cls+'">'+f.score+'</span></td>'+
           '<td><strong>'+f.priority.label+'</strong><div style="font-size:.62rem;color:#94a3b8;margin-top:1px;">'+f.likelihood.label+' ('+f.likelihood.weight+') × '+f.impact.label+' ('+f.impact.weight+')</div></td></tr>';
       }).join('');
+
+      // Regenerate CMMI Function table with click handlers
+      var cmmiTbody = document.getElementById('cmmi-fn-tbody');
+      if (cmmiTbody) {
+        var fnOrder = ['GOVERN', 'IDENTIFY', 'PROTECT', 'DETECT', 'RESPOND', 'RECOVER'];
+        cmmiTbody.innerHTML = fnOrder.map(function(fn) {
+          var data = byFn[fn];
+          var avg = data && data.n > 0 ? (data.sum / data.n).toFixed(1) : '—';
+          var gap = avg === '—' ? '—' : (Number(avg) - 3.0).toFixed(1);
+          var gapColor = avg === '—' ? '#64748b' : Number(gap) >= 0 ? '#16a34a' : '#dc2626';
+          var matLvl = avg === '—' ? '—' : avg <= 1 ? 'Initial' : avg <= 2 ? 'Managed' : avg <= 3 ? 'Defined' : avg <= 4 ? 'Quantitatively Managed' : 'Optimized';
+          var fnTagClass = fn === 'GOVERN' ? 'fn-govern' : fn === 'IDENTIFY' ? 'fn-identify' : fn === 'PROTECT' ? 'fn-protect' : fn === 'DETECT' ? 'fn-detect' : fn === 'RESPOND' ? 'fn-respond' : 'fn-recover';
+          var domainName = fn === 'GOVERN' ? 'Governance & Risk Strategy' : fn === 'IDENTIFY' ? 'Asset & Risk Management' : fn === 'PROTECT' ? 'Access Control & Training' : fn === 'DETECT' ? 'Monitoring & Detection' : fn === 'RESPOND' ? 'Incident Response' : 'Recovery Planning';
+          return '<tr style="cursor:pointer;" onclick="navigateTo(\'csf\', \'' + fn + '\');"><td><span class="fn-tag ' + fnTagClass + '">' + fn + '</span></td><td>' + domainName + '</td><td><strong>' + avg + '</strong></td><td>' + matLvl + '</td><td>3.0</td><td style="color:' + gapColor + ';font-weight:700;">' + (gap === '—' ? '—' : Number(gap) >= 0 ? '+' + gap : gap) + '</td></tr>';
+        }).join('');
+      }
     }
 
     // ── Update SAR Section from Live SRTM Data ─────────────────────────────────────

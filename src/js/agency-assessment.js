@@ -783,3 +783,36 @@ function buildPoamFromSrtm(agencyKey) {
 
   return poamItems;
 }
+
+/**
+ * Navigate to a section with optional domain filter and scroll target
+ * @param {string} sectionId - Section ID (csf, risk, sar, poam, etc.)
+ * @param {string} filterFn - CSF function to filter (GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER)
+ * @param {string} scrollTargetId - Element ID to scroll to after navigation
+ */
+function navigateTo(sectionId, filterFn, scrollTargetId) {
+  // Find and click the nav button for this section
+  var navBtn = document.querySelector('[onclick*="showSection(\'' + sectionId + '\'"]');
+  if (navBtn) {
+    navBtn.click();
+  } else if (window.showSection) {
+    window.showSection(sectionId, null);
+  }
+
+  // If a domain filter is specified, apply it after section loads
+  if (filterFn && window.switchSrtmDomain) {
+    setTimeout(function() {
+      window.switchSrtmDomain(filterFn, null);
+    }, 150);
+  }
+
+  // Scroll to target element if specified
+  if (scrollTargetId) {
+    setTimeout(function() {
+      var target = document.getElementById(scrollTargetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+}
